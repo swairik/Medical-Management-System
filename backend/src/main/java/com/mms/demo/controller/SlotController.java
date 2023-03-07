@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Slot;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.SlotRequest;
 import com.mms.demo.model.SlotResponse;
 import com.mms.demo.service.SlotService;
@@ -39,7 +40,8 @@ public class SlotController {
 
     @GetMapping("/display/{id}")
     public ResponseEntity<SlotResponse> displaySlotById(@PathVariable Long id) {
-        Slot slot = slotService.getSlotById(id).orElseThrow(() -> new RuntimeException("Slot Not Found"));
+        Slot slot = slotService.getSlotById(id)
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
         SlotResponse response = createResponseFromSlot(slot);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Patient;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.PatientRequest;
 import com.mms.demo.model.PatientResponse;
 import com.mms.demo.service.PatientService;
@@ -42,13 +43,19 @@ public class PatientController {
     @GetMapping("/display/{id}")
     public ResponseEntity<PatientResponse> showAllPatients(@PathVariable Long id) {
         Patient patient = patientService.getPatientById(id)
-                .orElseThrow(() -> new RuntimeException("Patient Not Found"));
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         PatientResponse response = createResponseFromPatient(patient);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<PatientResponse> createPatient(@Valid @RequestBody PatientRequest patientRequest) {
+        List<Patient> patients = patientService.getAllPatients();
+        Patient patientAlreadyCreated = patients.stream().filter((p) -> p.getEmail().equals(patientRequest.getEmail()))
+                .findFirst().orElse(null);
+        if (patientAlreadyCreated != null) {
+            throw new CustomException("Patient with email id already exists", "PATIENT_ALREADY_CREATED");
+        }
         Patient patient = createPatientFromRequest(patientRequest);
         Patient createdPatient = patientService.createPatient(patient);
         PatientResponse patientResponse = createResponseFromPatient(createdPatient);

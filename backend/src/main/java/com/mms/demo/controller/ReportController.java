@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Report;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.ReportRequest;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
@@ -42,7 +43,8 @@ class ReportController {
 
     @GetMapping("/display/{id}")
     public ResponseEntity<ReportResponse> showReportById(@PathVariable Long id) {
-        Report report = reportService.getReportById(id).orElseThrow(() -> new RuntimeException("Report Not Found"));
+        Report report = reportService.getReportById(id)
+                .orElseThrow(() -> new CustomException("Report with given id not found", "REPORT_NOT_FOUND"));
         ReportResponse response = createResponseFromReport(report);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -50,7 +52,7 @@ class ReportController {
     @GetMapping("/display/patient/{pid}")
     public ResponseEntity<List<ReportResponse>> showReportByPid(@PathVariable Long pid) {
         Patient patient = patientService.getPatientById(pid)
-                .orElseThrow(() -> new RuntimeException("Patient Not Found"));
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         List<Report> reports = reportService.getReportsByPatient(patient);
         List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
                 .collect(Collectors.toList());
@@ -60,7 +62,7 @@ class ReportController {
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<List<ReportResponse>> showReportByDid(@PathVariable Long did) {
         Doctor doctor = doctorService.getDoctortById(did)
-                .orElseThrow(() -> new RuntimeException("Doctor Not Found"));
+                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
         List<Report> reports = reportService.getReportByDoctor(doctor);
         List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
                 .collect(Collectors.toList());
@@ -100,9 +102,9 @@ class ReportController {
 
     public Report createReportFromRequest(ReportRequest reportRequest) {
         Patient patient = patientService.getPatientById(reportRequest.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         Doctor doctor = doctorService.getDoctortById(reportRequest.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
         LocalDateTime currentDateTime = LocalDateTime.now();
         Report report = Report.builder()
                 .patient(patient)

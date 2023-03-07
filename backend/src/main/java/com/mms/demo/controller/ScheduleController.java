@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.ScheduleRequest;
 import com.mms.demo.model.ScheduleResponse;
 import com.mms.demo.service.DoctorService;
@@ -51,7 +52,7 @@ public class ScheduleController {
     @GetMapping("/display/{id}")
     public ResponseEntity<ScheduleResponse> displayScheduleById(@PathVariable Long id) {
         Schedule schedule = scheduleService.getScheduleById(id)
-                .orElseThrow(() -> new RuntimeException("Schedule with given id not found"));
+                .orElseThrow(() -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND"));
         ScheduleResponse response = createResponseFromSchedule(schedule);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -59,7 +60,7 @@ public class ScheduleController {
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<List<ScheduleResponse>> displaySchedulesByDoctor(@PathVariable Long did) {
         Doctor doctor = doctorService.getDoctortById(did)
-                .orElseThrow(() -> new RuntimeException("Doctor with given id not found"));
+                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
         List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
         List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
                 .collect(Collectors.toList());
@@ -69,7 +70,7 @@ public class ScheduleController {
     @GetMapping("/display/schedule/{sid}")
     public ResponseEntity<List<ScheduleResponse>> displaySchedulesBySlot(@PathVariable Long sid) {
         Slot slot = slotService.getSlotById(sid)
-                .orElseThrow(() -> new RuntimeException("Slot with given id not found"));
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
         List<Schedule> schedules = scheduleService.getSchedulesBySlot(slot);
         List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
                 .collect(Collectors.toList());
@@ -107,9 +108,9 @@ public class ScheduleController {
 
     public Schedule createScheduleFromRequest(ScheduleRequest scheduleRequest) {
         Doctor doctor = doctorService.getDoctortById(scheduleRequest.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor with given id not found"));
+                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
         Slot slot = slotService.getSlotById(scheduleRequest.getSlotId())
-                .orElseThrow(() -> new RuntimeException("Slot with given id not found"));
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
         Schedule schedule = Schedule.builder()
                 .doctor(doctor)
                 .slot(slot)

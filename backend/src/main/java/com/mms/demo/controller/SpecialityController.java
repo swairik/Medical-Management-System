@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Speciality;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.SpecialityRequest;
 import com.mms.demo.model.SpecialityResponse;
 import com.mms.demo.service.SpecialityService;
@@ -42,7 +43,7 @@ public class SpecialityController {
     @GetMapping("/display/{id}")
     public ResponseEntity<SpecialityResponse> getSpecialityById(@PathVariable Long id) {
         Speciality speciality = specialityService.getSpecialityById(id)
-                .orElseThrow(() -> new RuntimeException("Speciality with given id not found"));
+                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
         SpecialityResponse response = createResponseFromSpeciality(speciality);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

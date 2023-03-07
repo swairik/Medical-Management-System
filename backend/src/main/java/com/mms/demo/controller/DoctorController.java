@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
 import com.mms.demo.model.PatientRequest;
@@ -57,7 +58,7 @@ public class DoctorController {
     @GetMapping("/display/{id}")
     public ResponseEntity<DoctorResponse> showDoctorById(@PathVariable Long id) {
         Doctor dr = doctorService.getDoctortById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor with given id not found"));
+                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
 
         DoctorResponse response = createResponseFromDoctor(dr);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -76,6 +77,12 @@ public class DoctorController {
 
     @PostMapping("/")
     public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody DoctorRequest doctorRequest) {
+        List<Doctor> doctors = doctorService.getAllDoctors();
+        Doctor doctorAlreadyCreated = doctors.stream().filter((d) -> d.getEmail().equals(doctorRequest.getEmail()))
+                .findFirst().orElse(null);
+        if (doctorAlreadyCreated != null) {
+            throw new CustomException("Doctor with given email id already exists", "DOCTOR_ALREADY_CREATED");
+        }
         Doctor doctor = createDoctorFromRequest(doctorRequest);
         Doctor createdDoctor = doctorService.createDoctor(doctor);
         DoctorResponse doctorResponse = createResponseFromDoctor(createdDoctor);
@@ -107,7 +114,7 @@ public class DoctorController {
 
     public Doctor createDoctorFromRequest(DoctorRequest doctorRequest) {
         Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
-                .orElseThrow(() -> new RuntimeException("Speciality with given id not found"));
+                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
         Doctor doctor = Doctor
                 .builder()
                 .name(doctorRequest.getName())

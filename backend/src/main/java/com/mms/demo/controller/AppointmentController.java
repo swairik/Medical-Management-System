@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.entity.Appointment;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Slot;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
 import com.mms.demo.model.PatientRequest;
@@ -55,7 +56,7 @@ public class AppointmentController {
     @GetMapping("/display/{id}")
     public ResponseEntity<AppointmentResponse> displayAppointmentById(@PathVariable Long id) {
         Appointment appointment = appointmentService.getAppointmentById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment with given id not found"));
+                .orElseThrow(() -> new CustomException("Appointment with given id not found", "APPOINTMENT_NOT_FOUND"));
         AppointmentResponse response = createResponseFromAppointment(appointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -106,9 +107,9 @@ public class AppointmentController {
 
     public Appointment createAppointmentFromRequest(AppointmentRequest appointmentRequest) {
         Patient patient = patientService.getPatientById(appointmentRequest.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient with given id not found"));
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
-                .orElseThrow(() -> new RuntimeException("Slot with given id not found"));
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
         Appointment appointment = Appointment.builder()
                 .patient(patient)
                 .slot(slot)
