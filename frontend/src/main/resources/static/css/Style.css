@@ -190,3 +190,15 @@ padding: 1%;
 font-size: large;
 margin-top: 2%;
   }
+
+  .add_doctor_box {
+    display: flex;
+  }
+
+  .add_doctor_box_right {
+    width: 50%;
+  }
+
+  .add_doctor_box_left {
+   background-color: #35B409;
+  }

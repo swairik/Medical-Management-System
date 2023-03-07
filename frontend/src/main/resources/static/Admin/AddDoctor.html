@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="../css/Style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $.ajax({
+          url: "http://localhost:8050/api/v1/patients",
+          type: "GET",
+          success: function(result) {
+            console.log(result);
+          },
+          error: function(error) {
+            console.log(error);
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div>
+            <img class="doc-img" src="../css/doc.png" alt="An example image"> 
+        </div>
+        <div class="view">
+            View Profile
+        </div>
+     </div>
+    </header>
+
+    <div class="add_doctor_box">
+        <div class="add_doctor_box_right">
+            Doctor's List
+        </div>
+        <button class="add_doctor_box_left">
+            Add Doctor
+        </div>
+    </div>
+    
+    
+    
+    <p class="footer">Care4u@gmail.com</p>
+</body>
+</html>
