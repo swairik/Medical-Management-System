@@ -2,28 +2,15 @@
 <html>
   <head>
     <title>Admin</title>
-    <link rel="stylesheet" type="text/css" href="../css/Style.css">
+    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function() {
-        $.ajax({
-          url: "http://localhost:8050/api/v1/patients",
-          type: "GET",
-          success: function(result) {
-            console.log(result);
-          },
-          error: function(error) {
-            console.log(error);
-          }
-        });
-      });
-    </script>
+    <script src="../js/Admin.js"></script>
   </head>
   <body>
     <header>
       <div class="header-content">
         <div>
-            <img class="doc-img" src="../css/doc.png" alt="An example image"> 
+            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
         </div>
         <div class="view">
             View Profile
@@ -39,6 +26,30 @@
             Add Doctor
         </div>
     </div>
+
+    <div class="add_doctor_menu">
+
+    </div>
+
+    <!-- <div id="add_doctor_menu">
+        <div class="add_doctor_menu_img">
+
+        </div>
+        <div class="add_doctor_personal">
+         
+        </div>
+        <div class="add_doctor_menu_btn">
+            <button class="add_doctor_menu_btn_edit">
+                Edit
+            </button>
+            <button class="add_doctor_menu_btn_remove">
+                Remove
+            </button>
+
+        </div>
+    </div> -->
+
+   
     
     
     
