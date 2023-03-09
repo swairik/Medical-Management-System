@@ -1,11 +1,19 @@
 package com.mms.demo.entity;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -17,7 +25,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Setter
 @Getter
 @AllArgsConstructor
@@ -27,7 +34,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Table(name = "PATIENT", schema = "MMSYSTEM")
-public class Patient {
+public class Patient implements UserDetails {
     @Id
     @Column(name = "patient_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,7 +55,48 @@ public class Patient {
     @Email
     private String email;
 
-    @Column(name="patient_phone", length = 14, nullable = false)
+    @Column(name = "patient_phone", length = 14, nullable = false)
     private String phone;
+
+    @Column(name = "patient_password")
+    private String password;
+
+    @Transient
+    private final String role = "PATIENT";
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
 }

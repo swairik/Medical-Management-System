@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +33,7 @@ public class PatientController {
 
     @GetMapping("/display")
     public ResponseEntity<List<PatientResponse>> showAllPatients() {
+        System.out.println("inside patient display");
         List<PatientResponse> response = new ArrayList<>();
         List<Patient> patients = patientService.getAllPatients();
         response = patients.stream().map((p) -> createResponseFromPatient(p)).collect(Collectors.toList());
@@ -92,8 +92,16 @@ public class PatientController {
     }
 
     public PatientResponse createResponseFromPatient(Patient patient) {
-        PatientResponse patientResponse = new PatientResponse();
-        BeanUtils.copyProperties(patient, patientResponse);
+        // PatientResponse patientResponse = new PatientResponse();
+        // BeanUtils.copyProperties(patient, patientResponse);
+        PatientResponse patientResponse = PatientResponse.builder()
+                .id(patient.getId())
+                .name(patient.getName())
+                .age(patient.getAge())
+                .gender(patient.getGender())
+                .email(patient.getEmail())
+                .phone(patient.getPhone())
+                .build();
         return patientResponse;
     }
 
