@@ -31,8 +31,19 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient updatePatient(Long id, Patient patient) {
-        patient.setId(id);
+    public Patient updatePatient(Long id, Patient patientUpdates) {
+        Optional<Patient> temp = patientRepo.findById(id);
+        if (temp.isEmpty()) {
+            return null;
+        }
+
+        Patient patient = temp.get();
+        patient.setAge(patientUpdates.getAge());
+        patient.setEmail(patientUpdates.getEmail());
+        patient.setGender(patientUpdates.getGender());
+        patient.setName(patientUpdates.getName());
+        patient.setPhone(patientUpdates.getPhone());
+
         return patientRepo.save(patient);
     }
 

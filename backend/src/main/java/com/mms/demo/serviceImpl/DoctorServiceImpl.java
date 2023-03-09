@@ -37,8 +37,20 @@ public class DoctorServiceImpl implements DoctorService {
     }
     
     @Override
-    public Doctor updateDoctor(Long id, Doctor doctor) {
-        doctor.setId(id);
+    public Doctor updateDoctor(Long id, Doctor doctorUpdates) {
+        Optional<Doctor> temp = doctorRepo.findById(id);
+        if (temp.isEmpty()) {
+            return null;
+        }
+
+        Doctor doctor = temp.get();
+        doctor.setAge(doctorUpdates.getAge());
+        doctor.setEmail(doctorUpdates.getEmail());
+        doctor.setGender(doctorUpdates.getGender());
+        doctor.setName(doctorUpdates.getName());
+        doctor.setPhone(doctorUpdates.getPhone());
+        doctor.setSpeciality(doctorUpdates.getSpeciality());
+
         return doctorRepo.save(doctor);
     }
     
