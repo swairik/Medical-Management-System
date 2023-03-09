@@ -2,11 +2,13 @@ package com.mms.demo.serviceImpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Credential;
 import com.mms.demo.repository.CredentialRepository;
 import com.mms.demo.service.CredentialService;
 
+@Service
 public class CredentialServiceImpl implements CredentialService {
     @Autowired
     CredentialRepository credRepo;
@@ -27,7 +29,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential updateCredentials(Long id, Credential credentialsUpdate) {
+    public Credential updateCredentials(Long id, Credential credentialsUpdates) {
         Optional<Credential> temp = credRepo.findById(id);
 
         if (temp.isEmpty()) {
@@ -35,10 +37,10 @@ public class CredentialServiceImpl implements CredentialService {
         }
 
         Credential credentials = temp.get();
-        credentials.setEmail(credentialsUpdate.getEmail());
-        credentials.setPassword(credentialsUpdate.getPassword());
-        credentials.setIsAdmin(credentialsUpdate.getIsAdmin());
-        credentials.setIsPatient(credentialsUpdate.getIsPatient());
+        credentials.setEmail(credentialsUpdates.getEmail());
+        credentials.setPassword(credentialsUpdates.getPassword());
+        credentials.setIsAdmin(credentialsUpdates.getIsAdmin());
+        credentials.setIsPatient(credentialsUpdates.getIsPatient());
 
         return credRepo.save(credentials);
     }

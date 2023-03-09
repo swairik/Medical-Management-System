@@ -40,8 +40,19 @@ public class SlotServiceImpl implements SlotService {
     }
 
     @Override
-    public Slot updateSlot(Long id, Slot slot) {
-        slot.setId(id);
+    public Slot updateSlot(Long id, Slot slotUpdates) {
+        Optional<Slot> temp = slotRepo.findById(id);
+
+        if (temp.isEmpty()) {
+            return null;
+        }
+
+        Slot slot = temp.get();
+        slot.setCapacity(slotUpdates.getCapacity());
+        slot.setEnd(slotUpdates.getEnd());
+        slot.setStart(slotUpdates.getStart());
+        slot.setWeekday(slotUpdates.getWeekday());
+
         return slotRepo.save(slot);
     }
 
