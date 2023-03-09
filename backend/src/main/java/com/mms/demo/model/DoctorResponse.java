@@ -1,7 +1,5 @@
 package com.mms.demo.model;
 
-import com.mms.demo.entity.Speciality;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +16,5 @@ public class DoctorResponse {
     private Integer age;
     private String email;
     private String phone;
-    private Speciality speciality;
+    private SpecialityResponse speciality;
 }

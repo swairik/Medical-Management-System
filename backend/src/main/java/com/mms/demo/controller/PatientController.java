@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +65,7 @@ public class PatientController {
     public ResponseEntity<PatientResponse> updatePatient(@PathVariable Long id,
             @Valid @RequestBody PatientRequest patientRequest) {
         Patient patient = createPatientFromRequest(patientRequest);
-        Patient updatedPatient = patientService.createPatient(patient);
+        Patient updatedPatient = patientService.updatePatient(id, patient);
         PatientResponse patientResponse = createResponseFromPatient(updatedPatient);
         return new ResponseEntity<>(patientResponse, HttpStatus.OK);
     }
@@ -92,8 +91,14 @@ public class PatientController {
     }
 
     public PatientResponse createResponseFromPatient(Patient patient) {
-        PatientResponse patientResponse = new PatientResponse();
-        BeanUtils.copyProperties(patient, patientResponse);
+        PatientResponse patientResponse = PatientResponse.builder()
+                .id(patient.getId())
+                .name(patient.getName())
+                .age(patient.getAge())
+                .email(patient.getEmail())
+                .gender(patient.getGender())
+                .phone(patient.getPhone())
+                .build();
         return patientResponse;
     }
 

@@ -3,7 +3,6 @@ package com.mms.demo.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,7 @@ import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
 import com.mms.demo.model.PatientRequest;
 import com.mms.demo.model.SpecialityRequest;
+import com.mms.demo.model.SpecialityResponse;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
@@ -80,10 +80,17 @@ public class DoctorController {
     @PostMapping("/")
     public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody DoctorRequest doctorRequest) {
         List<Doctor> doctors = doctorService.getAllDoctors();
-        Doctor doctorAlreadyCreated = doctors.stream().filter((d) -> d.getEmail().equals(doctorRequest.getEmail()))
+        Doctor doctorAlreadyCreatedWithEmail = doctors.stream().filter(
+                (d) -> d.getEmail().equals(doctorRequest.getEmail()))
                 .findFirst().orElse(null);
-        if (doctorAlreadyCreated != null) {
+        if (doctorAlreadyCreatedWithEmail != null) {
             throw new CustomException("Doctor with given email id already exists", "DOCTOR_ALREADY_CREATED");
+        }
+        Doctor doctorAlreadyCreatedWithPhone = doctors.stream().filter(
+                (d) -> d.getPhone().equals(doctorRequest.getPhone()))
+                .findFirst().orElse(null);
+        if (doctorAlreadyCreatedWithPhone != null) {
+            throw new CustomException("Doctor with given phone already exists", "DOCTOR_ALREADY_CREATED");
         }
         Doctor doctor = createDoctorFromRequest(doctorRequest);
         Doctor createdDoctor = doctorService.createDoctor(doctor);
@@ -109,8 +116,16 @@ public class DoctorController {
     // TODO : Add report generation controllers
 
     public DoctorResponse createResponseFromDoctor(Doctor doctor) {
-        DoctorResponse doctorResponse = new DoctorResponse();
-        BeanUtils.copyProperties(doctor, doctorResponse);
+        SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());
+        DoctorResponse doctorResponse = DoctorResponse.builder()
+                .id(doctor.getId())
+                .name(doctor.getName())
+                .age(doctor.getAge())
+                .email(doctor.getEmail())
+                .gender(doctor.getGender())
+                .phone(doctor.getPhone())
+                .speciality(specialityResponse)
+                .build();
         return doctorResponse;
     }
 
@@ -134,6 +149,14 @@ public class DoctorController {
                 .name(specialityRequest.getName())
                 .build();
         return speciality;
+    }
+
+    public SpecialityResponse createResponseFromSpeciality(Speciality speciality) {
+        SpecialityResponse specialityResponse = SpecialityResponse.builder()
+                .id(speciality.getId())
+                .name(speciality.getName())
+                .build();
+        return specialityResponse;
     }
 
     public Patient createPatientFromRequest(PatientRequest patientRequest) {
