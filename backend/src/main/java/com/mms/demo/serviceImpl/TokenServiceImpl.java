@@ -3,11 +3,13 @@ package com.mms.demo.serviceImpl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Token;
 import com.mms.demo.service.TokenService;
 import com.mms.demo.repository.TokenRepository;
 
+@Service
 public class TokenServiceImpl implements TokenService {
     @Autowired
     TokenRepository repo;
