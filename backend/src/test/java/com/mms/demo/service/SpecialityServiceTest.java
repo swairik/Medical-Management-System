@@ -1,37 +1,25 @@
-package com.mms.demo.speciality;
+package com.mms.demo.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Speciality;
-import com.mms.demo.service.SpecialityService;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SpecialityServiceTest {
     @Autowired
     SpecialityService impl;
     
     static final Speciality spec = Speciality.builder().name("Spec").build();
-
-    @BeforeEach
-    void init() {
-        System.out.println("Static: " + spec.toString());
-    }
-
-    @AfterEach
-    void result() {
-        impl.getAllSpecialities().stream().forEach(s -> System.out.println("Database: " + s.toString()));
-    }
 
     @Order(1)
     @Test

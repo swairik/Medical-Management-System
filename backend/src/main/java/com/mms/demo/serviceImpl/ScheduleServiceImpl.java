@@ -15,37 +15,37 @@ import com.mms.demo.service.ScheduleService;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
-    private ScheduleRepository schRepo;
+    private ScheduleRepository repo;
 
     @Override
     public Schedule createSchedule(Schedule schedule) {
-        return schRepo.save(schedule);
+        return repo.save(schedule);
     }
 
     @Override
     public void deleteSchedule(Long id) {
-        schRepo.deleteById(id);
+        repo.deleteById(id);
     }
 
     @Override
     public List<Schedule> getAllSchedules() {
-        return schRepo.findAll();
+        return repo.findAll();
     }
 
     @Override
     public Optional<Schedule> getScheduleById(Long id) {
-        return schRepo.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public List<Schedule> getSchedulesByDoctor(Doctor doctor) {
-        return schRepo.findAllByDoctor(doctor);
+        return repo.findAllByDoctor(doctor);
     }
 
 
     @Override
     public List<Schedule> getSchedulesBySlot(Slot slot) {
-        return schRepo.findAllBySlot(slot);
+        return repo.findAllBySlot(slot);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setSlot(scheduleUpdates.getSlot());
         schedule.setWeek(scheduleUpdates.getWeek());
 
-        return schRepo.save(schedule);
+        return repo.save(schedule);
     }
 
     

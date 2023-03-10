@@ -55,7 +55,7 @@ public class Patient {
     private String phone;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
-    @JoinColumn(nullable = false, referencedColumnName = "credential_id")
+    @JoinColumn(referencedColumnName = "credential_id")
     Credential credential;
 
 }

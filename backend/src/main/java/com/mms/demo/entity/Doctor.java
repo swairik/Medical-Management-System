@@ -60,7 +60,7 @@ public class Doctor {
     private Speciality speciality;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
-    @JoinColumn(nullable = false, referencedColumnName = "credential_id")
+    @JoinColumn(referencedColumnName = "credential_id")
     Credential credential;
 
 }

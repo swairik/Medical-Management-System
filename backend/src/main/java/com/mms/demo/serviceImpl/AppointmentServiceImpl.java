@@ -15,37 +15,37 @@ import com.mms.demo.service.AppointmentService;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
-    private AppointmentRepository appRepo;
+    private AppointmentRepository repo;
 
     @Override
     public Appointment createAppointment(Appointment appointment) {
-        return appRepo.save(appointment);
+        return repo.save(appointment);
     }
 
     @Override
     public void deleteAppointment(Long id) {
-        appRepo.deleteById(id);
+        repo.deleteById(id);
         
     }
 
     @Override
     public List<Appointment> getAllAppointments() {
-        return appRepo.findAll();
+        return repo.findAll();
     }
 
     @Override
     public Optional<Appointment> getAppointmentById(Long id) {
-        return appRepo.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public List<Appointment> getAppointmentsByPatient(Patient patient) {
-        return appRepo.findAllByPatient(patient);
+        return repo.findAllByPatient(patient);
     }
 
     @Override
     public List<Appointment> getAppointmentsBySlot(Slot slot) {
-        return appRepo.findAllBySlot(slot);
+        return repo.findAllBySlot(slot);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setSlot(appointmentUpdates.getSlot());
         
 
-        return appRepo.save(appointment);
+        return repo.save(appointment);
     }
     
     

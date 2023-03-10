@@ -186,15 +186,19 @@ li {
 
 .add_doctor_box {
   display: flex;
-  background-color: #a7bcdc;
+  /* background-color: #a7bcdc; */
   margin-top: 2%;
 }
 
 .add_doctor_box_right {
   width: 50%;
+  margin-left: 5%;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
 .add_doctor_box_left {
+  margin-left: 15%;
   background-color: #35b409;
 }
 

@@ -16,36 +16,36 @@ import com.mms.demo.service.ReportService;
 @Service
 public class ReportServiceImpl implements ReportService{
     @Autowired
-    private ReportRepository reportRepo;
+    private ReportRepository repo;
 
     @Override
     public Report createReport(Report report) {
-        return reportRepo.save(report);
+        return repo.save(report);
     }
 
     @Override
     public void deleteReport(Long id) {
-        reportRepo.deleteById(id);
+        repo.deleteById(id);
     }
 
     @Override
     public List<Report> getReportByDoctor(Doctor doctor) {
-        return reportRepo.findAllByDoctor(doctor);
+        return repo.findAllByDoctor(doctor);
     }
 
     @Override
     public Optional<Report> getReportById(Long id) {
-        return reportRepo.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public List<Report> getReportByStamp(LocalDateTime stamp) {
-        return reportRepo.findAllByStamp(stamp);
+        return repo.findAllByStamp(stamp);
     }
 
     @Override
     public List<Report> getReportsByPatient(Patient patient) {
-        return reportRepo.findAllByPatient(patient);
+        return repo.findAllByPatient(patient);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ReportServiceImpl implements ReportService{
         report.setReportText(reportUpdates.getReportText());
         report.setStamp(reportUpdates.getStamp());
 
-        return reportRepo.save(report);
+        return repo.save(report);
     }
     
     

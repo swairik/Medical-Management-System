@@ -1,4 +1,4 @@
-package com.mms.demo.doctor;
+package com.mms.demo.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -9,17 +9,16 @@ import org.junit.jupiter.api.Order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Speciality;
-import com.mms.demo.service.DoctorService;
-import com.mms.demo.service.SpecialityService;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class DoctorServiceTest {
     @Autowired
     DoctorService impl;

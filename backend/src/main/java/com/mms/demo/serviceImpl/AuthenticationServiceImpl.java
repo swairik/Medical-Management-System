@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Role;
+import com.mms.demo.entity.Token;
 import com.mms.demo.model.AuthenticationRequest;
 import com.mms.demo.model.AuthenticationResponse;
 import com.mms.demo.exception.CustomException;
@@ -21,6 +22,7 @@ import com.mms.demo.service.AuthenticationService;
 import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.JwtService;
 import com.mms.demo.service.PatientService;
+import com.mms.demo.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -38,6 +40,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         private final PasswordEncoder passwordEncoder;
 
         private final JwtService jwtService;
+
+        private final TokenService tokenService;
 
         private final AuthenticationManager authenticationManager;
 
@@ -57,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .build();
 
                 // credentialRepository.save(credentials);
-                Credential createdCredential = credentialService.createCredentials(credentials);
+                credentialService.createCredentials(credentials);
 
                 var patient = Patient.builder()
                                 .name(registerRequest.getName())
@@ -65,12 +69,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .age(registerRequest.getAge())
                                 .email(registerRequest.getEmail())
                                 .phone(registerRequest.getPhone())
-                                .credential(createdCredential)
                                 .build();
 
                 patientService.createPatient(patient);
 
                 var jwtToken = jwtService.generateToken(credentials);
+
+                saveToken(jwtToken);
+
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
                                 .build();
@@ -87,6 +93,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
                                 .build();
+        }
+
+        private void saveToken(String jwtToken) {
+                Token token = Token.builder()
+                                .identifier(jwtToken)
+                                .build();
+                tokenService.createToken(token);
+        }
+
+        private void revokeToken() {
+
         }
 
 }
