@@ -2,15 +2,21 @@
 //var docMenu = document.getElementById('add_doctor_menu');
 
 const constructDoctorMenu = (value) => {
-  var div1=`<img src="../images/AddDoctor.png" alt="An example image">`
+  var div1=`<img src="../images/AddDoctor.png" alt="An example image" style="margin-left:1%">`
 
-  var div2= `Name:  ${value.name}  Speciality:   ${value.speciality.name}`
+  var div2= `<div style="margin-left:5%">
+  Name:  ${value.name} 
+  <br/> Age:   ${value.age}
+  <br/> Contact:   ${value.phone}
+  <br/> Email: ${value.email}
+  <br/> Speciality:   ${value.speciality.name}
+  </div>`
 
   var div3 = 
   `<div style="display:flex;background-color:#DDDDEC;">` +
   div1+div2+
-  `<div class="add_doctor_menu_btn">
-  <button class="add_doctor_menu_btn_edit">
+  `<div style="margin-left:50%; margin-top:5%">
+  <button>
       Edit
   </button>
   <button class="add_doctor_menu_btn_remove" value=${value.id}>
@@ -62,9 +68,32 @@ $(document).ready(function () {
     });
   });
 
-  $(".add_doctor_box_left").click(function(e) {
+  var docData = {
+    "name": "Doc1",
+    "gender": "M",
+    "age": 35,
+    "email": "test20@gmail.com",
+    "phone": "123465689",
+    "specialityId": 1
+  }
+
+  $(".addnew").click(function(e) {
     console.log("clicked")
     e.preventDefault();
+    $.ajax({
+      url: "http://localhost:8050/doctor/",
+      type: "POST",
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(docData),
+      success: function (result) {
+        window.location.href = 'AddDoctor';
+        console.log(result);
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
    
   });
 });

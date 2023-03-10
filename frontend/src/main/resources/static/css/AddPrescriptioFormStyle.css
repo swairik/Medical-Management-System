@@ -1,0 +1,98 @@
+.NavBar {
+    background-color: #004798;
+    height: 75px;
+  }
+  
+  .NavBar h1 {
+      color: white;
+      width: 10%;
+      display: inline-block;
+  }
+  nav {
+      float:right;
+  }
+  
+  .Logo img {
+      height: 50px;
+      width: 50px;
+      padding: 15px 10px 10px 10px;
+      float: left;
+  }
+  
+  .options li {
+    display: inline-block; 
+    padding:10px;
+    font-size:20px; 
+    font-family:raleway;
+  }
+  
+  .options li a {
+      color: white;
+      text-decoration: none;
+      padding: inherit;
+  }
+  
+  .options li a:hover {
+    text-decoration: underline;
+  }
+
+  .form {
+    background-color: #8DAED3;
+    width: 50%;
+    border-radius: 12px;
+    height: 700px;
+    border: 1px solid #000000;
+    margin-top: 1%;
+    margin-left: 25%;
+  }
+
+  .form h2 {
+    text-decoration: underline;
+    text-align: center;
+  }
+
+  .form label {
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 5%;
+  }
+
+  .input {
+    height: 100px;
+    width: 80%;
+    margin-left: 6%;
+    /* margin-top: 1%; */
+    margin-bottom: 2%;
+    background-color: #D9C6C6;
+    font-size: medium;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .submit {
+    background-color: #000093;
+    color: white;
+    margin-left: 45%;
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px;
+    border-color: #000093;
+    width: 100px;
+    height: 35px;
+  }
+
+  footer {
+    background-color: #004798;
+    color: white;
+    text-align: center;
+    height: 50px;
+    margin-top: 20px;
+  }
+  
+  footer p {
+    display: inline-block;
+  }
+  
+  footer p a {
+    color: white;
+    display: inline-block;
+  }

@@ -1,0 +1,133 @@
+.NavBar {
+  background-color: #004798;
+  height: 75px;
+}
+
+.NavBar h1 {
+    color: white;
+    width: 10%;
+    display: inline-block;
+}
+nav {
+    float:right;
+}
+
+.Logo img {
+    height: 50px;
+    width: 50px;
+    padding: 15px 10px 10px 10px;
+    float: left;
+}
+
+.options li {
+  display: inline-block; 
+  padding:10px;
+  font-size:20px; 
+  font-family:raleway;
+}
+
+.options li a {
+    color: white;
+    text-decoration: none;
+    padding: inherit;
+}
+
+.options li a:hover {
+  text-decoration: underline;
+}
+
+
+.L1 {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.left {
+  background-color: #A7BCDC;
+  width: 60%;
+  height: 150px;
+  display: inline-block;
+  text-align: center;
+}
+
+.left h2 {
+  padding: 15px;
+  font-size: -webkit-xxx-large;
+  color: #01346F;
+}
+
+.right {
+  background-color: #004798;
+  color: white;
+  height: 150px;
+  width: 30%;
+  float: right;
+}
+
+.info {
+  list-style: circle;
+  padding: 0 0 0 120px;
+  font-size: x-large;
+}
+
+.title {
+  color: #B38309;
+  margin: 50px 0 25px 40px;
+}
+
+.func {
+  font-size: large;
+  font-style: italic;
+  list-style: none;
+  width: 45%;
+  background-color: #DDDDECA6;
+  display: inline-block;
+  height: 270px;
+  margin-left: 5%;
+}
+
+.func h2 {
+  padding: 15px 0 15px 0;
+}
+
+.func a {
+  text-decoration: none;
+  color: black;
+  padding-left: 250px;
+}
+
+.func a:hover {
+  color: #004798;
+  text-decoration: underline;
+}
+
+.noti {
+  background-color: #C1D7F1;
+  width: 30%;
+  height: 270px;
+  text-align: center;
+  border-radius: 16px;
+  float: right;
+}
+
+.noti h2 {
+  padding-top: 10px;
+  text-decoration: underline;
+}
+
+footer {
+  background-color: #004798;
+  color: white;
+  text-align: center;
+  height: 50px;
+  margin-top: 20px;
+}
+
+footer p {
+  display: inline-block;
+}
+
+footer p a {
+  color: white;
+  display: inline-block;
+}

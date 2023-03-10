@@ -1,0 +1,89 @@
+.NavBar {
+    background-color: #004798;
+    height: 75px;
+  }
+  
+  .NavBar h1 {
+      color: white;
+      width: 10%;
+      display: inline-block;
+  }
+  nav {
+      float:right;
+  }
+  
+  .Logo img {
+      height: 50px;
+      width: 50px;
+      padding: 15px 10px 10px 10px;
+      float: left;
+  }
+  
+  .options li {
+    display: inline-block; 
+    padding:10px;
+    font-size:20px; 
+    font-family:raleway;
+  }
+  
+  .options li a {
+      color: white;
+      text-decoration: none;
+      padding: inherit;
+  }
+  
+  .options li a:hover {
+    text-decoration: underline;
+  }
+
+  .heading {
+    text-align: center;
+    font-family: 'Font Awesome 5 Free';
+    font-style: italic;
+    font-size: 24px;
+    text-align: center;
+    text-decoration-line: underline;
+    color: #000093;
+    opacity: 0.7;
+  }
+
+  table {
+    width: 100%;
+    margin: 50px 0 50px 0;
+  }
+  
+  table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+    background-color: #C1D7F19C;
+  }
+  
+  tr {
+    height: 50px;
+  }
+  
+  table a {
+    background-color: #000093;
+    color: white;
+    margin-left: 40%;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: #000093;
+  }
+
+  footer {
+    background-color: #004798;
+    color: white;
+    text-align: center;
+    height: 50px;
+    margin-top: 20px;
+  }
+  
+  footer p {
+    display: inline-block;
+  }
+  
+  footer p a {
+    color: white;
+    display: inline-block;
+  }

@@ -1,18 +1,11 @@
 package com.mms.demo.entity;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -40,16 +33,16 @@ public class Token {
     private String identifier;
 
     @Column(name="token_type", nullable = false)
-    @ColumnDefault("BEARER")
-    private String type;
+    @Builder.Default
+    private String type = "BEARER";
 
     @Column(name="token_is_revoked", nullable = false)
-    //@ColumnDefault("false")
-    private Boolean isRevoked;
+    @Builder.Default
+    private Boolean isRevoked = false;
 
     @Column(name="token_is_expired", nullable = false)
-    //@ColumnDefault("false")
-    private Boolean isExpired;
+    @Builder.Default
+    private Boolean isExpired = false;
 
 
 }
