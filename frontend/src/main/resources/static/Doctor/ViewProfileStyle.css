@@ -1,0 +1,103 @@
+.NavBar {
+    background-color: #004798;
+    height: 75px;
+  }
+  
+  .NavBar h1 {
+      color: white;
+      width: 10%;
+      display: inline-block;
+  }
+  nav {
+      float:right;
+  }
+  
+  .Logo img {
+      height: 50px;
+      width: 50px;
+      padding: 15px 10px 10px 10px;
+      float: left;
+  }
+  
+  .options li {
+    display: inline-block; 
+    padding:10px;
+    font-size:20px; 
+    font-family:raleway;
+  }
+  
+  .options li a {
+      color: white;
+      text-decoration: none;
+      padding: inherit;
+  }
+  
+  .options li a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  .L1 {
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .left {
+    background-color: #A7BCDC;
+    width: 60%;
+    height: 150px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .left h2 {
+    padding: 15px;
+    font-size: -webkit-xxx-large;
+    color: #01346F;
+  }
+  
+  .right {
+    background-color: #004798;
+    color: white;
+    height: 150px;
+    width: 30%;
+    float: right;
+  }
+  
+  .info {
+    list-style: circle;
+    padding: 0 0 0 120px;
+    font-size: x-large;
+  }
+  
+  .profile {
+    height: 370px;
+    width: 500px;
+    margin-top: 10px;
+    margin-left: 35%;
+    background: #004798;
+    border: 3px solid #01346F;
+    border-radius: 8px;
+  }
+
+  .profile h2, p {
+    color: white;
+    text-align: center;
+  }
+  
+  .bottom {
+    background-color: #004798;
+    color: white;
+    text-align: center;
+    height: 50px;
+    margin-top: 20px;
+  }
+  
+  .bottom p {
+    display: inline-block;
+  }
+  
+  .bottom p a {
+    color: white;
+    display: inline-block;
+  }
