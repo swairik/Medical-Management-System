@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.PatientRequest;
@@ -32,7 +34,8 @@ public class PatientController {
     PatientService patientService;
 
     @GetMapping("/display")
-    public ResponseEntity<List<PatientResponse>> showAllPatients() {
+    public ResponseEntity<List<PatientResponse>> showAllPatients(@AuthenticationPrincipal Credential user) {
+        // System.out.println(user);
         List<PatientResponse> response = new ArrayList<>();
         List<Patient> patients = patientService.getAllPatients();
         response = patients.stream().map((p) -> createResponseFromPatient(p)).collect(Collectors.toList());
@@ -75,9 +78,6 @@ public class PatientController {
         patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    // TODO : Add controllers for booking using session management
-    // TODO : Add controllers for viewing report using session management
 
     public Patient createPatientFromRequest(PatientRequest patientRequest) {
         Patient patient = Patient.builder()

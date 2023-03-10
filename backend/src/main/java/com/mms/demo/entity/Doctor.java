@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -51,10 +52,15 @@ public class Doctor {
     @Email
     private String email;
 
-    @Column(name="doctor_phone", length = 14, nullable = false)
+    @Column(name = "doctor_phone", length = 14, nullable = false)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
     @JoinColumn(nullable = false, referencedColumnName = "speciality_id")
     private Speciality speciality;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
+    @JoinColumn(nullable = false, referencedColumnName = "credential_id")
+    Credential credential;
+
 }

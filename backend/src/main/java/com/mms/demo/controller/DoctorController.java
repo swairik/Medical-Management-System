@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,23 +17,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
+import com.mms.demo.model.RegisterDoctorRequest;
 import com.mms.demo.model.PatientRequest;
 import com.mms.demo.model.SpecialityRequest;
 import com.mms.demo.model.SpecialityResponse;
+import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
 import com.mms.demo.service.SpecialityService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin("*")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
@@ -48,6 +54,11 @@ public class DoctorController {
 
     @Autowired
     ReportService reportService;
+
+    @Autowired
+    CredentialService credentialService;
+
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/display")
     public ResponseEntity<List<DoctorResponse>> showAllDoctors() {
@@ -78,7 +89,7 @@ public class DoctorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody DoctorRequest doctorRequest) {
+    public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody RegisterDoctorRequest doctorRequest) {
         List<Doctor> doctors = doctorService.getAllDoctors();
         Doctor doctorAlreadyCreatedWithEmail = doctors.stream().filter(
                 (d) -> d.getEmail().equals(doctorRequest.getEmail()))
@@ -92,7 +103,30 @@ public class DoctorController {
         if (doctorAlreadyCreatedWithPhone != null) {
             throw new CustomException("Doctor with given phone already exists", "DOCTOR_ALREADY_CREATED");
         }
-        Doctor doctor = createDoctorFromRequest(doctorRequest);
+
+        var credentials = Credential.builder()
+                .email(doctorRequest.getEmail())
+                .password(passwordEncoder.encode(doctorRequest.getPassword()))
+                .role(doctorRequest.getRole())
+                .build();
+
+        Credential createdCredential = credentialService.createCredentials(credentials);
+
+        Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
+                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
+
+        var doctor = Doctor
+                .builder()
+                .name(doctorRequest.getName())
+                .age(doctorRequest.getAge())
+                .gender(doctorRequest.getGender())
+                .email(doctorRequest.getEmail())
+                .phone(doctorRequest.getPhone())
+                .speciality(speciality)
+                .credential(createdCredential)
+                .build();
+
+        // Doctor doctor = createDoctorFromRequest(doctorRequest);
         Doctor createdDoctor = doctorService.createDoctor(doctor);
         DoctorResponse doctorResponse = createResponseFromDoctor(createdDoctor);
         return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
@@ -112,8 +146,6 @@ public class DoctorController {
         doctorService.deleteDoctor(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    // TODO : Add report generation controllers
 
     public DoctorResponse createResponseFromDoctor(Doctor doctor) {
         SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());

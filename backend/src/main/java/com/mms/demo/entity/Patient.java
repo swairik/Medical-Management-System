@@ -1,10 +1,14 @@
 package com.mms.demo.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -16,7 +20,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 @Setter
 @Getter
@@ -48,7 +51,11 @@ public class Patient {
     @Email
     private String email;
 
-    @Column(name="patient_phone", length = 14, nullable = false)
+    @Column(name = "patient_phone", length = 14, nullable = false)
     private String phone;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
+    @JoinColumn(nullable = false, referencedColumnName = "credential_id")
+    Credential credential;
 
 }
