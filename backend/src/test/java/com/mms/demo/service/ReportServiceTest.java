@@ -1,4 +1,4 @@
-package com.mms.demo.report;
+package com.mms.demo.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -8,16 +8,12 @@ import org.junit.jupiter.api.Order;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Report;
 import com.mms.demo.entity.Speciality;
-import com.mms.demo.service.DoctorService;
-import com.mms.demo.service.PatientService;
-import com.mms.demo.service.ReportService;
-import com.mms.demo.service.SpecialityService;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -26,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class ReportServiceTest {
     @Autowired
     ReportService impl;

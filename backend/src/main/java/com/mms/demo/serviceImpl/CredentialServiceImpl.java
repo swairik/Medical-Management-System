@@ -11,26 +11,26 @@ import com.mms.demo.service.CredentialService;
 @Service
 public class CredentialServiceImpl implements CredentialService {
     @Autowired
-    CredentialRepository credRepo;
+    CredentialRepository repo;
 
     @Override
     public Optional<Credential> getCredentialsById(Long id) {
-        return credRepo.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public Optional<Credential> getCredentialsByEmail(String email) {
-        return credRepo.findByEmail(email);
+        return repo.findByEmail(email);
     }
 
     @Override
     public Credential createCredentials(Credential credentials) {
-        return credRepo.save(credentials);
+        return repo.save(credentials);
     }
 
     @Override
     public Credential updateCredentials(Long id, Credential credentialsUpdates) {
-        Optional<Credential> temp = credRepo.findById(id);
+        Optional<Credential> temp = repo.findById(id);
 
         if (temp.isEmpty()) {
             return null;
@@ -42,12 +42,12 @@ public class CredentialServiceImpl implements CredentialService {
         credentials.setIsAdmin(credentialsUpdates.getIsAdmin());
         credentials.setIsPatient(credentialsUpdates.getIsPatient());
 
-        return credRepo.save(credentials);
+        return repo.save(credentials);
     }
 
     @Override
     public void deleteCredentials(Long id) {
-        credRepo.deleteById(id);
+        repo.deleteById(id);
     }
     
 }

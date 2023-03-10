@@ -14,31 +14,31 @@ import com.mms.demo.service.DoctorService;
 @Service
 public class DoctorServiceImpl implements DoctorService {
     @Autowired
-    private DoctorRepository doctorRepo;
+    private DoctorRepository repo;
     
     @Override
     public List<Doctor> getAllDoctors() {
-        return doctorRepo.findAll();
+        return repo.findAll();
     }
 
     @Override
     public List<Doctor> getDoctorBySpeciality(Speciality speciality) {
-        return doctorRepo.findAllBySpeciality(speciality);
+        return repo.findAllBySpeciality(speciality);
     }
 
     @Override
     public Optional<Doctor> getDoctortById(Long id) {
-        return doctorRepo.findById(id);
+        return repo.findById(id);
     }
 
     @Override
     public Doctor createDoctor(Doctor doctor) {
-        return doctorRepo.save(doctor);
+        return repo.save(doctor);
     }
     
     @Override
     public Doctor updateDoctor(Long id, Doctor doctorUpdates) {
-        Optional<Doctor> temp = doctorRepo.findById(id);
+        Optional<Doctor> temp = repo.findById(id);
         if (temp.isEmpty()) {
             return null;
         }
@@ -51,11 +51,11 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setPhone(doctorUpdates.getPhone());
         doctor.setSpeciality(doctorUpdates.getSpeciality());
 
-        return doctorRepo.save(doctor);
+        return repo.save(doctor);
     }
     
     @Override
     public void deleteDoctor(Long id) {
-        doctorRepo.deleteById(id);
+        repo.deleteById(id);
     }
 }

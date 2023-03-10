@@ -1,4 +1,4 @@
-package com.mms.demo.slot;
+package com.mms.demo.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -7,16 +7,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Slot;
-import com.mms.demo.service.SlotService;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SlotServiceTest {
     @Autowired
     SlotService impl;

@@ -1,4 +1,4 @@
-package com.mms.demo.patient;
+package com.mms.demo.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -9,19 +9,21 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Patient;
-import com.mms.demo.serviceImpl.PatientServiceImpl;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
-public class PatientServiceImplTest {
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+public class PatientServiceTest {
 
     @Autowired
-    PatientServiceImpl impl;
+    PatientService impl;
 
     static final Patient temp = Patient.builder().age(10).email("temp@temp.com")
     .gender("M").phone("1010101010").name("Jerry")
