@@ -2,6 +2,7 @@ package com.mms.demo.controller;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,11 +80,14 @@ public class SlotController {
     }
 
     public Slot createSlotFromRequest(SlotRequest slotRequest) {
+        LocalTime start = LocalTime.parse(slotRequest.getStart());
+        LocalTime end = LocalTime.parse(slotRequest.getEnd());
+        Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
         Slot slot = Slot.builder()
                 .weekday(DayOfWeek.of(slotRequest.getWeekday()))
-                .start(LocalTime.parse(slotRequest.getStart()))
-                .end(LocalTime.parse(slotRequest.getEnd()))
-                .capacity(slotRequest.getCapacity())
+                .start(start)
+                .end(end)
+                .capacity(capacity)
                 .build();
         return slot;
     }
