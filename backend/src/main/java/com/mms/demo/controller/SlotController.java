@@ -1,5 +1,7 @@
 package com.mms.demo.controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +51,7 @@ public class SlotController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<SlotResponse> createSlot(SlotRequest slotRequest) {
+    public ResponseEntity<SlotResponse> createSlot(@RequestBody SlotRequest slotRequest) {
         Slot slot = createSlotFromRequest(slotRequest);
         Slot createdSlot = slotService.createSlot(slot);
         SlotResponse response = createResponseFromSlot(createdSlot);
@@ -78,9 +80,9 @@ public class SlotController {
 
     public Slot createSlotFromRequest(SlotRequest slotRequest) {
         Slot slot = Slot.builder()
-                .weekday(slotRequest.getWeekday())
-                .start(slotRequest.getStart())
-                .end(slotRequest.getEnd())
+                .weekday(DayOfWeek.of(slotRequest.getWeekday()))
+                .start(LocalTime.parse(slotRequest.getStart()))
+                .end(LocalTime.parse(slotRequest.getEnd()))
                 .capacity(slotRequest.getCapacity())
                 .build();
         return slot;

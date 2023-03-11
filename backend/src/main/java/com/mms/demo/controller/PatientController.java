@@ -76,9 +76,6 @@ public class PatientController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO : Add controllers for booking using session management
-    // TODO : Add controllers for viewing report using session management
-
     public Patient createPatientFromRequest(PatientRequest patientRequest) {
         Patient patient = Patient.builder()
                 .name(patientRequest.getName())

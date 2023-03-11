@@ -113,8 +113,6 @@ public class DoctorController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO : Add report generation controllers
-
     public DoctorResponse createResponseFromDoctor(Doctor doctor) {
         SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());
         DoctorResponse doctorResponse = DoctorResponse.builder()
