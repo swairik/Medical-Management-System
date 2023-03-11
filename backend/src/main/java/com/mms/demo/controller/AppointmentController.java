@@ -1,7 +1,10 @@
 package com.mms.demo.controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +88,18 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponse> createAppointment(
             @Valid @RequestBody AppointmentRequest appointmentRequest) {
         Appointment appointment = createAppointmentFromRequest(appointmentRequest);
+
+        Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+        if (slot.getCapacity() == 0) {
+            throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+        }
+
         Appointment createdAppointment = appointmentService.createAppointment(appointment);
+
+        slot.setCapacity(slot.getCapacity() - 1);
+        slotService.updateSlot(slot.getId(), slot);
+
         AppointmentResponse response = createResponseFromAppointment(createdAppointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -101,6 +115,14 @@ public class AppointmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
+        Appointment appointment = appointmentService.getAppointmentById(id)
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+
+        Slot slot = appointment.getSlot();
+        Integer maxCapacity = (int) slot.getStart().until(slot.getEnd(), ChronoUnit.MINUTES) / 30;
+        slot.setCapacity(Integer.min(slot.getCapacity() + 1, maxCapacity));
+        slotService.updateSlot(slot.getId(), slot);
+
         appointmentService.deleteAppointment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -146,11 +168,14 @@ public class AppointmentController {
     }
 
     public Slot createSlotFromRequest(SlotRequest slotRequest) {
+        LocalTime start = LocalTime.parse(slotRequest.getStart());
+        LocalTime end = LocalTime.parse(slotRequest.getEnd());
+        Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
         Slot slot = Slot.builder()
-                .weekday(slotRequest.getWeekday())
-                .start(slotRequest.getStart())
-                .end(slotRequest.getEnd())
-                .capacity(slotRequest.getCapacity())
+                .weekday(DayOfWeek.of(slotRequest.getWeekday()))
+                .start(start)
+                .end(end)
+                .capacity(capacity)
                 .build();
         return slot;
     }

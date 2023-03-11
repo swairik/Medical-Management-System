@@ -1,6 +1,7 @@
 package com.mms.demo.controller;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Doctor;
@@ -72,8 +74,10 @@ class ReportController {
     }
 
     @GetMapping("/display/stamp")
-    public ResponseEntity<List<ReportResponse>> showReportById(@RequestBody LocalDateTime stamp) {
-        List<Report> reports = reportService.getReportByStamp(stamp);
+    public ResponseEntity<List<ReportResponse>> showReportById(@RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
+        List<Report> reports = reportService.getReportByStamp(dateTime);
         List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
