@@ -43,163 +43,166 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/doctor")
 public class DoctorController {
 
-    @Autowired
-    DoctorService doctorService;
+        @Autowired
+        DoctorService doctorService;
 
-    @Autowired
-    PatientService patientService;
+        @Autowired
+        PatientService patientService;
 
-    @Autowired
-    SpecialityService specialityService;
+        @Autowired
+        SpecialityService specialityService;
 
-    @Autowired
-    ReportService reportService;
+        @Autowired
+        ReportService reportService;
 
-    @Autowired
-    CredentialService credentialService;
+        @Autowired
+        CredentialService credentialService;
 
-    private final PasswordEncoder passwordEncoder;
+        private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/display")
-    public ResponseEntity<List<DoctorResponse>> showAllDoctors() {
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/display/{id}")
-    public ResponseEntity<DoctorResponse> showDoctorById(@PathVariable Long id) {
-        Doctor dr = doctorService.getDoctortById(id)
-                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
-
-        DoctorResponse response = createResponseFromDoctor(dr);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/display/speciality")
-    public ResponseEntity<List<DoctorResponse>> showDoctorById(
-            @Valid @RequestBody SpecialityRequest specialityRequest) {
-        Speciality speciality = createSpecialityFromRequest(specialityRequest);
-
-        List<Doctor> doctors = doctorService.getDoctorBySpeciality(speciality);
-        List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody RegisterDoctorRequest doctorRequest) {
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        Doctor doctorAlreadyCreatedWithEmail = doctors.stream().filter(
-                (d) -> d.getEmail().equals(doctorRequest.getEmail()))
-                .findFirst().orElse(null);
-        if (doctorAlreadyCreatedWithEmail != null) {
-            throw new CustomException("Doctor with given email id already exists", "DOCTOR_ALREADY_CREATED");
-        }
-        Doctor doctorAlreadyCreatedWithPhone = doctors.stream().filter(
-                (d) -> d.getPhone().equals(doctorRequest.getPhone()))
-                .findFirst().orElse(null);
-        if (doctorAlreadyCreatedWithPhone != null) {
-            throw new CustomException("Doctor with given phone already exists", "DOCTOR_ALREADY_CREATED");
+        @GetMapping("/display")
+        public ResponseEntity<List<DoctorResponse>> showAllDoctors() {
+                List<Doctor> doctors = doctorService.getAllDoctors();
+                List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        var credentials = Credential.builder()
-                .email(doctorRequest.getEmail())
-                .password(passwordEncoder.encode(doctorRequest.getPassword()))
-                .role(doctorRequest.getRole())
-                .build();
+        @GetMapping("/display/{id}")
+        public ResponseEntity<DoctorResponse> showDoctorById(@PathVariable Long id) {
+                Doctor dr = doctorService.getDoctortById(id)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
 
-        Credential createdCredential = credentialService.createCredentials(credentials);
+                DoctorResponse response = createResponseFromDoctor(dr);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
-                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
+        @GetMapping("/display/speciality")
+        public ResponseEntity<List<DoctorResponse>> showDoctorById(
+                        @Valid @RequestBody SpecialityRequest specialityRequest) {
+                Speciality speciality = createSpecialityFromRequest(specialityRequest);
 
-        var doctor = Doctor
-                .builder()
-                .name(doctorRequest.getName())
-                .age(doctorRequest.getAge())
-                .gender(doctorRequest.getGender())
-                .email(doctorRequest.getEmail())
-                .phone(doctorRequest.getPhone())
-                .speciality(speciality)
-                .credential(createdCredential)
-                .build();
+                List<Doctor> doctors = doctorService.getDoctorBySpeciality(speciality);
+                List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        // Doctor doctor = createDoctorFromRequest(doctorRequest);
-        Doctor createdDoctor = doctorService.createDoctor(doctor);
-        DoctorResponse doctorResponse = createResponseFromDoctor(createdDoctor);
-        return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
-    }
+        @PostMapping("/")
+        public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody RegisterDoctorRequest doctorRequest) {
+                List<Doctor> doctors = doctorService.getAllDoctors();
+                Doctor doctorAlreadyCreatedWithEmail = doctors.stream().filter(
+                                (d) -> d.getEmail().equals(doctorRequest.getEmail()))
+                                .findFirst().orElse(null);
+                if (doctorAlreadyCreatedWithEmail != null) {
+                        throw new CustomException("Doctor with given email id already exists",
+                                        "DOCTOR_ALREADY_CREATED");
+                }
+                Doctor doctorAlreadyCreatedWithPhone = doctors.stream().filter(
+                                (d) -> d.getPhone().equals(doctorRequest.getPhone()))
+                                .findFirst().orElse(null);
+                if (doctorAlreadyCreatedWithPhone != null) {
+                        throw new CustomException("Doctor with given phone already exists", "DOCTOR_ALREADY_CREATED");
+                }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DoctorResponse> updateDoctor(@PathVariable Long id,
-            @Valid @RequestBody DoctorRequest doctorRequest) {
-        Doctor doctor = createDoctorFromRequest(doctorRequest);
-        Doctor updatedDoctor = doctorService.updateDoctor(id, doctor);
-        DoctorResponse doctorResponse = createResponseFromDoctor(updatedDoctor);
-        return new ResponseEntity<>(doctorResponse, HttpStatus.OK);
-    }
+                Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
+                                .orElseThrow(() -> new CustomException("Speciality with given id not found",
+                                                "SPECIALITY_NOT_FOUND"));
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-        doctorService.deleteDoctor(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+                var credentials = Credential.builder()
+                                .email(doctorRequest.getEmail())
+                                .password(passwordEncoder.encode(doctorRequest.getPassword()))
+                                .role(doctorRequest.getRole())
+                                .build();
 
-    public DoctorResponse createResponseFromDoctor(Doctor doctor) {
-        SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());
-        DoctorResponse doctorResponse = DoctorResponse.builder()
-                .id(doctor.getId())
-                .name(doctor.getName())
-                .age(doctor.getAge())
-                .email(doctor.getEmail())
-                .gender(doctor.getGender())
-                .phone(doctor.getPhone())
-                .speciality(specialityResponse)
-                .build();
-        return doctorResponse;
-    }
+                credentialService.createCredentials(credentials);
 
-    public Doctor createDoctorFromRequest(DoctorRequest doctorRequest) {
-        Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
-                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
-        Doctor doctor = Doctor
-                .builder()
-                .name(doctorRequest.getName())
-                .age(doctorRequest.getAge())
-                .gender(doctorRequest.getGender())
-                .email(doctorRequest.getEmail())
-                .phone(doctorRequest.getPhone())
-                .speciality(speciality)
-                .build();
-        return doctor;
-    }
+                var doctor = Doctor
+                                .builder()
+                                .name(doctorRequest.getName())
+                                .age(doctorRequest.getAge())
+                                .gender(doctorRequest.getGender())
+                                .email(doctorRequest.getEmail())
+                                .phone(doctorRequest.getPhone())
+                                .speciality(speciality)
+                                .build();
 
-    public Speciality createSpecialityFromRequest(SpecialityRequest specialityRequest) {
-        Speciality speciality = Speciality.builder()
-                .name(specialityRequest.getName())
-                .build();
-        return speciality;
-    }
+                // Doctor doctor = createDoctorFromRequest(doctorRequest);
+                Doctor createdDoctor = doctorService.createDoctor(doctor);
+                DoctorResponse doctorResponse = createResponseFromDoctor(createdDoctor);
+                return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
+        }
 
-    public SpecialityResponse createResponseFromSpeciality(Speciality speciality) {
-        SpecialityResponse specialityResponse = SpecialityResponse.builder()
-                .id(speciality.getId())
-                .name(speciality.getName())
-                .build();
-        return specialityResponse;
-    }
+        @PutMapping("/{id}")
+        public ResponseEntity<DoctorResponse> updateDoctor(@PathVariable Long id,
+                        @Valid @RequestBody DoctorRequest doctorRequest) {
+                Doctor doctor = createDoctorFromRequest(doctorRequest);
+                Doctor updatedDoctor = doctorService.updateDoctor(id, doctor);
+                DoctorResponse doctorResponse = createResponseFromDoctor(updatedDoctor);
+                return new ResponseEntity<>(doctorResponse, HttpStatus.OK);
+        }
 
-    public Patient createPatientFromRequest(PatientRequest patientRequest) {
-        Patient patient = Patient.builder()
-                .name(patientRequest.getName())
-                .gender(patientRequest.getGender())
-                .age(patientRequest.getAge())
-                .email(patientRequest.getEmail())
-                .phone(patientRequest.getPhone())
-                .build();
-        return patient;
-    }
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
+                doctorService.deleteDoctor(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        public DoctorResponse createResponseFromDoctor(Doctor doctor) {
+                SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());
+                DoctorResponse doctorResponse = DoctorResponse.builder()
+                                .id(doctor.getId())
+                                .name(doctor.getName())
+                                .age(doctor.getAge())
+                                .email(doctor.getEmail())
+                                .gender(doctor.getGender())
+                                .phone(doctor.getPhone())
+                                .speciality(specialityResponse)
+                                .build();
+                return doctorResponse;
+        }
+
+        public Doctor createDoctorFromRequest(DoctorRequest doctorRequest) {
+                Speciality speciality = specialityService.getSpecialityById(doctorRequest.getSpecialityId())
+                                .orElseThrow(() -> new CustomException("Speciality with given id not found",
+                                                "SPECIALITY_NOT_FOUND"));
+                Doctor doctor = Doctor
+                                .builder()
+                                .name(doctorRequest.getName())
+                                .age(doctorRequest.getAge())
+                                .gender(doctorRequest.getGender())
+                                .email(doctorRequest.getEmail())
+                                .phone(doctorRequest.getPhone())
+                                .speciality(speciality)
+                                .build();
+                return doctor;
+        }
+
+        public Speciality createSpecialityFromRequest(SpecialityRequest specialityRequest) {
+                Speciality speciality = Speciality.builder()
+                                .name(specialityRequest.getName())
+                                .build();
+                return speciality;
+        }
+
+        public SpecialityResponse createResponseFromSpeciality(Speciality speciality) {
+                SpecialityResponse specialityResponse = SpecialityResponse.builder()
+                                .id(speciality.getId())
+                                .name(speciality.getName())
+                                .build();
+                return specialityResponse;
+        }
+
+        public Patient createPatientFromRequest(PatientRequest patientRequest) {
+                Patient patient = Patient.builder()
+                                .name(patientRequest.getName())
+                                .gender(patientRequest.getGender())
+                                .age(patientRequest.getAge())
+                                .email(patientRequest.getEmail())
+                                .phone(patientRequest.getPhone())
+                                .build();
+                return patient;
+        }
 
 }

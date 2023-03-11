@@ -1,7 +1,5 @@
 package com.mms.demo.serviceImpl;
 
-import java.util.List;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,8 +14,7 @@ import com.mms.demo.model.AuthenticationRequest;
 import com.mms.demo.model.AuthenticationResponse;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.RegisterRequest;
-import com.mms.demo.repository.CredentialRepository;
-import com.mms.demo.repository.PatientRepository;
+import com.mms.demo.model.RegisterResponse;
 import com.mms.demo.service.AuthenticationService;
 import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.JwtService;
@@ -31,9 +28,6 @@ import lombok.var;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-        // private final PatientRepository patientRepository;
-        // private final CredentialRepository credentialRepository;
-
         private final PatientService patientService;
         private final CredentialService credentialService;
 
@@ -46,7 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         private final AuthenticationManager authenticationManager;
 
         @Override
-        public AuthenticationResponse register(RegisterRequest registerRequest) {
+        public RegisterResponse register(RegisterRequest registerRequest) {
                 Credential alreadyCreatedCredential = credentialService
                                 .getCredentialsByEmail(registerRequest.getEmail()).orElse(null);
 
@@ -60,26 +54,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .role(registerRequest.getRole())
                                 .build();
 
-                // credentialRepository.save(credentials);
                 credentialService.createCredentials(credentials);
 
-                var patient = Patient.builder()
-                                .name(registerRequest.getName())
-                                .gender(registerRequest.getGender())
-                                .age(registerRequest.getAge())
-                                .email(registerRequest.getEmail())
-                                .phone(registerRequest.getPhone())
+                if (registerRequest.getRole() == Role.PATIENT) {
+                        var patient = Patient.builder()
+                                        .name(registerRequest.getName())
+                                        .gender(registerRequest.getGender())
+                                        .age(registerRequest.getAge())
+                                        .email(registerRequest.getEmail())
+                                        .phone(registerRequest.getPhone())
+                                        .build();
+
+                        patientService.createPatient(patient);
+                }
+
+                return RegisterResponse.builder()
+                                .message("User succesfully created")
                                 .build();
 
-                patientService.createPatient(patient);
-
-                var jwtToken = jwtService.generateToken(credentials);
-
-                saveToken(jwtToken);
-
-                return AuthenticationResponse.builder()
-                                .token(jwtToken)
-                                .build();
         }
 
         @Override
@@ -90,6 +82,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 var user = credentialService.getCredentialsByEmail(authenticationRequest.getEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
                 var jwtToken = jwtService.generateToken(user);
+
+                // TODO : Fix issue for multiple login for same user - revoke their old token
+                // access
+                saveToken(jwtToken);
+
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
                                 .build();
@@ -102,8 +99,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 tokenService.createToken(token);
         }
 
-        private void revokeToken() {
-
+        private void revokeUserToken(String jwtToken) {
+                tokenService.expireToken(jwtToken);
+                tokenService.revokeToken(jwtToken);
         }
 
 }

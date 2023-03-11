@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.model.AuthenticationRequest;
 import com.mms.demo.model.AuthenticationResponse;
 import com.mms.demo.model.RegisterRequest;
+import com.mms.demo.model.RegisterResponse;
 import com.mms.demo.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 

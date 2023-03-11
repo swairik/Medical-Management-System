@@ -9,18 +9,24 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.mms.demo.entity.Token;
 import com.mms.demo.service.JwtService;
+import com.mms.demo.service.TokenService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
     private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566D597033733676397924";
+
+    private final TokenService tokenService;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -53,7 +59,12 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Token storedToken = tokenService.getTokenByIdentifier(token).orElse(null);
+        Boolean isBlacklisted = false;
+        if (storedToken != null) {
+            isBlacklisted = storedToken.getIsExpired() && storedToken.getIsRevoked();
+        }
+        return extractExpiration(token).before(new Date()) || isBlacklisted;
     }
 
     private Date extractExpiration(String token) {
