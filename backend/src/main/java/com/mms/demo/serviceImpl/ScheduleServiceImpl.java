@@ -42,7 +42,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return repo.findAllByDoctor(doctor);
     }
 
-
     @Override
     public List<Schedule> getSchedulesBySlot(Slot slot) {
         return repo.findAllBySlot(slot);
@@ -59,11 +58,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = temp.get();
         schedule.setDoctor(scheduleUpdates.getDoctor());
         schedule.setSlot(scheduleUpdates.getSlot());
-        schedule.setWeek(scheduleUpdates.getWeek());
+        schedule.setWeekDate(scheduleUpdates.getWeekDate());
 
         return repo.save(schedule);
     }
 
-    
-    
 }

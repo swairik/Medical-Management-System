@@ -46,17 +46,19 @@ public class ScheduleServiceTest {
         specImpl.createSpeciality(spec);
         assertThat(specImpl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
 
-        doctor = Doctor.builder().age(40).email("abc@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec).build();
+        doctor = Doctor.builder().age(40).email("abc@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec)
+                .build();
         doctorImpl.createDoctor(doctor);
         assertThat(doctorImpl.getDoctortById(doctor.getId())).isNotEmpty().contains(doctor);
 
-        slot = Slot.builder().start(LocalTime.of(0, 0, 0)).end(LocalTime.of(0, 0, 1)).weekday(DayOfWeek.MONDAY).capacity(5).build();
+        slot = Slot.builder().start(LocalTime.of(0, 0, 0)).end(LocalTime.of(0, 0, 1)).weekday(DayOfWeek.MONDAY)
+                .capacity(5).build();
         slotImpl.createSlot(slot);
         assertThat(slotImpl.getSlotById(slot.getId())).isNotEmpty().contains(slot);
 
-        sched = Schedule.builder().doctor(doctor).slot(slot).week(5).build();
+        sched = Schedule.builder().doctor(doctor).slot(slot).weekDate("2023-W10").build();
         assertThat(impl.createSchedule(sched)).isEqualTo(sched);
-    }   
+    }
 
     @Order(2)
     @Test
