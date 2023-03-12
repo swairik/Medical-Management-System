@@ -82,7 +82,17 @@ public class SlotController {
     public Slot createSlotFromRequest(SlotRequest slotRequest) {
         LocalTime start = LocalTime.parse(slotRequest.getStart());
         LocalTime end = LocalTime.parse(slotRequest.getEnd());
+
+        if(start.until(end, ChronoUnit.MINUTES) < 0) {
+            throw new CustomException("End time is less than start time", "END_TIME_LESS_THAN_START_TIME");
+        }
+
+        if(start.until(end, ChronoUnit.MINUTES) < 30) {
+            throw new CustomException("End time and start time need a minimum difference of 30 minutes", "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
+        }
+
         Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
+
         Slot slot = Slot.builder()
                 .weekday(DayOfWeek.of(slotRequest.getWeekday()))
                 .start(start)
