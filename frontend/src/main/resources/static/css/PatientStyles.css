@@ -113,7 +113,15 @@ input[type=text]:focus {
   left: 8%;
 }
 
-.grid {
+/* .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  align-items: center;
+  grid-gap: 20%;
+} */
+
+.speciality_menu {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
