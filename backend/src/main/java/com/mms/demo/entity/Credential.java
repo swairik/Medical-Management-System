@@ -54,6 +54,10 @@ public class Credential implements UserDetails {
     @Column(name = "credential_role", nullable = false)
     private Role role;
 
+    @Column(name = "credential_reset_token", nullable = true)
+    @Builder.Default
+    private String resetToken = null;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
