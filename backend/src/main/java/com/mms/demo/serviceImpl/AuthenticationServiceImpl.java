@@ -136,6 +136,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (!passwordRequest.getToken().equals(user.getResetToken())) {
                         throw new CustomException("Reset token incorrect", "INCORRECT_RESET_TOKEN");
                 }
+
+                if (!jwtService.isTokenValid(passwordRequest.getToken(), user)) {
+                        throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN");
+                }
+
                 user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
                 user.setResetToken(null);
                 credentialService.updateCredentials(user.getId(), user);
