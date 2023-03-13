@@ -42,8 +42,8 @@ $(document).ready(function () {
     week_id.min = `${result[0]}-W${result[1]}`
     week_id.value= `${result[0]}-W${result[1]}`
 
-    // start_time_id.value = (curDateTime.getHours()<10?'0':'') + curDateTime.getHours() + ":" + (curDateTime.getMinutes()<10?'0':'') + curDateTime.getMinutes()
-    // end_time_id.value = (curDateTime.getHours()<10?'0':'') + curDateTime.getHours() + ":" + (curDateTime.getMinutes()<10?'0':'') + curDateTime.getMinutes()
+    start_time_id.value = (curDateTime.getHours()<10?'0':'') + curDateTime.getHours() + ":" + (curDateTime.getMinutes()<10?'0':'') + curDateTime.getMinutes()
+    end_time_id.value = (curDateTime.getHours()<10?'0':'') + curDateTime.getHours() + ":" + (curDateTime.getMinutes()<10?'0':'') + curDateTime.getMinutes()
     date_id.value=getDate(curDateTime)
     
     curDT=new Date(date.value)
@@ -52,8 +52,6 @@ $(document).ready(function () {
     var slotID=12;
 
 
-
-    
     $("#save_button").click(function(e) {
         
         var slotData = {
@@ -77,10 +75,11 @@ $(document).ready(function () {
                 console.log(result);
                 
                 var scheduleData = {
-                    "doctorId": 103,
+                    "doctorId": 2,
                     "slotId": result.id,
-                    "week": $('#week').val()
+                    "weekDate": $('#week').val()
                 }
+                console.log(scheduleData)
                 $.ajax({
                     url: "http://localhost:8050/schedule/",
                     type: "POST",
