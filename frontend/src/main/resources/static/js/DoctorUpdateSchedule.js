@@ -51,6 +51,32 @@ $(document).ready(function () {
 
     var slotID=12;
 
+    $.ajax({
+        url: "http://localhost:8050/schedule/display/doctor/2",
+        type: "GET",
+        success: function (result) {
+          console.log(result);
+         
+          $.each(result, function (key, value) {
+            console.log(value);
+            // $(".add_doctor_personal").append("Name= " + value.name + "Speciality= " + value.speciality.name);
+            $("#schedule_table").append(`<tr>
+                        <td>${value.weekDate}</td>
+                        <td>${value.weekDate}</td>
+                        <td>${value.slotResponse.weekday}</td>
+                        <td>${value.slotResponse.start}</td>
+                        <td>${value.slotResponse.end}</td>
+                        <td>${value.slotResponse.capacity}</td>
+                        <td>${value.approval?"Approved":"Not Approved"}</td>
+                        <td><button id="remove_schedule" value=${value.id}>Remove</button></td>
+                      </tr>`);
+          });
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+
 
     $("#save_button").click(function(e) {
         
@@ -88,7 +114,7 @@ $(document).ready(function () {
                     data: JSON.stringify(scheduleData),
                     success: function (result) {
                         console.log(result);
-                    //   window.location.href = 'UpdateSchedule';
+                      window.location.href = 'UpdateSchedule';
                     },
                     error: function (error) {
                       console.log(error);
@@ -98,6 +124,22 @@ $(document).ready(function () {
             error: function (error) {
               console.log(error);
             },
+        });
+      });
+
+      $("#schedule_table").on("click","button#remove_schedule",function(e) {
+        console.log("clicked")
+        console.log(this)
+        e.preventDefault();
+        $.ajax({
+          type: "DELETE",
+          url: `http://localhost:8050/schedule/${this.value}`,
+          success: function(result) {
+            window.location.href = 'UpdateSchedule';
+          },
+          error: function(result) {
+            alert('error');
+          }
         });
       });
 
