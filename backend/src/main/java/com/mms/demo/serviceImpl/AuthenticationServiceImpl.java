@@ -155,9 +155,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 tokenService.createToken(token);
         }
 
-        private void revokeUserToken(String jwtToken) {
-                tokenService.expireToken(jwtToken);
-                tokenService.revokeToken(jwtToken);
-        }
+        // private void revokeUserToken(String jwtToken) {
+        // tokenService.expireToken(jwtToken);
+        // tokenService.revokeToken(jwtToken);
+        // }
 
 }

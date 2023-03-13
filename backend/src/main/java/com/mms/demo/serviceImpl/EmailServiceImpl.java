@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.EmailDetails;
 import com.mms.demo.service.EmailService;
 
@@ -30,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mailMessage);
             return "Mail sent successfully";
         } catch (Exception e) {
-            return "Error";
+            throw new CustomException("Error while sending mail", "EMAIL_NOT_SENT");
         }
     }
 
