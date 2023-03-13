@@ -58,7 +58,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = temp.get();
         schedule.setDoctor(scheduleUpdates.getDoctor());
         schedule.setSlot(scheduleUpdates.getSlot());
-        schedule.setWeekDate(scheduleUpdates.getWeekDate());
+        schedule.setWeek(scheduleUpdates.getWeek());
+        schedule.setYear(scheduleUpdates.getYear());
 
         return repo.save(schedule);
     }
