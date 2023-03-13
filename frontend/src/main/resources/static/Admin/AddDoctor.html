@@ -1,76 +1,61 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <title>Admin</title>
-    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../js/Admin.js"></script>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/Profile.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="../js/AddDoctor.js"></script>
   </head>
   <body>
-    <header>
-      <div class="header-content">
-        <div>
-            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
-        </div>
-        <div class="view">
-            View Profile
-        </div>
-     </div>
-    </header>
 
-    <!-- <div class="add_doctor_box">
-        <div class="add_doctor_box_right">
-            Doctor's List
-        </div>
-        <button class="add_doctor_box_left">
-            Add Doctor
-        </div>
-    </div> -->
-
-    <h2 class="heading">DOCTORS' LIST</h2>
-
-    <button class="addnew" type="button" onclick="">Add New</button>
-
-
-    <div class="add_doctor_menu">
-
+    <nav class="navbar">
+    <div class="logo"><span><img src="images/logo.jpg"></span>Care4U</div>
+    <div class="menu">
+    <a href="AdminDashboard" class="active">Home</a>
+    <!-- <a href="Profile">View Profile</a> -->
+    
+    </div>  
+    </nav>
+    <div class="card">
+      <img src="images/image.png" alt="profile pic">
+      <button style="background-color: #cc3e17" id="add_doctor">Add</button>
+      <table>
+        <tr>
+          <td>NAME</td>
+          <td>:</td>
+          <td><input type="text" value="test" id="name"></td>
+        </tr>
+        <tr>
+          <td>AGE</td>
+          <td>:</td>
+          <td><input type="text" value="test" id="age"></td>
+        </tr>
+        <tr>
+          <td>GENDER</td>
+          <td>:</td>
+          <td><input type="text" value="test" id="gender"></td>
+        </tr>
+        <tr>
+          <td>EMAIL</td>
+          <td>:</td>
+          <td><input type="text" value="test" id="email"></td>
+        </tr>
+        <tr>
+          <td>CONTACT NO.</td>
+          <td>:</td>
+          <td><input type="text" value="test" id="phone"></td>
+        </tr>
+        <tr>
+          <td>Speciality</td>
+          <td>:</td>
+          <td>
+            <select name="cars" id="speciality_menu">
+            </select>
+          </td>
+        </tr>
+      </table>
     </div>
-
-    <!-- <div class="box">
-       
-            <h3>Name:</h3>
-        <h3>Contact No.:</h3>
-        <h3>E-Mail ID:</h3>
-        <h3>Address:</h3>
-        <h3>Speciality:</h3>
-        <button class="remove" type="button" onclick="">Remove</button>
-        <button class="edit" type="button" onclick="">Edit</button>
-       
-    </div> -->
-
-
-    <!-- <div id="add_doctor_menu">
-        <div class="add_doctor_menu_img">
-
-        </div>
-        <div class="add_doctor_personal">
-         
-        </div>
-        <div class="add_doctor_menu_btn">
-            <button class="add_doctor_menu_btn_edit">
-                Edit
-            </button>
-            <button class="add_doctor_menu_btn_remove">
-                Remove
-            </button>
-
-        </div>
-    </div> -->
-
-   
-    
-    
-    
-    <p class="footer">Care4u@gmail.com</p>
-</body>
-</html>
+    <footer>footer</footer>
+  </body>
+  </html>

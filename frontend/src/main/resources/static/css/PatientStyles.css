@@ -178,13 +178,13 @@ input[type=text]:focus {
     to right bottom,
     rgba(255, 255, 255, 0.4),
     rgba(255, 255, 255, 0.1)
-);
-box-shadow: 4px 4px 5px #333;
-color: #ffffff;
-margin-top: 20px;
-font-size: 24px;
-width: 190px;
-padding: 15px 5px;
+  );
+  box-shadow: 4px 4px 5px #333;
+  color: #ffffff;
+  margin-top: 20px;
+  font-size: 24px;
+  width: 190px;
+  padding: 15px 5px;
 }
 
 

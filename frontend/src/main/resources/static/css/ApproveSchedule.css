@@ -1,0 +1,135 @@
+@media only screen and (max-width: 550px) {
+
+    .box_grp{
+        width: 95%;
+    }
+}
+
+@media only screen and (min-width: 550px) {
+    .box_grp{
+        width: 70%;
+    }
+}
+
+@media only screen and (min-width: 768px) { 
+}
+
+@media only screen and (min-width: 992px) {
+}
+
+@media only screen and (min-width: 1200px) {
+
+}
+.header-content {
+    justify-content: space-between;
+    display: flex;
+    text-align: center;
+    background-color: #1E5A9E;
+    color: #fff;    
+    margin: 0 !important;
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+  .img_grp{
+    display: flex;
+  }
+  .doc-img {
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+  .care-img{
+    align-self: center;
+  }
+
+  .header_btn_grp {
+    margin-left: 10px;
+    align-self: center;
+    display: flex;
+    padding: 5px;
+
+  }
+  .header_btn_grp button {
+    margin-right: 5px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    color: white;
+  }
+
+.box_grp{
+    display: flex;
+    margin: auto;
+    margin-block: 3%;
+}
+.box_one{
+    background-color: #C1D7F1;
+    display: grid;
+    padding-block: 1%;
+    width:40% ;    
+}
+.text{
+    border: none;
+    margin-block: 2%;
+    background-color: #C1D7F1;
+    font-size: medium;
+    width: 80%;
+    outline: none;
+    margin-inline: auto;
+    color: #000000;
+}
+.box_two{
+    background-color: #01346F;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 1%;
+    padding-left: 5%;
+}
+.text_two{
+    outline: none;
+    border: none;
+    color: #FFFFFF;
+    background-color: #01346F;
+    font-size: medium;
+    width: 80%;
+}
+.btn_grp{
+    display: flex;
+    justify-content: flex-end;
+    width: 95%;
+}
+.btn_accept{
+margin: 2%;
+border-radius: 5px;
+
+background-color: #43DB0E;
+color: white;
+border: none;;
+padding-inline: 10px;
+padding-block: 5px;
+}
+.btn_remove{
+    margin: 2%;
+    border-radius: 5px;
+    background-color: #B40909;
+    color: white;
+    border: none;
+    padding-inline: 10px;
+    padding-block: 5px;
+
+
+}
+
+  .footer{
+    background-color: #1E5A9E;
+color: white;
+padding-block: 10px;
+font-size: large;
+width: 100%;
+margin-inline: 0;
+left: 0;
+right: 0;
+text-align: center;
+  }

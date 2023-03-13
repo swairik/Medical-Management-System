@@ -1,29 +1,4 @@
 const constructSpecialityMenu = (value) => {
-//     var div1=`<img src="../images/AddDoctor.png" alt="An example image" style="margin-left:1%">`
-  
-//     var div2= `<div style="margin-left:5%">
-//     Name:  ${value.name} 
-//     <br/> Age:   ${value.age}
-//     <br/> Contact:   ${value.phone}
-//     <br/> Email: ${value.email}
-//     <br/> Speciality:   ${value.speciality.name}
-//     </div>`
-  
-//     var div3 = 
-//     `<div style="display:flex;background-color:#DDDDEC;">` +
-//     div1+div2+
-//     `<div style="margin-left:50%; margin-top:5%">
-//     <button>
-//         Edit
-//     </button>
-//     <button class="add_doctor_menu_btn_remove" value=${value.id}>
-//         Remove
-//     </button>
-  
-//     </div>` +
-//     `</div> </br> </br>
-//   `;
-
 var content =
 `<div class="flip-card">
 <div class="flip-card-inner">
@@ -33,6 +8,8 @@ var content =
   </div>
   <div class="flip-card-back">
     <h1>Doctor</h1>
+    <p>Doc-1</p>
+    <p>Doc-2</p>
   </div>
 </div>
 </div>`
@@ -58,4 +35,6 @@ $(document).ready(function () {
         console.log(error);
       },
     });
+
+
   });
