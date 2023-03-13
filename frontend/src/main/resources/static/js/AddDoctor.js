@@ -23,10 +23,10 @@ $(document).ready(function () {
       console.log("clicked")
       var docData = {
         "name": $('#name').val(),
-        "gender": "M",
+        "gender": $('#gender').val(),
         "age": $('#age').val(),
-        "email": "email41@gmail.com",
-        "phone":  "123417219",
+        "email": $('#email').val(),
+        "phone":  $('#phone').val(),
         "specialityId": 1
       }
 

@@ -4,7 +4,7 @@
 const constructDoctorMenu = (value) => {
   var div1=`<img src="../images/AddDoctor.png" alt="An example image" style="margin-left:1%">`
 
-  var div2= `<div style="margin-left:5%">
+  var div2= `<div style="margin-left:5%;margin-top:2%">
   Name:  ${value.name} 
   <br/> Age:   ${value.age}
   <br/> Contact:   ${value.phone}
@@ -16,9 +16,6 @@ const constructDoctorMenu = (value) => {
   `<div style="display:flex;background-color:#DDDDEC;">` +
   div1+div2+
   `<div style="margin-left:50%; margin-top:5%">
-  <button>
-      Edit
-  </button>
   <button class="add_doctor_menu_btn_remove" value=${value.id}>
       Remove
   </button>

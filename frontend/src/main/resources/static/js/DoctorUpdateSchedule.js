@@ -52,7 +52,7 @@ $(document).ready(function () {
     var slotID=12;
 
     $.ajax({
-        url: "http://localhost:8050/schedule/display/doctor/2",
+        url: "http://localhost:8050/schedule/display/doctor/1",
         type: "GET",
         success: function (result) {
           console.log(result);
@@ -61,8 +61,8 @@ $(document).ready(function () {
             console.log(value);
             // $(".add_doctor_personal").append("Name= " + value.name + "Speciality= " + value.speciality.name);
             $("#schedule_table").append(`<tr>
-                        <td>${value.weekDate}</td>
-                        <td>${value.weekDate}</td>
+                        <td>${value.year}</td>
+                        <td>${value.week}</td>
                         <td>${value.slotResponse.weekday}</td>
                         <td>${value.slotResponse.start}</td>
                         <td>${value.slotResponse.end}</td>
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 console.log(result);
                 
                 var scheduleData = {
-                    "doctorId": 2,
+                    "doctorId": 1,
                     "slotId": result.id,
                     "weekDate": $('#week').val()
                 }
