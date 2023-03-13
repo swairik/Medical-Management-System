@@ -42,10 +42,14 @@ public class Schedule {
     @JoinColumn(referencedColumnName = "slot_id", nullable = false)
     private Slot slot;
 
-    @Min(1)
-    @Max(52)
-    @Column(name = "week_of_year", nullable = false)
-    private Integer week;
+    @Column(name = "year_and_week", nullable = false)
+    private String weekDate;
+
+
+    // @Min(1)
+    // @Max(52)
+    // @Column(name = "week_of_year", nullable = false)
+    // private Integer week;
 
     @Column(name = "schedule_approval", nullable = false)
     @Builder.Default
