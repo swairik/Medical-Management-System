@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mms.demo.entity.Appointment;
 import com.mms.demo.entity.Doctor;
+import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
@@ -27,7 +29,9 @@ import com.mms.demo.model.ScheduleRequest;
 import com.mms.demo.model.ScheduleResponse;
 import com.mms.demo.model.SlotResponse;
 import com.mms.demo.model.SpecialityResponse;
+import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
+import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ScheduleService;
 import com.mms.demo.service.SlotService;
 
@@ -46,6 +50,12 @@ public class ScheduleController {
 
         @Autowired
         ScheduleService scheduleService;
+
+        @Autowired
+        PatientService patientService;
+
+        @Autowired
+        AppointmentService appointmentService;
 
         @GetMapping("/display")
         public ResponseEntity<List<ScheduleResponse>> displayAllSchedules() {
@@ -93,6 +103,25 @@ public class ScheduleController {
                                                 "DOCTOR_NOT_FOUND"));
                 List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
                 List<ScheduleResponse> response = schedules.stream().filter((s) -> s.getApproval())
+                                .map((s) -> createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/display/{pid}/{did}")
+        public ResponseEntity<List<ScheduleResponse>> displayDoctorSchedulesByPatient(@PathVariable Long did,
+                        @PathVariable Long pid) {
+                Doctor doctor = doctorService.getDoctortById(did)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+                Patient patient = patientService.getPatientById(pid).orElseThrow(
+                                () -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
+                List<Appointment> bookedAppointments = appointmentService.getAppointmentsByPatient(patient);
+                List<Long> bookedSlotsByPatient = bookedAppointments.stream().map((s) -> (s.getId()))
+                                .collect(Collectors.toList());
+                List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
+                List<ScheduleResponse> response = schedules.stream().filter((s) -> s.getApproval())
+                                .filter((s) -> (!bookedSlotsByPatient.contains(s.getId())))
                                 .map((s) -> createResponseFromSchedule(s))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
