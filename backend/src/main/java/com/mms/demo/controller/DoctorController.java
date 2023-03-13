@@ -78,10 +78,11 @@ public class DoctorController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        @GetMapping("/display/speciality")
-        public ResponseEntity<List<DoctorResponse>> showDoctorById(
-                        @Valid @RequestBody SpecialityRequest specialityRequest) {
-                Speciality speciality = createSpecialityFromRequest(specialityRequest);
+        @GetMapping("/display/speciality/{id}")
+        public ResponseEntity<List<DoctorResponse>> showDoctorBySpeciality(@PathVariable Long id) {
+                Speciality speciality = specialityService.getSpecialityById(id)
+                                .orElseThrow(() -> new CustomException("Speciality with given id not found",
+                                                "SPECIALITY_NOT_FOUND"));
 
                 List<Doctor> doctors = doctorService.getDoctorBySpeciality(speciality);
                 List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))

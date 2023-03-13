@@ -60,7 +60,7 @@ $(document).ready(function () {
       //   access_token: $("#access_token").val()
       // },
       success: function(result) {
-        window.location.href = 'AddDoctor';
+        window.location.href = 'EditDoctor';
       },
       error: function(result) {
         alert('error');
@@ -68,34 +68,6 @@ $(document).ready(function () {
     });
   });
 
-  var docData = {
-    "name": "Doc1",
-    "gender": "M",
-    "age": 35,
-    "email": "test20@gmail.com",
-    "phone": "123465689",
-    "specialityId": 1
-  }
-
-  $(".addnew").click(function(e) {
-    console.log("clicked")
-    e.preventDefault();
-    $.ajax({
-      url: "http://localhost:8050/doctor/",
-      type: "POST",
-      dataType: 'json',
-      contentType: 'application/json',
-      data: JSON.stringify(docData),
-      success: function (result) {
-        window.location.href = 'AddDoctor';
-        console.log(result);
-      },
-      error: function (error) {
-        console.log(error);
-      },
-    });
-   
-  });
 });
 
 // jQuery.each( docList, function( i, val ) {

@@ -7,6 +7,8 @@
     <title>Update Your Schedule</title>
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="./css/UpdateYourScheduleStyle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/DoctorUpdateSchedule.js"></script>
     <link rel="shortcut icon" href="Favicon.ico" type="image/x-icon">
 </head>
 
@@ -39,6 +41,11 @@
     <div>
       <h2 class="heading">UPDATE YOUR SCHEDULE</h2>
 
+      <p class="content">Week 
+        <br><br>
+        <input type="week" id="week" value="" min="" max="">
+      </p>
+
       <p class="content">Date 
         <br><br>
         <input type="date" id="date" value="" min="" max="">
@@ -46,50 +53,39 @@
 
       <p class="content">Start Time 
         <br><br>
-        <input type="time" id="time" value="" min="" max="">
+        <input type="time" id="start_time" value="" min="" max="">
       </p>
 
       <p class="content">End Time 
         <br><br>
-        <input type="time" id="time" value="" min="" max="">
+        <input type="time" id="end_time" value="" min="" max="">
       </p>
 
-      <button type="button" onclick="">Save</button>
+      <button type="button" id="save_button" onclick="">Save</button>
       
     </div>
 
-    <table>
+    <table id="schedule_table">
       <tr>
-        <th>Date</th>
+        <th>Year</th>
+        <th>Week No.</th>
         <th>Day</th>
         <th>Start Time</th>
         <th>End Time</th>
-        <th>No. of Slots</th>
+        <th>Capacity</th>
+        <th>Status</th>
       </tr>
-      <tr>
+      <!-- <tr>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td></td>
         <td><button type="button" onclick="">Remove</button></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button type="button" onclick="">Remove</button></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button type="button" onclick="">Remove</button></td>
-      </tr>
+      </tr> -->
+    
     </table>
 
 

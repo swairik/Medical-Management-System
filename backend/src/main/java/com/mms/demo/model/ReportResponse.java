@@ -2,9 +2,6 @@ package com.mms.demo.model;
 
 import java.time.LocalDateTime;
 
-import com.mms.demo.entity.Doctor;
-import com.mms.demo.entity.Patient;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReportResponse {
     private Long id;
-    private Patient patient;
-    private Doctor doctor;
+    private PatientResponse patientResponse;
+    private DoctorResponse doctorResponse;
     private LocalDateTime stamp;
     private byte[] reportText;
 }

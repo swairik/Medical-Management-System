@@ -181,8 +181,13 @@ public class AppointmentController {
     }
 
     public SlotResponse createResponseFromSlot(Slot slot) {
-        SlotResponse slotResponse = new SlotResponse();
-        BeanUtils.copyProperties(slot, slotResponse);
+        SlotResponse slotResponse = SlotResponse.builder()
+                .id(slot.getId())
+                .start(slot.getStart())
+                .end(slot.getEnd())
+                .capacity(slot.getCapacity())
+                .weekday(slot.getWeekday())
+                .build();
         return slotResponse;
     }
 
