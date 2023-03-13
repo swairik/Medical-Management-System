@@ -36,122 +36,147 @@ import jakarta.validation.Valid;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
-    @Autowired
-    DoctorService doctorService;
+        @Autowired
+        DoctorService doctorService;
 
-    @Autowired
-    SlotService slotService;
+        @Autowired
+        SlotService slotService;
 
-    @Autowired
-    ScheduleService scheduleService;
+        @Autowired
+        ScheduleService scheduleService;
 
-    @GetMapping("/display")
-    public ResponseEntity<List<ScheduleResponse>> displayAllSchedules() {
-        List<Schedule> schedules = scheduleService.getAllSchedules();
-        List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @GetMapping("/display")
+        public ResponseEntity<List<ScheduleResponse>> displayAllSchedules() {
+                List<Schedule> schedules = scheduleService.getAllSchedules();
+                List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @GetMapping("/display/{id}")
-    public ResponseEntity<ScheduleResponse> displayScheduleById(@PathVariable Long id) {
-        Schedule schedule = scheduleService.getScheduleById(id)
-                .orElseThrow(() -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND"));
-        ScheduleResponse response = createResponseFromSchedule(schedule);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @GetMapping("/display/{id}")
+        public ResponseEntity<ScheduleResponse> displayScheduleById(@PathVariable Long id) {
+                Schedule schedule = scheduleService.getScheduleById(id)
+                                .orElseThrow(() -> new CustomException("Schedule with given id not found",
+                                                "SCHEDULE_NOT_FOUND"));
+                ScheduleResponse response = createResponseFromSchedule(schedule);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @GetMapping("/display/doctor/{did}")
-    public ResponseEntity<List<ScheduleResponse>> displaySchedulesByDoctor(@PathVariable Long did) {
-        Doctor doctor = doctorService.getDoctortById(did)
-                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
-        List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
-        List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @GetMapping("/display/doctor/{did}")
+        public ResponseEntity<List<ScheduleResponse>> displaySchedulesByDoctor(@PathVariable Long did) {
+                Doctor doctor = doctorService.getDoctortById(did)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+                List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
+                List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @GetMapping("/display/schedule/{sid}")
-    public ResponseEntity<List<ScheduleResponse>> displaySchedulesBySlot(@PathVariable Long sid) {
-        Slot slot = slotService.getSlotById(sid)
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        List<Schedule> schedules = scheduleService.getSchedulesBySlot(slot);
-        List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @GetMapping("/display/schedule/{sid}")
+        public ResponseEntity<List<ScheduleResponse>> displaySchedulesBySlot(@PathVariable Long sid) {
+                Slot slot = slotService.getSlotById(sid)
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+                List<Schedule> schedules = scheduleService.getSchedulesBySlot(slot);
+                List<ScheduleResponse> response = schedules.stream().map((s) -> createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @PostMapping("/")
-    public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest) {
-        Schedule schedule = createScheduleFromRequest(scheduleRequest);
-        Schedule createdSchedule = scheduleService.createSchedule(schedule);
-        ScheduleResponse response = createResponseFromSchedule(createdSchedule);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
+        @GetMapping("/display/unapproved")
+        public ResponseEntity<List<ScheduleResponse>> displayUnapprovedSchedules() {
+                List<Schedule> schedules = scheduleService.getAllSchedules();
+                List<Schedule> unapprovedSchedules = schedules.stream().filter((s) -> (s.getApproval() == false))
+                                .collect(Collectors.toList());
+                List<ScheduleResponse> response = unapprovedSchedules.stream().map((s) -> createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Long id,
-            @Valid @RequestBody ScheduleRequest scheduleRequest) {
-        Schedule schedule = createScheduleFromRequest(scheduleRequest);
-        Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
-        ScheduleResponse response = createResponseFromSchedule(updatedSchedule);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @PutMapping("/{id}/approve")
+        public ResponseEntity<ScheduleResponse> updateApproval(@PathVariable Long id) {
+                Schedule schedule = scheduleService.getScheduleById(id).orElseThrow(
+                                () -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND"));
+                schedule.setApproval(true);
+                Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
+                ScheduleResponse response = createResponseFromSchedule(updatedSchedule);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+        @PostMapping("/")
+        public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest) {
+                Schedule schedule = createScheduleFromRequest(scheduleRequest);
+                Schedule createdSchedule = scheduleService.createSchedule(schedule);
+                ScheduleResponse response = createResponseFromSchedule(createdSchedule);
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
 
-    public ScheduleResponse createResponseFromSchedule(Schedule schedule) {
-        SpecialityResponse specialityResponse = SpecialityResponse.builder()
-                .id(schedule.getDoctor().getSpeciality().getId())
-                .name(schedule.getDoctor().getSpeciality().getName())
-                .build();
+        @PutMapping("/{id}")
+        public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Long id,
+                        @Valid @RequestBody ScheduleRequest scheduleRequest) {
+                Schedule schedule = createScheduleFromRequest(scheduleRequest);
+                Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
+                ScheduleResponse response = createResponseFromSchedule(updatedSchedule);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        DoctorResponse doctorResponse = DoctorResponse.builder()
-                .id(schedule.getDoctor().getId())
-                .name(schedule.getDoctor().getName())
-                .age(schedule.getDoctor().getAge())
-                .email(schedule.getDoctor().getEmail())
-                .gender(schedule.getDoctor().getGender())
-                .phone(schedule.getDoctor().getPhone())
-                .speciality(specialityResponse)
-                .build();
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+                scheduleService.deleteSchedule(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
 
-        SlotResponse slotResponse = SlotResponse.builder()
-                .id(schedule.getSlot().getId())
-                .start(schedule.getSlot().getStart())
-                .end(schedule.getSlot().getEnd())
-                .weekday(schedule.getSlot().getWeekday())
-                .capacity(schedule.getSlot().getCapacity())
-                .build();
+        public ScheduleResponse createResponseFromSchedule(Schedule schedule) {
+                SpecialityResponse specialityResponse = SpecialityResponse.builder()
+                                .id(schedule.getDoctor().getSpeciality().getId())
+                                .name(schedule.getDoctor().getSpeciality().getName())
+                                .build();
 
-        ScheduleResponse scheduleResponse = ScheduleResponse.builder()
-                .id(schedule.getId())
-                .doctorResponse(doctorResponse)
-                .slotResponse(slotResponse)
-                .weekDate(schedule.getWeekDate())
-                .approval(schedule.getApproval())
-                .build();
+                DoctorResponse doctorResponse = DoctorResponse.builder()
+                                .id(schedule.getDoctor().getId())
+                                .name(schedule.getDoctor().getName())
+                                .age(schedule.getDoctor().getAge())
+                                .email(schedule.getDoctor().getEmail())
+                                .gender(schedule.getDoctor().getGender())
+                                .phone(schedule.getDoctor().getPhone())
+                                .speciality(specialityResponse)
+                                .build();
 
-        return scheduleResponse;
-    }
+                SlotResponse slotResponse = SlotResponse.builder()
+                                .id(schedule.getSlot().getId())
+                                .start(schedule.getSlot().getStart())
+                                .end(schedule.getSlot().getEnd())
+                                .weekday(schedule.getSlot().getWeekday())
+                                .capacity(schedule.getSlot().getCapacity())
+                                .build();
 
-    public Schedule createScheduleFromRequest(ScheduleRequest scheduleRequest) {
-        Doctor doctor = doctorService.getDoctortById(scheduleRequest.getDoctorId())
-                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
-        Slot slot = slotService.getSlotById(scheduleRequest.getSlotId())
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        Schedule schedule = Schedule.builder()
-                .doctor(doctor)
-                .slot(slot)
-                .weekDate(scheduleRequest.getWeekDate())
-                .approval(scheduleRequest.getApproval())
-                .build();
+                ScheduleResponse scheduleResponse = ScheduleResponse.builder()
+                                .id(schedule.getId())
+                                .doctorResponse(doctorResponse)
+                                .slotResponse(slotResponse)
+                                .weekDate(schedule.getWeekDate())
+                                .approval(schedule.getApproval())
+                                .build();
 
-        return schedule;
-    }
+                return scheduleResponse;
+        }
+
+        public Schedule createScheduleFromRequest(ScheduleRequest scheduleRequest) {
+                Doctor doctor = doctorService.getDoctortById(scheduleRequest.getDoctorId())
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+                Slot slot = slotService.getSlotById(scheduleRequest.getSlotId())
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+                Schedule schedule = Schedule.builder()
+                                .doctor(doctor)
+                                .slot(slot)
+                                .weekDate(scheduleRequest.getWeekDate())
+                                .approval(scheduleRequest.getApproval())
+                                .build();
+
+                return schedule;
+        }
 
 }
