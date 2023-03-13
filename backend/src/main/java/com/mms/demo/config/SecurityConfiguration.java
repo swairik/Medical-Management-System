@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                 // .requestMatchers("/schedule/display/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
                 .requestMatchers(HttpMethod.PUT, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                .requestMatchers(HttpMethod.DELETE, "/schedule/**").hasAnyAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
                 // .requestMatchers("/slot/display/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/slot/**").hasAnyAuthority("ADMIN", "DOCTOR")
@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/slot/**").hasAnyAuthority("ADMIN")
 
                 // .requestMatchers("/speciality/display/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/speciality/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                .requestMatchers(HttpMethod.POST, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/speciality/**").hasAnyAuthority("ADMIN")
 
