@@ -1,40 +1,40 @@
 .NavBar {
-  background-color: #004798;
-  height: 75px;
-}
-
-.NavBar h1 {
-    color: white;
-    width: 10%;
-    display: inline-block;
-}
-nav {
-    float:right;
-}
-
-.Logo img {
-    height: 50px;
-    width: 50px;
-    padding: 15px 10px 10px 10px;
-    float: left;
-}
-
-.options li {
-  display: inline-block; 
-  padding:10px;
-  font-size:20px; 
-  font-family:raleway;
-}
-
-.options li a {
-    color: white;
-    text-decoration: none;
-    padding: inherit;
-}
-
-.options li a:hover {
-  text-decoration: underline;
-}
+  background-color: #1e5a9e;
+    height: 75px;
+  }
+  
+  .NavBar h1 {
+      color: white;
+      width: 10%;
+      display: inline-block;
+  }
+  nav {
+      float:right;
+  }
+  
+  .Logo img {
+      height: 50px;
+      width: 50px;
+      padding: 15px 10px 10px 10px;
+      float: left;
+  }
+  
+  .options li {
+    display: inline-block; 
+    padding:10px;
+    font-size:20px; 
+    font-family:raleway;
+  }
+  
+  .options li a {
+      color: white;
+      text-decoration: none;
+      padding: inherit;
+  }
+  
+  .options li a:hover {
+    text-decoration: underline;
+  }
 
 
 .L1 {
@@ -116,7 +116,7 @@ nav {
 }
 
 footer {
-  background-color: #004798;
+  background-color: #1e5a9e;
   color: white;
   text-align: center;
   height: 50px;

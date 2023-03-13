@@ -1,5 +1,5 @@
 .NavBar {
-    background-color: #004798;
+  background-color: #1e5a9e;
     height: 75px;
   }
   
@@ -71,13 +71,18 @@
   }
   
   .profile {
-    height: 370px;
-    width: 500px;
-    margin-top: 10px;
-    margin-left: 35%;
-    background: #004798;
+    height: 60%;
+    width: 30%;
+    margin-top: 8%;
+    background: #1e5a9e;
     border: 3px solid #01346F;
     border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .profile h2 {
+    text-decoration: underline;
   }
 
   .profile h2, p {
@@ -85,19 +90,19 @@
     text-align: center;
   }
   
-  .bottom {
-    background-color: #004798;
+  footer {
+    background-color: #1e5a9e;
     color: white;
     text-align: center;
     height: 50px;
     margin-top: 20px;
   }
   
-  .bottom p {
+  footer p {
     display: inline-block;
   }
   
-  .bottom p a {
+  footer p a {
     color: white;
     display: inline-block;
   }
