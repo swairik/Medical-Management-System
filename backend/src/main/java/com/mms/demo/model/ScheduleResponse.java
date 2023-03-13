@@ -14,4 +14,5 @@ public class ScheduleResponse {
     private DoctorResponse doctorResponse;
     private SlotResponse slotResponse;
     private String weekDate;
+    private Boolean approval;
 }

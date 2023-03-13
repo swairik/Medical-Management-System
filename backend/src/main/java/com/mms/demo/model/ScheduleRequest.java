@@ -19,4 +19,7 @@ public class ScheduleRequest {
 
     @NotNull(message = "Year & week cannot be null")
     private String weekDate;
+
+    @Builder.Default
+    private Boolean approval = false;
 }

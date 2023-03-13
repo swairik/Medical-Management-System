@@ -133,6 +133,7 @@ public class ScheduleController {
                 .doctorResponse(doctorResponse)
                 .slotResponse(slotResponse)
                 .weekDate(schedule.getWeekDate())
+                .approval(schedule.getApproval())
                 .build();
 
         return scheduleResponse;
@@ -147,6 +148,7 @@ public class ScheduleController {
                 .doctor(doctor)
                 .slot(slot)
                 .weekDate(scheduleRequest.getWeekDate())
+                .approval(scheduleRequest.getApproval())
                 .build();
 
         return schedule;
