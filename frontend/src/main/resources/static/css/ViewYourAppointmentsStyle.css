@@ -1,5 +1,5 @@
 .NavBar {
-    background-color: #004798;
+  background-color: #1e5a9e;
     height: 75px;
   }
   
@@ -46,15 +46,22 @@
     color: #000093;
     opacity: 0.7;
   }
+
+  .fields {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3%;
+  }
   
   .content {
     display: inline-block;
     color: black;
     background-color: #C1D7F19C;
-    font-size: 24px;
+    font-size: 18px;
     padding: 10px;
     border-radius: 10px;
-    margin-left: 20%;
+    margin-left: 2%;
     text-align: center;
   }
   
@@ -114,7 +121,7 @@
   }
 
   footer {
-    background-color: #004798;
+    background-color: #1e5a9e;
     color: white;
     text-align: center;
     height: 50px;

@@ -1,5 +1,5 @@
 .NavBar {
-    background-color: #004798;
+  background-color: #1e5a9e;
     height: 75px;
   }
   
@@ -45,6 +45,7 @@
     text-decoration-line: underline;
     color: #000093;
     opacity: 0.7;
+    padding-bottom: 5%;
   }
 
   table {
@@ -72,7 +73,7 @@
   }
 
   footer {
-    background-color: #004798;
+    background-color: #1e5a9e;
     color: white;
     text-align: center;
     height: 50px;
