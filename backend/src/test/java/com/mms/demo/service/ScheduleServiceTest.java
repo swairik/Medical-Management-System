@@ -56,7 +56,7 @@ public class ScheduleServiceTest {
         slotImpl.createSlot(slot);
         assertThat(slotImpl.getSlotById(slot.getId())).isNotEmpty().contains(slot);
 
-        sched = Schedule.builder().doctor(doctor).slot(slot).weekDate("2023-W10").build();
+        sched = Schedule.builder().doctor(doctor).slot(slot).year(2023).week(10).build();
         assertThat(impl.createSchedule(sched)).isEqualTo(sched);
     }
 

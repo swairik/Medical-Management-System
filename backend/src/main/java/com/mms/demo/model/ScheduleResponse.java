@@ -13,6 +13,7 @@ public class ScheduleResponse {
     private Long id;
     private DoctorResponse doctorResponse;
     private SlotResponse slotResponse;
-    private String weekDate;
+    private Integer week;
+    private Integer year;
     private Boolean approval;
 }

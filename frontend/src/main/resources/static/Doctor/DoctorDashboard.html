@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Doctor</title>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/DoctorDashboardStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
   </head>
+
   <body>
-    <header>
+
+    <div class="NavBar">
+        <div class="Logo">
+          <img src="../images/doc.png" alt="Care4U"/>
+        </div>
+        <h1>Care4U</h1>
+
+        <nav>
+          <ul class="options">
+            <li><a href="DoctorDashboard.html">Home</a></li>
+            <li><a href="ViewProfile.html">View Profile</a></li>
+          </ul>
+        </nav>
+    </div>
+
+    <!-- <header>
       <div class="header-content">
         <div>
             <img class="doc-img" src="../images/doc.png" alt="An example image"> 
@@ -14,42 +32,44 @@
             View Profile
         </div>
      </div>
-    </header>
+    </header> -->
     
     <main>
-    <div class="first_box">
-       <h3>''We Care For Your Well Being''</h3> 
-     </div>
+      <div class="first_box">
+        <h3>''We Care For Your Well Being''</h3> 
+      </div>
 
-     <img class="main-img" src="../images/main.png" >
-     
-     <div class="second_box">
-       <ul class="ul">
-        <li class="li">choose the doctor</li>
-        <li class="li">Book a slot</li>
-        <li class="li">Make payment</li>
-        <li class="li">Be present in the consult room</li>
-       </ul>
-    </div>
-
+      <img class="main-img" src="../images/main.png" >
+      
+      <div class="second_box">
+        <ul class="ul">
+          <li class="li">Choose the doctor</li>
+          <li class="li">Book a slot</li>
+          <li class="li">Make payment</li>
+          <li class="li">Be present in the consult room</li>
+        </ul>
+      </div>
     </main>
-    <h2 class="admin_heading">Hi Dr Abc,</h2>  
+
+    <h2 class="admin_heading">Hi Dr. Abc,</h2>  
+
     <div class="lower_body">
         <div class="lower_body_box">
             <div class="img_button">
                 <img  src="../images/Vector.png" >
-                <button onclick="window.location.href='UpdateSchedule'">Update Schedule</button>
+                <button onclick="window.location.href='UpdateYourSchedule.html'">Update Your Schedule</button>
             </div>
             <div class="img_button">
                 <img  src="../images/edit.png" >
-                <button onclick="window.location.href='ViewYourAppointments'">View Your Appointments</button>
+                <button onclick="window.location.href='ViewYourAppointments.html'">View Your Appointments</button>
             </div>
             <div class="img_button">
                 <img  src="../images/edit.png" >
-                <button onclick="window.location.href='YourPatients'">Your Patients</button>
+                <button onclick="window.location.href='YourPatients.html'">Your Patients</button>
             </div>
         </div>
-        <div class="lower_body_box">
+
+        <!-- <div class="lower_body_box">
             <div class="img_button">
                 <img  src="../images/Vector.png" >
                 <button>View Patients List</button>
@@ -58,8 +78,15 @@
                 <img  src="../images/edit.png" >
                 <button>Generate Report</button>
             </div>
-        </div>
+        </div> -->
     </div>
-    <p class="footer">Care4u@gmail.com</p>
+
+    <!-- <p class="footer">Care4u@gmail.com</p> -->
+
+    <footer>
+        <p>Mail us at : </p>
+        <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+    </footer>
+    
 </body>
 </html>

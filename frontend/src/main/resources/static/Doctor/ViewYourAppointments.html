@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Your Appointments</title>
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
-    <link rel="stylesheet" href="./css/ViewYourAppointmentsStyle.css">
-    <link rel="shortcut icon" href="Favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/ViewYourAppointmentsStyle.css">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
         </nav>
     </div> -->
 
-    <header>
+    <!-- <header>
       <div class="header-content">
         <div>
             <img class="doc-img" src="../images/doc.png" alt="An example image"> 
@@ -35,11 +35,26 @@
             View Profile
         </div>
      </div>
-    </header>
+    </header> -->
+
+    <div class="NavBar">
+      <div class="Logo">
+        <img src="../images/doc.png" alt="Care4U"/>
+      </div>
+      <h1>Care4U</h1>
+
+      <nav>
+        <ul class="options">
+          <li><a href="DoctorDashboard.html">Home</a></li>
+          <li><a href="ViewProfile.html">View Profile</a></li>
+        </ul>
+      </nav>
+  </div>
 
     <div>
       <h2 class="heading">VIEW YOUR APPOINTMENTS</h2>
 
+      <div class="fields">
       <p class="content">Start Date 
         <br><br>
         <input type="date" id="date" value="" min="" max="">
@@ -51,6 +66,7 @@
       </p>
 
       <button type="button" onclick="">View</button>
+    </div>
     </div>
 
     <table>
@@ -92,7 +108,12 @@
       <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
     </footer> -->
 
-    <p class="footer">Care4u@gmail.com</p>
+    <!-- <p class="footer">Care4u@gmail.com</p> -->
+
+    <footer>
+      <p>Mail us at : </p>
+      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+    </footer>
   
   </body>
   </html>

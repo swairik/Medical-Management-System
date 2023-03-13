@@ -1,6 +1,8 @@
 package com.mms.demo.controller;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -167,7 +169,8 @@ public class ScheduleController {
                                 .id(schedule.getId())
                                 .doctorResponse(doctorResponse)
                                 .slotResponse(slotResponse)
-                                .weekDate(schedule.getWeekDate())
+                                .year(schedule.getYear())
+                                .week(schedule.getWeek())
                                 .approval(schedule.getApproval())
                                 .build();
 
@@ -181,10 +184,27 @@ public class ScheduleController {
                 Slot slot = slotService.getSlotById(scheduleRequest.getSlotId())
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
+                String weekDate = scheduleRequest.getWeekDate();
+
+                Pattern pattern = Pattern.compile("^(?<year>\\d{4})-W(?<week>\\d{2})$");
+                Matcher matcher = pattern.matcher(weekDate);
+
+                if (!matcher.find()) {
+                        throw new CustomException("Wrong format of weekDate", "WRONG_FORMAT");
+                }
+
+                Integer year = Integer.parseInt(matcher.group("year"));
+                Integer week = Integer.parseInt(matcher.group("week"));
+
+                if (week < 0 || week > 52) {
+                        throw new CustomException("Week is not valid", "INVALID_WEEK_FORMAT");
+                }
+
                 Schedule schedule = Schedule.builder()
                                 .doctor(doctor)
                                 .slot(slot)
-                                .weekDate(scheduleRequest.getWeekDate())
+                                .week(week)
+                                .year(year)
                                 .approval(scheduleRequest.getApproval())
                                 .build();
 
