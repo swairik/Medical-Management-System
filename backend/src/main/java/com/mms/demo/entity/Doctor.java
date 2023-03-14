@@ -12,6 +12,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+
+import java.time.LocalDate;
+
 import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,4 +60,8 @@ public class Doctor {
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.DETACH})
     @JoinColumn(nullable = false, referencedColumnName = "speciality_id")
     private Speciality speciality;
+
+    @Column(name="doctor_registration_timestamp", nullable = false)
+    @Builder.Default
+    private LocalDate stamp = LocalDate.now();
 }

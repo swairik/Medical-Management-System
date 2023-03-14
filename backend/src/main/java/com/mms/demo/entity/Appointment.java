@@ -1,5 +1,7 @@
 package com.mms.demo.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,4 +42,12 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(nullable = false, referencedColumnName = "slot_id")
     private Slot slot;
+
+    @Column(name = "appointment_attended", nullable = false)
+    @Builder.Default
+    private Boolean attended = false;
+
+    @Column(name = "appointment_scheduled_on", nullable = false)
+    @Builder.Default
+    private LocalDate stamp = LocalDate.now();
 }

@@ -10,10 +10,10 @@ import com.mms.demo.entity.Report;
 
 public interface ReportService {
     Optional<Report> getReportById(Long id);
-    List<Report> getReportsByPatient(Patient patient);
     List<Report> getReportByStamp(LocalDateTime stamp);
-    List<Report> getReportByDoctor(Doctor doctor);
+    List<Report> getAllReportsByStampBetween(LocalDateTime start, LocalDateTime end);
 
+    Optional<byte[]> generateReports(LocalDateTime from, LocalDateTime to);
     Report createReport(Report report);
     void deleteReport(Long id);
     Report updateReport(Long id, Report update);
