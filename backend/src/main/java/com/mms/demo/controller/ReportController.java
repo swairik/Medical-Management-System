@@ -22,17 +22,13 @@ import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Report;
 import com.mms.demo.exception.CustomException;
-import com.mms.demo.model.DoctorResponse;
-import com.mms.demo.model.PatientResponse;
 import com.mms.demo.model.ReportRequest;
+import com.mms.demo.model.ReportResponse;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
 
 import jakarta.validation.Valid;
-
-import com.mms.demo.model.ReportResponse;
-import com.mms.demo.model.SpecialityResponse;
 
 @RestController
 @RequestMapping("/report")
@@ -52,7 +48,7 @@ class ReportController {
                 Report report = reportService.getReportById(id)
                                 .orElseThrow(() -> new CustomException("Report with given id not found",
                                                 "REPORT_NOT_FOUND"));
-                ReportResponse response = createResponseFromReport(report);
+                ReportResponse response = ReportResponse.createResponseFromReport(report);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -62,7 +58,7 @@ class ReportController {
                                 .orElseThrow(() -> new CustomException("Patient with given id not found",
                                                 "PATIENT_NOT_FOUND"));
                 List<Report> reports = reportService.getReportsByPatient(patient);
-                List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
+                List<ReportResponse> response = reports.stream().map((r) -> ReportResponse.createResponseFromReport(r))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -73,7 +69,7 @@ class ReportController {
                                 .orElseThrow(() -> new CustomException("Doctor with given id not found",
                                                 "DOCTOR_NOT_FOUND"));
                 List<Report> reports = reportService.getReportByDoctor(doctor);
-                List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
+                List<ReportResponse> response = reports.stream().map((r) -> ReportResponse.createResponseFromReport(r))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -83,7 +79,7 @@ class ReportController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
                 List<Report> reports = reportService.getReportByStamp(dateTime);
-                List<ReportResponse> response = reports.stream().map((r) -> createResponseFromReport(r))
+                List<ReportResponse> response = reports.stream().map((r) -> ReportResponse.createResponseFromReport(r))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -92,7 +88,7 @@ class ReportController {
         public ResponseEntity<ReportResponse> createReport(@Valid @RequestBody ReportRequest reportRequest) {
                 Report report = createReportFromRequest(reportRequest);
                 Report createdReport = reportService.createReport(report);
-                ReportResponse reportResponse = createResponseFromReport(createdReport);
+                ReportResponse reportResponse = ReportResponse.createResponseFromReport(createdReport);
                 return new ResponseEntity<>(reportResponse, HttpStatus.CREATED);
         }
 
@@ -101,7 +97,7 @@ class ReportController {
                         @Valid @RequestBody ReportRequest reportRequest) {
                 Report report = createReportFromRequest(reportRequest);
                 Report updatedReport = reportService.updateReport(id, report);
-                ReportResponse reportResponse = createResponseFromReport(updatedReport);
+                ReportResponse reportResponse = ReportResponse.createResponseFromReport(updatedReport);
                 return new ResponseEntity<>(reportResponse, HttpStatus.OK);
         }
 
@@ -126,41 +122,6 @@ class ReportController {
                                 .reportText(reportRequest.getReportText())
                                 .build();
                 return report;
-        }
-
-        public ReportResponse createResponseFromReport(Report report) {
-                PatientResponse patientResponse = PatientResponse.builder()
-                                .id(report.getPatient().getId())
-                                .name(report.getPatient().getName())
-                                .age(report.getPatient().getAge())
-                                .email(report.getPatient().getEmail())
-                                .gender(report.getPatient().getGender())
-                                .phone(report.getPatient().getPhone())
-                                .build();
-
-                SpecialityResponse specialityResponse = SpecialityResponse.builder()
-                                .id(report.getDoctor().getSpeciality().getId())
-                                .name(report.getDoctor().getSpeciality().getName())
-                                .build();
-                DoctorResponse doctorResponse = DoctorResponse.builder()
-                                .id(report.getDoctor().getId())
-                                .name(report.getDoctor().getName())
-                                .age(report.getDoctor().getAge())
-                                .email(report.getDoctor().getEmail())
-                                .gender(report.getDoctor().getGender())
-                                .phone(report.getDoctor().getPhone())
-                                .speciality(specialityResponse)
-                                .build();
-
-                ReportResponse reportResponse = ReportResponse.builder()
-                                .id(report.getId())
-                                .patientResponse(patientResponse)
-                                .doctorResponse(doctorResponse)
-                                .stamp(report.getStamp())
-                                .reportText(report.getReportText())
-                                .build();
-
-                return reportResponse;
         }
 
 }

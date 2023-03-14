@@ -1,12 +1,9 @@
 package com.mms.demo.controller;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +22,6 @@ import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
-import com.mms.demo.model.PatientRequest;
-import com.mms.demo.model.PatientResponse;
-import com.mms.demo.model.SlotRequest;
-import com.mms.demo.model.SlotResponse;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.SlotService;
@@ -51,7 +44,8 @@ public class AppointmentController {
     @GetMapping("/display")
     public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
         List<Appointment> appointments = appointmentService.getAllAppointments();
-        List<AppointmentResponse> response = appointments.stream().map((a) -> createResponseFromAppointment(a))
+        List<AppointmentResponse> response = appointments.stream()
+                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -60,26 +54,30 @@ public class AppointmentController {
     public ResponseEntity<AppointmentResponse> displayAppointmentById(@PathVariable Long id) {
         Appointment appointment = appointmentService.getAppointmentById(id)
                 .orElseThrow(() -> new CustomException("Appointment with given id not found", "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse response = createResponseFromAppointment(appointment);
+        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(appointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/display/patient")
+    @GetMapping("/display/patient/{id}")
     public ResponseEntity<List<AppointmentResponse>> displayAppointmentsByPatient(
-            @RequestBody @Valid PatientRequest patientRequest) {
-        Patient patient = createPatientFromRequest(patientRequest);
+            @PathVariable Long id) {
+        Patient patient = patientService.getPatientById(id)
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
-        List<AppointmentResponse> response = appointments.stream().map((a) -> createResponseFromAppointment(a))
+        List<AppointmentResponse> response = appointments.stream()
+                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/display/slot")
+    @GetMapping("/display/slot/{id}")
     public ResponseEntity<List<AppointmentResponse>> displayAppointmentsBySlot(
-            @RequestBody @Valid SlotRequest slotRequest) {
-        Slot slot = createSlotFromRequest(slotRequest);
+            @PathVariable Long id) {
+        Slot slot = slotService.getSlotById(id)
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
         List<Appointment> appointments = appointmentService.getAppointmentsBySlot(slot);
-        List<AppointmentResponse> response = appointments.stream().map((a) -> createResponseFromAppointment(a))
+        List<AppointmentResponse> response = appointments.stream()
+                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -89,18 +87,27 @@ public class AppointmentController {
             @Valid @RequestBody AppointmentRequest appointmentRequest) {
         Appointment appointment = createAppointmentFromRequest(appointmentRequest);
 
-        Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        if (slot.getCapacity() == 0) {
-            throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+        List<Appointment> allAppointments = appointmentService.getAllAppointments();
+
+        Appointment alreadyCreatedAppointment = allAppointments.stream()
+                .filter((a) -> (a.getPatient().getId() == appointmentRequest.getPatientId()
+                        && a.getSlot().getId() == appointmentRequest.getSlotId()))
+                .findFirst().orElse(null);
+
+        if (alreadyCreatedAppointment != null) {
+            throw new CustomException("Appointment with given patient id and slot id already created",
+                    "APPOINTMENT_ALREADY_CREATED");
         }
 
         Appointment createdAppointment = appointmentService.createAppointment(appointment);
 
+        Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+
         slot.setCapacity(slot.getCapacity() - 1);
         slotService.updateSlot(slot.getId(), slot);
 
-        AppointmentResponse response = createResponseFromAppointment(createdAppointment);
+        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(createdAppointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -109,7 +116,7 @@ public class AppointmentController {
             @Valid @RequestBody AppointmentRequest appointmentRequest) {
         Appointment appointment = createAppointmentFromRequest(appointmentRequest);
         Appointment updatedAppointment = appointmentService.updateAppointment(id, appointment);
-        AppointmentResponse response = createResponseFromAppointment(updatedAppointment);
+        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(updatedAppointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -118,12 +125,13 @@ public class AppointmentController {
         Appointment appointment = appointmentService.getAppointmentById(id)
                 .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
 
+        appointmentService.deleteAppointment(id);
+
         Slot slot = appointment.getSlot();
         Integer maxCapacity = (int) slot.getStart().until(slot.getEnd(), ChronoUnit.MINUTES) / 30;
         slot.setCapacity(Integer.min(slot.getCapacity() + 1, maxCapacity));
         slotService.updateSlot(slot.getId(), slot);
 
-        appointmentService.deleteAppointment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -132,63 +140,14 @@ public class AppointmentController {
                 .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
         Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
                 .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+        if (slot.getCapacity() == 0) {
+            throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+        }
         Appointment appointment = Appointment.builder()
                 .patient(patient)
                 .slot(slot)
                 .build();
         return appointment;
-    }
-
-    public AppointmentResponse createResponseFromAppointment(Appointment appointment) {
-        PatientResponse patientResponse = createResponseFromPatient(appointment.getPatient());
-        SlotResponse slotResponse = createResponseFromSlot(appointment.getSlot());
-        AppointmentResponse appointmentResponse = AppointmentResponse.builder()
-                .id(appointment.getId())
-                .patientResponse(patientResponse)
-                .slotResponse(slotResponse)
-                .build();
-        return appointmentResponse;
-    }
-
-    public Patient createPatientFromRequest(PatientRequest patientRequest) {
-        Patient patient = Patient.builder()
-                .name(patientRequest.getName())
-                .gender(patientRequest.getGender())
-                .age(patientRequest.getAge())
-                .email(patientRequest.getEmail())
-                .phone(patientRequest.getPhone())
-                .build();
-        return patient;
-    }
-
-    public PatientResponse createResponseFromPatient(Patient patient) {
-        PatientResponse patientResponse = new PatientResponse();
-        BeanUtils.copyProperties(patient, patientResponse);
-        return patientResponse;
-    }
-
-    public Slot createSlotFromRequest(SlotRequest slotRequest) {
-        LocalTime start = LocalTime.parse(slotRequest.getStart());
-        LocalTime end = LocalTime.parse(slotRequest.getEnd());
-        Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
-        Slot slot = Slot.builder()
-                .weekday(DayOfWeek.of(slotRequest.getWeekday()))
-                .start(start)
-                .end(end)
-                .capacity(capacity)
-                .build();
-        return slot;
-    }
-
-    public SlotResponse createResponseFromSlot(Slot slot) {
-        SlotResponse slotResponse = SlotResponse.builder()
-                .id(slot.getId())
-                .start(slot.getStart())
-                .end(slot.getEnd())
-                .capacity(slot.getCapacity())
-                .weekday(slot.getWeekday())
-                .build();
-        return slotResponse;
     }
 
 }
