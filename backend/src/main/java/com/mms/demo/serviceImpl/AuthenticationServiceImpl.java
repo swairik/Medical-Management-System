@@ -96,6 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
+                                .role(user.getRole())
                                 .build();
         }
 
