@@ -108,6 +108,19 @@ public class ScheduleController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
+        @GetMapping("/display/patient/approved/{did}")
+        public ResponseEntity<List<ScheduleResponse>> displayNonZeroApprovedSchedulesByDoctor(@PathVariable Long did) {
+                Doctor doctor = doctorService.getDoctortById(did)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+                List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
+                List<ScheduleResponse> response = schedules.stream().filter((s) -> s.getApproval())
+                                .filter((s) -> (s.getSlot().getCapacity() != 0))
+                                .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
         @GetMapping("/display/{pid}/{did}")
         public ResponseEntity<List<ScheduleResponse>> displayDoctorSchedulesByPatient(@PathVariable Long did,
                         @PathVariable Long pid) {
