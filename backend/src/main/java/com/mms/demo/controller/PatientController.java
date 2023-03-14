@@ -38,7 +38,8 @@ public class PatientController {
         // System.out.println(user);
         List<PatientResponse> response = new ArrayList<>();
         List<Patient> patients = patientService.getAllPatients();
-        response = patients.stream().map((p) -> createResponseFromPatient(p)).collect(Collectors.toList());
+        response = patients.stream().map((p) -> PatientResponse.createResponseFromPatient(p))
+                .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -46,7 +47,7 @@ public class PatientController {
     public ResponseEntity<PatientResponse> showAllPatients(@PathVariable Long id) {
         Patient patient = patientService.getPatientById(id)
                 .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
-        PatientResponse response = createResponseFromPatient(patient);
+        PatientResponse response = PatientResponse.createResponseFromPatient(patient);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -58,18 +59,18 @@ public class PatientController {
         if (patientAlreadyCreated != null) {
             throw new CustomException("Patient with email id already exists", "PATIENT_ALREADY_CREATED");
         }
-        Patient patient = createPatientFromRequest(patientRequest);
+        Patient patient = PatientRequest.createPatientFromRequest(patientRequest);
         Patient createdPatient = patientService.createPatient(patient);
-        PatientResponse patientResponse = createResponseFromPatient(createdPatient);
+        PatientResponse patientResponse = PatientResponse.createResponseFromPatient(createdPatient);
         return new ResponseEntity<>(patientResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponse> updatePatient(@PathVariable Long id,
             @Valid @RequestBody PatientRequest patientRequest) {
-        Patient patient = createPatientFromRequest(patientRequest);
+        Patient patient = PatientRequest.createPatientFromRequest(patientRequest);
         Patient updatedPatient = patientService.updatePatient(id, patient);
-        PatientResponse patientResponse = createResponseFromPatient(updatedPatient);
+        PatientResponse patientResponse = PatientResponse.createResponseFromPatient(updatedPatient);
         return new ResponseEntity<>(patientResponse, HttpStatus.OK);
     }
 
@@ -77,29 +78,6 @@ public class PatientController {
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    public Patient createPatientFromRequest(PatientRequest patientRequest) {
-        Patient patient = Patient.builder()
-                .name(patientRequest.getName())
-                .gender(patientRequest.getGender())
-                .age(patientRequest.getAge())
-                .email(patientRequest.getEmail())
-                .phone(patientRequest.getPhone())
-                .build();
-        return patient;
-    }
-
-    public PatientResponse createResponseFromPatient(Patient patient) {
-        PatientResponse patientResponse = PatientResponse.builder()
-                .id(patient.getId())
-                .name(patient.getName())
-                .age(patient.getAge())
-                .email(patient.getEmail())
-                .gender(patient.getGender())
-                .phone(patient.getPhone())
-                .build();
-        return patientResponse;
     }
 
 }

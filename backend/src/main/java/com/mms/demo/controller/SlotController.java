@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,8 @@ public class SlotController {
     @GetMapping("/display")
     public ResponseEntity<List<SlotResponse>> displayAllSlots() {
         List<Slot> slots = slotService.getAllSlots();
-        List<SlotResponse> response = slots.stream().map((s) -> createResponseFromSlot(s)).collect(Collectors.toList());
+        List<SlotResponse> response = slots.stream().map((s) -> SlotResponse.createResponseFromSlot(s))
+                .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> displaySlotById(@PathVariable Long id) {
         Slot slot = slotService.getSlotById(id)
                 .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        SlotResponse response = createResponseFromSlot(slot);
+        SlotResponse response = SlotResponse.createResponseFromSlot(slot);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -55,7 +55,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> createSlot(@RequestBody SlotRequest slotRequest) {
         Slot slot = createSlotFromRequest(slotRequest);
         Slot createdSlot = slotService.createSlot(slot);
-        SlotResponse response = createResponseFromSlot(createdSlot);
+        SlotResponse response = SlotResponse.createResponseFromSlot(createdSlot);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -63,7 +63,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> updateSlot(@PathVariable Long id, @Valid @RequestBody SlotRequest slotRequest) {
         Slot slot = createSlotFromRequest(slotRequest);
         Slot updatedSlot = slotService.updateSlot(id, slot);
-        SlotResponse response = createResponseFromSlot(updatedSlot);
+        SlotResponse response = SlotResponse.createResponseFromSlot(updatedSlot);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -73,22 +73,17 @@ public class SlotController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public SlotResponse createResponseFromSlot(Slot slot) {
-        SlotResponse slotResponse = new SlotResponse();
-        BeanUtils.copyProperties(slot, slotResponse);
-        return slotResponse;
-    }
-
     public Slot createSlotFromRequest(SlotRequest slotRequest) {
         LocalTime start = LocalTime.parse(slotRequest.getStart());
         LocalTime end = LocalTime.parse(slotRequest.getEnd());
 
-        if(start.until(end, ChronoUnit.MINUTES) < 0) {
+        if (start.until(end, ChronoUnit.MINUTES) < 0) {
             throw new CustomException("End time is less than start time", "END_TIME_LESS_THAN_START_TIME");
         }
 
-        if(start.until(end, ChronoUnit.MINUTES) < 30) {
-            throw new CustomException("End time and start time need a minimum difference of 30 minutes", "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
+        if (start.until(end, ChronoUnit.MINUTES) < 30) {
+            throw new CustomException("End time and start time need a minimum difference of 30 minutes",
+                    "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
         }
 
         Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
