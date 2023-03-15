@@ -11,11 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReportRequest {
-    @NotNull(message = "Patient Id cannot be null")
-    private Long patientId;
-
-    @NotNull(message = "Doctor Id cannot be null")
-    private Long DoctorId;
 
     private byte[] reportText;
+
 }
