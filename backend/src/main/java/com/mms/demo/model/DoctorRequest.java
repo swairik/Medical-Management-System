@@ -1,6 +1,5 @@
 package com.mms.demo.model;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -25,9 +24,6 @@ public class DoctorRequest {
     @NotNull(message = "Age cannot be null")
     @Min(0)
     private Integer age;
-
-    @Email
-    private String email;
 
     @Size(min = 7, max = 14, message = "Phone number must be between 7-14 characters")
     @NotNull

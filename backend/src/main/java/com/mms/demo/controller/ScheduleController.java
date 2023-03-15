@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
+import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.model.ScheduleRequest;
 import com.mms.demo.model.ScheduleResponse;
 import com.mms.demo.service.AppointmentService;
@@ -162,8 +166,13 @@ public class ScheduleController {
         }
 
         @PostMapping("/")
-        public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest) {
+        public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest,
+                        @AuthenticationPrincipal Credential user) {
                 Schedule schedule = createScheduleFromRequest(scheduleRequest);
+                if (checkPermissions(user, schedule.getDoctor().getEmail())) {
+                        throw new Custom403Exception("Logged in user is not permitted to edit another user's schedule",
+                                        "SCHEDULE_CREATION_NOT_ALLOWED");
+                }
                 Schedule createdSchedule = scheduleService.createSchedule(schedule);
                 ScheduleResponse response = ScheduleResponse.createResponseFromSchedule(createdSchedule);
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -172,8 +181,9 @@ public class ScheduleController {
         @PutMapping("/{id}")
         public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Long id,
                         @Valid @RequestBody ScheduleRequest scheduleRequest) {
-                Schedule schedule = createScheduleFromRequest(scheduleRequest);
-                Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
+
+                Schedule udpateSchedule = createScheduleFromRequest(scheduleRequest);
+                Schedule updatedSchedule = scheduleService.updateSchedule(id, udpateSchedule);
                 ScheduleResponse response = ScheduleResponse.createResponseFromSchedule(updatedSchedule);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -212,10 +222,16 @@ public class ScheduleController {
                                 .slot(slot)
                                 .week(week)
                                 .year(year)
-                                .approval(scheduleRequest.getApproval())
+                                .approval(false)
                                 .build();
 
                 return schedule;
+        }
+
+        private Boolean checkPermissions(Credential user, String email) {
+                if (user.getRole().equals(Role.DOCTOR) && !user.getEmail().equals(email))
+                        return false;
+                return true;
         }
 
 }
