@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../css/LoginStyle.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../js/Auth.js"></script>
+  </head>
+  <body>
+    <div class="logo">
+      <img src="images/logo.jpg" />
+      <h2>Care4U</h2>
+    </div>
+    <div class="container">
+      <img src="images/signin.png" alt="image" />
+      <div class="container-signin">
+        <form id="login_form">
+          <label>Email Id : </label>
+          <input
+            type="email"
+            placeholder="Enter Email Id..."
+            name="email"
+            id="email"
+            required
+          />
+          <label>Password : </label>
+          <input
+            type="password"
+            placeholder="Enter Password..."
+            name="password"
+            id="password"
+            required
+          />
+          <button type="submit" id="login">Login</button>
+        </form>
+          <a href="">Forgot Password?</a><br /><br />
+          <button id="signup">Sign up as Patient</button>
+
+      </div>
+
+      <div class="container-signup">
+        <form id="patient_form">
+          <label>Name : </label>
+          <input
+            type="text"
+            placeholder="Enter Name..."
+            name="name"
+            id="name"
+            required
+          />
+          <label>Age: </label>
+          <input type="text" placeholder="Enter Age..." name="age" id="age" required />
+          <label>Gender: </label>
+          <input
+            type="text"
+            placeholder="Enter Gender..."
+            name="gender"
+            id="gender"
+            required
+          />
+          <label>Phone: </label>
+          <input
+            type="text"
+            placeholder="Enter Phone No...."
+            name="phone"
+            id="phone"
+            required
+          />
+          <label>Email Id: </label>
+          <input
+            type="email"
+            placeholder="Enter Email Id..."
+            name="email"
+            id="email_patient"
+            required
+          />
+          <label>Password: </label>
+          <input
+            type="password"
+            placeholder="Enter Password..."
+            name="password1"
+            id="password1"
+            required
+          />
+          <label>Confirm Password: </label>
+          <input
+            type="password"
+            placeholder="Re-Enter Password..."
+            name="password2"
+            id="password2"
+            required
+          />
+          <button type="submit" id="sign_up">Sign Up</button>
+        </form>
+        <button id="signin">Login Instead</button>
+      </div>
+    </div>
+  </body>
+</html>
