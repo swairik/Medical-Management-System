@@ -3,6 +3,7 @@ package com.mms.demo.controller;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,8 @@ public class SlotController {
     @Autowired
     SlotService slotService;
 
+    private static final Integer SLOT_DURATION = 30;
+
     @GetMapping("/display")
     public ResponseEntity<List<SlotResponse>> displayAllSlots() {
         List<Slot> slots = slotService.getAllSlots();
@@ -52,17 +55,23 @@ public class SlotController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<SlotResponse> createSlot(@RequestBody SlotRequest slotRequest) {
-        Slot slot = createSlotFromRequest(slotRequest);
-        Slot createdSlot = slotService.createSlot(slot);
-        SlotResponse response = SlotResponse.createResponseFromSlot(createdSlot);
+    public ResponseEntity<List<SlotResponse>> createSlots(@RequestBody SlotRequest slotRequest) {
+        List<Slot> slots = createAllSlotsFromRequest(slotRequest);
+        List<SlotResponse> response = new ArrayList<>();
+        for (Slot slot : slots) {
+            Slot createdSlot = slotService.createSlot(slot);
+            response.add(SlotResponse.createResponseFromSlot(createdSlot));
+        }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<SlotResponse> updateSlot(@PathVariable Long id, @Valid @RequestBody SlotRequest slotRequest) {
-        Slot slot = createSlotFromRequest(slotRequest);
-        Slot updatedSlot = slotService.updateSlot(id, slot);
+        slotService.getSlotById(id)
+                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+
+        Slot updateslot = createSlotFromRequest(slotRequest);
+        Slot updatedSlot = slotService.updateSlot(id, updateslot);
         SlotResponse response = SlotResponse.createResponseFromSlot(updatedSlot);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -73,7 +82,7 @@ public class SlotController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public Slot createSlotFromRequest(SlotRequest slotRequest) {
+    public List<Slot> createAllSlotsFromRequest(SlotRequest slotRequest) {
         LocalTime start = LocalTime.parse(slotRequest.getStart());
         LocalTime end = LocalTime.parse(slotRequest.getEnd());
 
@@ -81,19 +90,56 @@ public class SlotController {
             throw new CustomException("End time is less than start time", "END_TIME_LESS_THAN_START_TIME");
         }
 
-        if (start.until(end, ChronoUnit.MINUTES) < 30) {
-            throw new CustomException("End time and start time need a minimum difference of 30 minutes",
+        if (start.until(end, ChronoUnit.MINUTES) < SLOT_DURATION) {
+            throw new CustomException(
+                    String.format("End time and start time need a minimum difference of %s minutes", SLOT_DURATION),
                     "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
         }
 
-        Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / 30;
+        Integer capacity = (int) start.until(end, ChronoUnit.MINUTES) / SLOT_DURATION;
+
+        List<Slot> slots = new ArrayList<>();
+
+        for (int i = 0; i < capacity; i++) {
+            slots.add(
+                    createSlotFromRequest(DayOfWeek.of(slotRequest.getWeekday()), start.plusMinutes(i * SLOT_DURATION),
+                            start.plusMinutes((i + 1) * SLOT_DURATION)));
+        }
+
+        return slots;
+    }
+
+    public Slot createSlotFromRequest(DayOfWeek weekDay, LocalTime start, LocalTime end) {
+        if (start.until(end, ChronoUnit.MINUTES) != SLOT_DURATION) {
+            throw new CustomException(
+                    String.format("End time and start time has to have a difference of %s minutes", SLOT_DURATION),
+                    "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
+        }
+
+        Slot slot = Slot.builder()
+                .weekday(weekDay)
+                .start(start)
+                .end(end)
+                .build();
+        return slot;
+    }
+
+    public Slot createSlotFromRequest(SlotRequest slotRequest) {
+        LocalTime start = LocalTime.parse(slotRequest.getStart());
+        LocalTime end = LocalTime.parse(slotRequest.getEnd());
+
+        if (start.until(end, ChronoUnit.MINUTES) != SLOT_DURATION) {
+            throw new CustomException(
+                    String.format("End time and start time has to have a difference of %s minutes", SLOT_DURATION),
+                    "NOT_ENOUGH_TIME_BETWEEN_START_AND_END");
+        }
 
         Slot slot = Slot.builder()
                 .weekday(DayOfWeek.of(slotRequest.getWeekday()))
                 .start(start)
                 .end(end)
-                .capacity(capacity)
                 .build();
         return slot;
     }
+
 }
