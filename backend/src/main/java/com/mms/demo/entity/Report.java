@@ -2,7 +2,7 @@ package com.mms.demo.entity;
 
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 import jakarta.persistence.Column;
@@ -40,16 +40,9 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "patient_id", nullable = false)
-    private Patient patient;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
-    private Doctor doctor;
-
     @Column(name = "report_timestamp")
-    private LocalDateTime stamp;
+    @Builder.Default
+    private LocalDate stamp = LocalDate.now();
 
     @Lob
     @Column(name = "report_text")

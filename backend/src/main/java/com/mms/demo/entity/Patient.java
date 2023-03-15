@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -49,5 +51,9 @@ public class Patient {
 
     @Column(name = "patient_phone", length = 14, nullable = false)
     private String phone;
+
+    @Column(name = "patient_registration_timestamp", nullable = false)
+    @Builder.Default
+    private LocalDate stamp = LocalDate.now();
 
 }

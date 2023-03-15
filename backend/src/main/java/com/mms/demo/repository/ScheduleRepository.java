@@ -11,4 +11,5 @@ import com.mms.demo.entity.Slot;
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findAllByDoctor(Doctor doctor);
     List<Schedule> findAllBySlot(Slot slot);
+    List<Schedule> findAllByDoctorAndWeek(Doctor doctor, Integer week);
 }
