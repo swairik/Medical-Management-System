@@ -18,9 +18,15 @@ var content =
 };
 
 $(document).ready(function () {
+    const cookie = document.cookie;
+    const token = cookie.split('; ').find(row => row.startsWith('authToken=')).split('=')[1];
+    console.log(token)
     $.ajax({
       url: "http://localhost:8050/speciality/display",
       type: "GET",
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       success: function (result) {
         console.log(result);
         docList = result;
@@ -33,6 +39,7 @@ $(document).ready(function () {
       },
       error: function (error) {
         console.log(error);
+
       },
     });
 

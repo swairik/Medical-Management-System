@@ -33,7 +33,7 @@ $(document).ready(function () {
       },
       error: function (error) {
         console.log(error);
-        alert("Some error occurred!");
+        alert("Wrong credential");
       },
     });
   });
@@ -64,7 +64,6 @@ $(document).ready(function () {
       success: function (result) {
         // window.location.href = 'EditDoctor';
         console.log(result);
-        result.role = "PATIENT";
         document.cookie = `authToken=${result.token}`;
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
