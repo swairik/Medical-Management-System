@@ -16,7 +16,8 @@ import com.mms.demo.entity.Report;
 import com.mms.demo.entity.Speciality;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -35,7 +36,7 @@ public class ReportServiceTest {
     @Order(1)
     @DisplayName("Testing create on a single report")
     void testCreateReport() {
-        report = Report.builder().reportText(null).stamp(LocalDateTime.now().toLocalDate()).build();
+        report = Report.builder().contents(null).stamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
         assertThat(impl.createReport(report)).isEqualTo(report);
     }
 
@@ -48,32 +49,33 @@ public class ReportServiceTest {
 
     @Order(4)
     @Test
-    @DisplayName("(UNIMPLEMENTED) Testing fetch on a single report by stamp")
+    @DisplayName("Testing fetch on a single report by stamp")
     void testGetReportByStamp() {
         ArrayList<Report> reports = new ArrayList<Report>();
-        reports.add(Report.builder().reportText(null).build());
-        reports.add(Report.builder().reportText(null).build());
-        reports.add(Report.builder().reportText(null).build());
-        reports.add(Report.builder().reportText(null).build());
+        LocalDateTime temporalTarget = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
 
         for (Report rep : reports) {
             impl.createReport(rep);
         }
 
-        assertThat(impl.getReportByStamp(LocalDateTime.now())).containsAll(reports);
+        assertThat(impl.getReportByStamp(temporalTarget)).containsAll(reports);
     }
 
     @Order(5)
     @Test
     void testGetAllReportsByStampBetween() {
         ArrayList<Report> reports = new ArrayList<Report>();
-        reports.add(Report.builder().reportText(null).build());
-        reports.add(Report.builder().reportText(null).build());
-        reports.add(Report.builder().reportText(null).build());
+        reports.add(Report.builder().contents(null).build());
+        reports.add(Report.builder().contents(null).build());
+        reports.add(Report.builder().contents(null).build());
         for (Report rep : reports) {
             impl.createReport(rep);
         }
-        Report temp = Report.builder().reportText(null).stamp(LocalDate.now().plusDays(1)).build();
+        Report temp = Report.builder().contents(null).stamp(LocalDateTime.now().plusDays(1)).build();
         impl.createReport(temp);
 
         assertThat(impl.getAllReportsByStampBetween(LocalDateTime.now(), LocalDateTime.now())).containsAll(reports).doesNotContain(temp);
@@ -86,6 +88,7 @@ public class ReportServiceTest {
         Report tempReport = report.toBuilder().build();
         assertThat(impl.updateReport(report.getId(), tempReport)).isEqualTo(tempReport);
     }
+
 
     @Order(7)
     @Test
