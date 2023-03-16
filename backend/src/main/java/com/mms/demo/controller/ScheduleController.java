@@ -191,6 +191,17 @@ public class ScheduleController {
                 Slot slot = slotService.getSlotById(scheduleRequest.getSlotId())
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
+
+                List<Schedule> bookedSchedules = scheduleService.getAllSchedules();
+                Schedule alreadyBookedSameSlot = bookedSchedules.stream().filter(
+                                (s) -> s.getDoctor().getId() == doctor.getId() && s.getSlot().getId() == slot.getId())
+                                .findFirst().orElse(null);
+
+                if (alreadyBookedSameSlot != null) {
+                        throw new CustomException("Schedule with combination of doctor and slot already booked",
+                                        "SCHEDULE_ALREADY_BOOKED");
+                }
+
                 String weekDate = scheduleRequest.getWeekDate();
 
                 Pattern pattern = Pattern.compile("^(?<year>\\d{4})-W(?<week>\\d{2})$");
