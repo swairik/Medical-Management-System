@@ -164,6 +164,17 @@ public class ScheduleController {
         @PostMapping("/")
         public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest) {
                 Schedule schedule = createScheduleFromRequest(scheduleRequest);
+
+                List<Schedule> createdSchedules = scheduleService.getSchedulesByDoctor(schedule.getDoctor());
+                Schedule alreadyCreatedSchedule = createdSchedules.stream()
+                                .filter((s) -> (s.getDoctor().getId() == schedule.getDoctor().getId()
+                                                && s.getSlot().getId() == schedule.getSlot().getId()))
+                                .findFirst().orElse(null);
+                if (alreadyCreatedSchedule != null) {
+                        throw new CustomException("Schedule with given combination of doctor and slot already created",
+                                        "SCHEDULE_ALREADY_CREATED");
+                }
+
                 Schedule createdSchedule = scheduleService.createSchedule(schedule);
                 ScheduleResponse response = ScheduleResponse.createResponseFromSchedule(createdSchedule);
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
