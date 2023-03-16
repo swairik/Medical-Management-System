@@ -1,6 +1,7 @@
 package com.mms.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,5 +50,5 @@ public class Appointment {
 
     @Column(name = "appointment_scheduled_on", nullable = false)
     @Builder.Default
-    private LocalDate stamp = LocalDate.now();
+    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 }

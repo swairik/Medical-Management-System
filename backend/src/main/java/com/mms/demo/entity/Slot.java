@@ -50,5 +50,6 @@ public class Slot {
 
     @Column(name = "slot_capacity", nullable = false)
     @Min(1)
-    private Integer capacity;
+    @Builder.Default
+    private Integer capacity = 1;
 }
