@@ -19,7 +19,6 @@ public class SlotResponse {
     private DayOfWeek weekday;
     private LocalTime start;
     private LocalTime end;
-    private Integer capacity;
 
     public static SlotResponse createResponseFromSlot(Slot slot) {
         SlotResponse slotResponse = SlotResponse.builder()
@@ -27,7 +26,6 @@ public class SlotResponse {
                 .weekday(slot.getWeekday())
                 .start(slot.getStart())
                 .end(slot.getEnd())
-                .capacity(slot.getCapacity())
                 .build();
         return slotResponse;
     }
