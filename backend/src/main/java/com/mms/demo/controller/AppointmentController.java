@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
 import com.mms.demo.service.AppointmentService;
+import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.SlotService;
 
@@ -32,122 +34,140 @@ import jakarta.validation.Valid;
 @RequestMapping("/appointment")
 public class AppointmentController {
 
-    @Autowired
-    PatientService patientService;
+        @Autowired
+        PatientService patientService;
 
-    @Autowired
-    SlotService slotService;
+        @Autowired
+        DoctorService doctorService;
 
-    @Autowired
-    AppointmentService appointmentService;
+        @Autowired
+        SlotService slotService;
 
-    @GetMapping("/display")
-    public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
-        List<AppointmentResponse> response = appointments.stream()
-                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @Autowired
+        AppointmentService appointmentService;
 
-    @GetMapping("/display/{id}")
-    public ResponseEntity<AppointmentResponse> displayAppointmentById(@PathVariable Long id) {
-        Appointment appointment = appointmentService.getAppointmentById(id)
-                .orElseThrow(() -> new CustomException("Appointment with given id not found", "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(appointment);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/display/patient/{id}")
-    public ResponseEntity<List<AppointmentResponse>> displayAppointmentsByPatient(
-            @PathVariable Long id) {
-        Patient patient = patientService.getPatientById(id)
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
-        List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
-        List<AppointmentResponse> response = appointments.stream()
-                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/display/slot/{id}")
-    public ResponseEntity<List<AppointmentResponse>> displayAppointmentsBySlot(
-            @PathVariable Long id) {
-        Slot slot = slotService.getSlotById(id)
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        List<Appointment> appointments = appointmentService.getAppointmentsBySlot(slot);
-        List<AppointmentResponse> response = appointments.stream()
-                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/")
-    public ResponseEntity<AppointmentResponse> createAppointment(
-            @Valid @RequestBody AppointmentRequest appointmentRequest) {
-        Appointment appointment = createAppointmentFromRequest(appointmentRequest);
-
-        List<Appointment> allAppointments = appointmentService.getAllAppointments();
-
-        Appointment alreadyCreatedAppointment = allAppointments.stream()
-                .filter((a) -> (a.getPatient().getId() == appointmentRequest.getPatientId()
-                        && a.getSlot().getId() == appointmentRequest.getSlotId()))
-                .findFirst().orElse(null);
-
-        if (alreadyCreatedAppointment != null) {
-            throw new CustomException("Appointment with given patient id and slot id already created",
-                    "APPOINTMENT_ALREADY_CREATED");
+        @GetMapping("/display")
+        public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
+                List<Appointment> appointments = appointmentService.getAllAppointments();
+                List<AppointmentResponse> response = appointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        Appointment createdAppointment = appointmentService.createAppointment(appointment);
-
-        Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-
-        slot.setCapacity(slot.getCapacity() - 1);
-        slotService.updateSlot(slot.getId(), slot);
-
-        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(createdAppointment);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable Long id,
-            @Valid @RequestBody AppointmentRequest appointmentRequest) {
-        Appointment appointment = createAppointmentFromRequest(appointmentRequest);
-        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointment);
-        AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(updatedAppointment);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
-        Appointment appointment = appointmentService.getAppointmentById(id)
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-
-        appointmentService.deleteAppointment(id);
-
-        Slot slot = appointment.getSlot();
-        Integer maxCapacity = (int) slot.getStart().until(slot.getEnd(), ChronoUnit.MINUTES) / 30;
-        slot.setCapacity(Integer.min(slot.getCapacity() + 1, maxCapacity));
-        slotService.updateSlot(slot.getId(), slot);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    public Appointment createAppointmentFromRequest(AppointmentRequest appointmentRequest) {
-        Patient patient = patientService.getPatientById(appointmentRequest.getPatientId())
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
-        Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
-                .orElseThrow(() -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-        if (slot.getCapacity() == 0) {
-            throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+        @GetMapping("/display/{id}")
+        public ResponseEntity<AppointmentResponse> displayAppointmentById(@PathVariable Long id) {
+                Appointment appointment = appointmentService.getAppointmentById(id)
+                                .orElseThrow(() -> new CustomException("Appointment with given id not found",
+                                                "APPOINTMENT_NOT_FOUND"));
+                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(appointment);
+                return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        Appointment appointment = Appointment.builder()
-                .patient(patient)
-                .slot(slot)
-                .build();
-        return appointment;
-    }
+
+        @GetMapping("/display/patient/{id}")
+        public ResponseEntity<List<AppointmentResponse>> displayAppointmentsByPatient(
+                        @PathVariable Long id) {
+                Patient patient = patientService.getPatientById(id)
+                                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                "PATIENT_NOT_FOUND"));
+                List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
+                List<AppointmentResponse> response = appointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/display/slot/{id}")
+        public ResponseEntity<List<AppointmentResponse>> displayAppointmentsBySlot(
+                        @PathVariable Long id) {
+                Slot slot = slotService.getSlotById(id)
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+                List<Appointment> appointments = appointmentService.getAppointmentsBySlot(slot);
+                List<AppointmentResponse> response = appointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/display/doctor/{id}/upcoming")
+        public ResponseEntity<List<AppointmentResponse>> showUpcomingAppointmentsByDoctor(@PathVariable Long id) {
+                Doctor doctor = doctorService.getDoctortById(id)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+
+        }
+
+        @PostMapping("/")
+        public ResponseEntity<AppointmentResponse> createAppointment(
+                        @Valid @RequestBody AppointmentRequest appointmentRequest) {
+                Appointment appointment = createAppointmentFromRequest(appointmentRequest);
+
+                List<Appointment> allAppointments = appointmentService.getAllAppointments();
+
+                Appointment alreadyCreatedAppointment = allAppointments.stream()
+                                .filter((a) -> (a.getPatient().getId() == appointmentRequest.getPatientId()
+                                                && a.getSlot().getId() == appointmentRequest.getSlotId()))
+                                .findFirst().orElse(null);
+
+                if (alreadyCreatedAppointment != null) {
+                        throw new CustomException("Appointment with given patient id and slot id already created",
+                                        "APPOINTMENT_ALREADY_CREATED");
+                }
+
+                Appointment createdAppointment = appointmentService.createAppointment(appointment);
+
+                Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+
+                slot.setCapacity(slot.getCapacity() - 1);
+                slotService.updateSlot(slot.getId(), slot);
+
+                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(createdAppointment);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @PutMapping("/{id}")
+        public ResponseEntity<AppointmentResponse> updateAppointment(@PathVariable Long id,
+                        @Valid @RequestBody AppointmentRequest appointmentRequest) {
+                Appointment appointment = createAppointmentFromRequest(appointmentRequest);
+                Appointment updatedAppointment = appointmentService.updateAppointment(id, appointment);
+                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(updatedAppointment);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
+                Appointment appointment = appointmentService.getAppointmentById(id)
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+
+                appointmentService.deleteAppointment(id);
+
+                Slot slot = appointment.getSlot();
+                Integer maxCapacity = (int) slot.getStart().until(slot.getEnd(), ChronoUnit.MINUTES) / 30;
+                slot.setCapacity(Integer.min(slot.getCapacity() + 1, maxCapacity));
+                slotService.updateSlot(slot.getId(), slot);
+
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        public Appointment createAppointmentFromRequest(AppointmentRequest appointmentRequest) {
+                Patient patient = patientService.getPatientById(appointmentRequest.getPatientId())
+                                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                "PATIENT_NOT_FOUND"));
+                Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
+                                .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                "SLOT_NOT_FOUND"));
+                if (slot.getCapacity() == 0) {
+                        throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+                }
+                Appointment appointment = Appointment.builder()
+                                .patient(patient)
+                                .slot(slot)
+                                .build();
+                return appointment;
+        }
 
 }
