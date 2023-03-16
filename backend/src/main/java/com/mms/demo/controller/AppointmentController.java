@@ -1,7 +1,12 @@
 package com.mms.demo.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mms.demo.entity.Appointment;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
@@ -26,6 +32,7 @@ import com.mms.demo.model.AppointmentResponse;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
+import com.mms.demo.service.ScheduleService;
 import com.mms.demo.service.SlotService;
 
 import jakarta.validation.Valid;
@@ -45,6 +52,9 @@ public class AppointmentController {
 
         @Autowired
         AppointmentService appointmentService;
+
+        @Autowired
+        ScheduleService scheduleService;
 
         @GetMapping("/display")
         public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
@@ -95,6 +105,26 @@ public class AppointmentController {
                 Doctor doctor = doctorService.getDoctortById(id)
                                 .orElseThrow(() -> new CustomException("Doctor with given id not found",
                                                 "DOCTOR_NOT_FOUND"));
+
+                // slots for a doctor scheduled between
+                // appointments after a specific date (now)
+                LocalDateTime temporalTargetStart = LocalDateTime.now();
+                LocalDateTime temporalTargetEnd = LocalDateTime.now().withMonth(12).withDayOfMonth(31);
+                List<Schedule> schedulesUpcoming = scheduleService.getSchedulesByDoctorAndWeekDay(doctor, temporalTargetStart.toLocalDate(), temporalTargetEnd.toLocalDate())
+                Set<Slot> validSlots = new HashSet<>();
+                for (Schedule sched : schedulesUpcoming) {
+                        validSlots.add(sched.getSlot());
+                }
+
+                List<Appointment> validAppointments = new ArrayList<Appointment>();
+                for (Slot slot : validSlots) {
+                        validAppointments.addAll(appointmentService.getAppointmentsBySlot(slot).stream()
+                        .filter(a   ->  a.getSlot().getStart().isAfter(temporalTargetStart.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
+                                        a.getSlot().getEnd().isBefore(temporalTargetEnd.truncatedTo(ChronoUnit.SECONDS).toLocalTime())    )
+                        .collect(Collectors.toList()));
+                }
+
+
 
         }
 
