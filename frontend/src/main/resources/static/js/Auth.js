@@ -27,9 +27,11 @@ $(document).ready(function () {
       success: function (result) {
         // window.location.href = 'EditDoctor';
         console.log(result);
-        result.role = "PATIENT";
+      
         document.cookie = `authToken=${result.token}`;
-        // if(result.role==="PATIENT") window.location.href = 'Patient';
+        if(result.role==="PATIENT") window.location.href = 'Patient';
+        if(result.role==="ADMIN") window.location.href = 'Admin';
+        if(result.role==="DOCTOR") window.location.href = 'Doctor';
       },
       error: function (error) {
         console.log(error);

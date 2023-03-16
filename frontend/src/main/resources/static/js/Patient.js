@@ -21,11 +21,11 @@ $(document).ready(function () {
     const cookie = document.cookie;
     const token = cookie.split('; ').find(row => row.startsWith('authToken=')).split('=')[1];
     console.log(token)
-    $.ajax({
+    var req=$.ajax({
       url: "http://localhost:8050/speciality/display",
       type: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`
+        "Authorization": `Bearer ${token}`
       },
       success: function (result) {
         console.log(result);
@@ -42,6 +42,8 @@ $(document).ready(function () {
 
       },
     });
+
+    console.log(req)
 
 
   });

@@ -23,7 +23,7 @@ import com.mms.demo.service.SpecialityService;
 
 import jakarta.validation.Valid;
 
-// @CrossOrigin("*")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/speciality")
 public class SpecialityController {
