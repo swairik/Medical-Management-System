@@ -1,5 +1,7 @@
 package com.mms.demo.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,13 +38,11 @@ public class Token {
     @Builder.Default
     private String type = "BEARER";
 
-    @Column(name="token_is_revoked", nullable = false)
+    @Column(name="reset_token_is_revoked", nullable = false)
     @Builder.Default
     private Boolean isRevoked = false;
 
-    @Column(name="token_is_expired", nullable = false)
-    @Builder.Default
-    private Boolean isExpired = false;
-
+    @Column(name="token_expiration_date", nullable = false)
+    private LocalDateTime expirationStamp;
 
 }
