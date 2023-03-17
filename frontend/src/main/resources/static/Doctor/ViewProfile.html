@@ -1,79 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
     <link rel="stylesheet" href="../css/ViewProfileStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
-</head>
+  </head>
 
-<body>
-    <div class="NavBar">
-        <div class="Logo">
-          <img src="../images/doc.png" alt="Care4U"/>
+  <body>
+
+    <!-- <div class="NavBar">
+      <div class="Logo">
+        <img src="../images/doc.png" alt="Care4U"/>
+      </div>
+      <h1>Care4U</h1>
+      <nav>
+        <ul class="options">
+          <li><a href="DoctorDashboard.html">Home</a></li>
+          <li><a href="ViewProfile.html">View Profile</a></li>
+        </ul>
+      </nav>
+    </div> -->
+
+    <nav class="navbar">
+      <div id="logo">
+        <img src="../images/doc.png">
+        <p>Care4U</p>
+      </div>
+      <div class="menu">
+        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <div class="dropdown">
+          <button class="dropbtn">Profile
+          <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link" href="#confirm">Sign Out</a>
+          </div>
         </div>
-        <h1>Care4U</h1>
+      </div> 
+    </nav>
 
-        <nav>
-          <ul class="options">
-            <li><a href="DoctorDashboard.html">Home</a></li>
-            <li><a href="ViewProfile.html">View Profile</a></li>
-          </ul>
-        </nav>
+    <div id="confirm" class="overlay">
+      <div class="popup">
+        <h3>Do you want to Sign Out?</h3>
+        <a class="close " style="background-color: #ba0000" href="#">No</a>
+        <button id="out" style="background-color: #0ca912">Yes</button>
+      </div>
     </div>
 
-    <main>
-        <div class="first_box">
-          <h3>''We Care For Your Well Being''</h3> 
-        </div>
-  
-        <img class="main-img" src="../images/main.png" >
-        
-        <div class="second_box">
-          <ul class="ul">
-            <li class="li">Choose the doctor</li>
-            <li class="li">Book a slot</li>
-            <li class="li">Make payment</li>
-            <li class="li">Be present in the consult room</li>
-          </ul>
-        </div>
-      </main>
+    <!-- <main>
+      <div class="first_box">
+        <h3>''We Care For Your Well Being''</h3> 
+      </div>
+      <img class="main-img" src="../images/main.png" >
+      <div class="second_box">
+        <ul class="ul">
+          <li class="li">Choose the doctor</li>
+          <li class="li">Book a slot</li>
+          <li class="li">Make payment</li>
+          <li class="li">Be present in the consult room</li>
+        </ul>
+      </div>
+    </main>
 
-        <!-- <div class="L1">
-        <section class="left">
-            <h2>"We Care For Your Well Being"</h2>
-        </section>
-        <section class="right">
-            <ul class="info">
-            <li>Choose the doctor</li>
-            <li>Book a slot</li>
-            <li>Make payment</li>
-            <li>Be present in the consult room</li>
-            </ul>
-        </section>
-        </div> -->
+    <div class="profile">
+      <h2>Your Profile</h2>
+      <hr>
+      <br>
+      <p>Name:</p>
+      <p>Gender:</p>
+      <p>Speciality:</p>
+      <p>Contact No.:</p>
+      <p>E-Mail ID:</p>
+      <p>Address:</p>
+      <br>
+    </div> -->
 
-        <div class="profile">
-            <h2>Your Profile</h2>
-            <hr>
-            <br>
-            <p>Name:</p>
-            <p>Gender:</p>
-            <p>Speciality:</p>
-            <p>Contact No.:</p>
-            <p>E-Mail ID:</p>
-            <p>Address:</p>
-            <br>
-        </div>
-
-        <footer>
-            <p>Mail us at : </p>
-            <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
-        </footer>
+    <div class="card">
+      <img src="../images/image.png" alt="Profile Picture">
+      <button id="edit">Edit</button>
+      <table>
+        <tr>
+          <td>NAME</td>
+          <td>:</td>
+          <td id="dname"></td>
+        </tr>
+        <tr>
+          <td>AGE</td>
+          <td>:</td>
+          <td id="dage"></td>
+        </tr>
+        <tr>
+          <td>GENDER</td>
+          <td>:</td>
+          <td id="dgender"></td>
+        </tr>
+        <tr>
+          <td>SPECIALITY</td>
+          <td>:</td>
+          <td id="dspeciality"></td>
+        </tr>
+        <tr>
+          <td>CONTACT NO.</td>
+          <td>:</td>
+          <td id="dcontact"></td>
+        </tr>
+        <tr>
+          <td>EMAIL ID</td>
+          <td>:</td>
+          <td id="demail"></td>
+        </tr>
+        <tr>
+          <td>ADDRESS</td>
+          <td>:</td>
+          <td id="daddress"></td>
+        </tr>
+      </table>
     </div>
 
-</body>
+    <div class="dedit">
+      <form class = "dedit-form" id="doctor-form">
+        <h2>Enter Your Details</h2>
+          <label>Name : </label><br>
+          <input type="text" name="dname" required><br>
+          <label>Age : </label><br> 
+          <input type="text" name="dage" required><br>
+          <label>Gender : </label><br>  
+          <input type="text" name="dgender" required><br>
+          <label>Speciality : </label><br>  
+          <input type="text" name="dspeciality" required><br>
+          <label>Contact No. : </label><br>   
+          <input type="text" name="dcontact" required><br><br>
+          <label>E-Mail ID : </label><br>  
+          <input type="text" name="demail" required><br>
+          <label>Address : </label><br>  
+          <input type="text" name="daddress" required><br>
+          <button id="edited" type="submit">Save</button>   
+      </form>
+    </div>
+
+    <footer>
+      <p>Mail us at : </p>
+      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+    </footer>
+
+  </body>
 </html>

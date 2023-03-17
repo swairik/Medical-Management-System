@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Patients</title>
     <link rel="stylesheet" href="../css/YourPatientsStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
-</head>
+  </head>
 
-<body>
+  <body>
     
-    <div class="NavBar">
-        <div class="Logo">
-          <img src="../images/doc.png" alt="Care4U"/>
-        </div>
-        <h1>Care4U</h1>
+    <!-- <div class="NavBar">
+      <div class="Logo">
+        <img src="../images/doc.png" alt="Care4U"/>
+      </div>
+      <h1>Care4U</h1>
+      <nav>
+        <ul class="options">
+          <li><a href="DoctorDashboard.html">Home</a></li>
+          <li><a href="ViewProfile.html">View Profile</a></li>
+        </ul>
+      </nav>
+    </div> -->
 
-        <nav>
-          <ul class="options">
-            <li><a href="DoctorDashboard.html">Home</a></li>
-            <li><a href="ViewProfile.html">View Profile</a></li>
-          </ul>
-        </nav>
+    <nav class="navbar">
+      <div id="logo">
+        <img src="../images/doc.png">
+        <p>Care4U</p>
+      </div>
+      <div class="menu">
+        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <div class="dropdown">
+          <button class="dropbtn">Profile
+          <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link" href="#confirm">Sign Out</a>
+          </div>
+        </div>
+      </div> 
+    </nav>
+
+    <div id="confirm" class="overlay">
+      <div class="popup">
+        <h3>Do you want to Sign Out?</h3>
+        <a class="close " style="background-color: #ba0000" href="#">No</a>
+        <button id="out" style="background-color: #0ca912">Yes</button>
+      </div>
     </div>
-
-    <!-- <header>
-      <div class="header-content">
-        <div>
-            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
-        </div>
-        <div class="view">
-            View Profile
-        </div>
-     </div>
-    </header> -->
 
     <h2 class="heading">YOUR PATIENTS</h2>
 
-    <table>
+    <!-- <table>
       <tr>
         <th>S. No.</th>
         <th>Name</th>
@@ -54,30 +71,31 @@
         <td></td>
         <td></td>
         <td></td>
-        <td><a href="AddPrescription">Add</a></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td><a href="AddPrescriptionForm.html">Add</a></td>
       </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><a href="AddPrescriptionForm.html">Add</a></td>
-      </tr>
-    </table>
+    </table> -->
 
-    <!-- <p class="footer">
-      Mail us at:
-      <a href="mailto:support@care4u.com">support@care4u.com</a>
-    </p> -->
+    <div class="container">
+      <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-1">S. No.</div>
+          <div class="col col-2">Name</div>
+          <div class="col col-3">Age</div>
+          <div class="col col-4">Previous Appointment</div>
+          <div class="col col-5">Next Appointment</div>
+          <div class="col col-6">Prescription</div>
+
+        </li>
+        <li class="table-row">
+          <div class="col col-1" data-label="No"></div>
+          <div class="col col-2" data-label="Name"></div>
+          <div class="col col-3" data-label="Age"></div>
+          <div class="col col-4" data-label="PrevApp"></div>
+          <div class="col col-5" data-label="NextApp"></div>
+          <div class="col col-6" data-label="Prescription"><a id="pres" href="AddPrescriptionForm.html">Add</a></div>
+        </li>
+      </ul>
+    </div>
 
     <footer>
       <p>Mail us at : </p>
@@ -85,4 +103,4 @@
     </footer>
   
   </body>
-  </html>
+</html>

@@ -10,7 +10,6 @@
   .admin_heading {
     text-align: center;
   }
-
   .lower_body {
     display: grid;
   }
@@ -37,7 +36,6 @@
   .admin_heading {
     text-align: center;
   }
-
   .lower_body {
     display: grid;
   }
@@ -97,7 +95,6 @@
   }
 }
 
-
 .header-content {
   justify-content: space-between;
   display: flex;
@@ -106,60 +103,72 @@
   color: #fff;
   text-align: center;
 }
+
 .doc-img {
   background-color: #1e5a9e;
   width: 85%;
   align-self: center;
 }
+
 .view {
   align-self: center;
 }
+
 main {
   max-width: 100%;
   margin-top: 2%;
 }
+
 .first_box {
   background-color: #a7bcdc;
   padding-block: 4%;
   text-align: center;
 }
+
 .first_box h3 {
   color: #01346f;
   font-size: 30px;
   font-style: italic;
 }
+
 .main-img {
   position: absolute;
   z-index: 100;
 }
+
 .second_box {
   background-color: #1e5a9e;
   padding-block: 4%;
   text-align: center;
 }
+
 .ul {
   width: max-content;
   margin-inline: auto;
 }
+
 li {
   text-align: left;
   color: white;
 }
 
 .admin_heading {
-  margin: 3%;
+  margin: 2%;
   color: #b38309;
   font-family: Roboto Serif;
   font-size: 35px;
 }
+
 .lower_body {
-  margin-top: 3%;
+  margin-top: 2%;
 }
+
 .lower_body_box {
   background-color: #e9e9f2;
   padding-top: 2%;
   padding-bottom: 6%;
 }
+
 .img_button {
   display: flex;
   margin-top: 5%;
@@ -175,6 +184,7 @@ li {
   font-size: large;
   align-self: center;
 }
+
 .footer {
   background-color: #1e5a9e;
   text-align: center;
@@ -186,7 +196,6 @@ li {
 
 .add_doctor_box {
   display: flex;
-  /* background-color: #a7bcdc; */
   margin-top: 2%;
 }
 
@@ -212,8 +221,6 @@ li {
 
 .heading {
   margin: 2% 0 1% 0;
-  /* padding: 0 0 0 25px; */
-  /* display: inline-block; */
   font-family: 'Font Awesome 5 Free';
   font-style: italic;
   font-size: 24px;
@@ -233,7 +240,6 @@ li {
   float: right;
   margin: 2% 10% 0 0;
 }
-
 
 .box {
   background-color: #DDDDECA6;
@@ -260,7 +266,6 @@ li {
   border-radius: 8px;
   padding: 10px 20px 10px 20px;
   float: right;
-
 }
 
 .edit {
@@ -274,9 +279,3 @@ li {
   margin-left: 5px;
   margin-right: 10px;
 }
-
-
-
-
-
-
