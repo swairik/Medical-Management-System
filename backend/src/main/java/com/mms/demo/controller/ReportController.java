@@ -50,41 +50,47 @@ class ReportController {
 
         // @GetMapping("/display/{id}")
         // public ResponseEntity<ReportResponse> showReportById(@PathVariable Long id) {
-        //         Report report = reportService.getReportById(id)
-        //                         .orElseThrow(() -> new CustomException("Report with given id not found",
-        //                                         "REPORT_NOT_FOUND"));
-        //         ReportResponse response = ReportResponse.createResponseFromReport(report);
-        //         return new ResponseEntity<>(response, HttpStatus.OK);
+        // Report report = reportService.getReportById(id)
+        // .orElseThrow(() -> new CustomException("Report with given id not found",
+        // "REPORT_NOT_FOUND"));
+        // ReportResponse response = ReportResponse.createResponseFromReport(report);
+        // return new ResponseEntity<>(response, HttpStatus.OK);
         // }
 
         // @GetMapping("/display/stamp")
-        // public ResponseEntity<List<ReportResponse>> showReportById(@RequestParam String stamp) {
-        //         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        //         LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
-        //         List<Report> reports = reportService.getReportByStamp(dateTime);
-        //         List<ReportResponse> response = reports.stream().map((r) -> ReportResponse.createResponseFromReport(r))
-        //                         .collect(Collectors.toList());
-        //         return new ResponseEntity<>(response, HttpStatus.OK);
+        // public ResponseEntity<List<ReportResponse>> showReportById(@RequestParam
+        // String stamp) {
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd
+        // HH:mm:ss");
+        // LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
+        // List<Report> reports = reportService.getReportByStamp(dateTime);
+        // List<ReportResponse> response = reports.stream().map((r) ->
+        // ReportResponse.createResponseFromReport(r))
+        // .collect(Collectors.toList());
+        // return new ResponseEntity<>(response, HttpStatus.OK);
         // }
 
         // @GetMapping("/display/stampBetween")
-        // public ResponseEntity<List<ReportResponse>> showReportByStampsBetween(@RequestParam String startTime,
-        //                 @RequestParam String endTime) {
-        //         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        //         LocalDateTime start, end;
-        //         try {
-        //                 start = LocalDateTime.parse(startTime, formatter);
-        //                 end = LocalDateTime.parse(endTime, formatter);
+        // public ResponseEntity<List<ReportResponse>>
+        // showReportByStampsBetween(@RequestParam String startTime,
+        // @RequestParam String endTime) {
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd
+        // HH:mm:ss");
+        // LocalDateTime start, end;
+        // try {
+        // start = LocalDateTime.parse(startTime, formatter);
+        // end = LocalDateTime.parse(endTime, formatter);
 
-        //         } catch (Exception e) {
-        //                 throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
-        //         }
-        //         List<Report> reports = reportService.getAllReportsByStampBetween(start, end);
-        //         List<ReportResponse> response = reports.stream().map((r) -> ReportResponse.createResponseFromReport(r))
-        //                         .collect(Collectors.toList());
-        //         // HttpHeaders headers = new HttpHeaders();
-        //         // headers.setContentType(null);
-        //         return new ResponseEntity<>(response, HttpStatus.OK);
+        // } catch (Exception e) {
+        // throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
+        // }
+        // List<Report> reports = reportService.getAllReportsByStampBetween(start, end);
+        // List<ReportResponse> response = reports.stream().map((r) ->
+        // ReportResponse.createResponseFromReport(r))
+        // .collect(Collectors.toList());
+        // // HttpHeaders headers = new HttpHeaders();
+        // // headers.setContentType(null);
+        // return new ResponseEntity<>(response, HttpStatus.OK);
         // }
 
         @GetMapping("/display/generateReport")
@@ -101,7 +107,37 @@ class ReportController {
                 byte[] reports = reportService.generateReports(start, end).orElseThrow(
                                 () -> new CustomException("Error while generating report", "REPORT_NOT_GENERATED"));
                 ByteArrayResource response = new ByteArrayResource(reports);
-                String filename = String.format("Report_%s_%s", start.toString(), end.toString());
+                String filename = String.format("Report_%s_%s.xlsx", start.toString(), end.toString());
+                return ResponseEntity.ok()
+                                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                                .contentLength(response.contentLength())
+                                .header(HttpHeaders.CONTENT_DISPOSITION,
+                                                ContentDisposition.attachment()
+                                                                .filename(filename)
+                                                                .build().toString())
+                                .body(response);
+        }
+
+        @GetMapping("/display/generateDoctorReport/{id}")
+        public ResponseEntity<Resource> generateDoctorReport(@PathVariable Long id, @RequestParam String from,
+                        @RequestParam String to) {
+                Doctor doctor = doctorService.getDoctortById(id).orElseThrow(
+                                () -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime start, end;
+                try {
+                        start = LocalDateTime.parse(from, formatter);
+                        end = LocalDateTime.parse(to, formatter);
+
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
+                }
+
+                byte[] reports = reportService.generateScheduleReportForDoctor(start, end, doctor).orElseThrow(
+                                () -> new CustomException("Error while generating report", "REPORT_NOT_GENERATED"));
+                ByteArrayResource response = new ByteArrayResource(reports);
+                String filename = String.format("Report_Doctor_%s_%s.xlsx", start.toString(), end.toString());
                 return ResponseEntity.ok()
                                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                                 .contentLength(response.contentLength())
@@ -150,7 +186,7 @@ class ReportController {
                                 // .patient(patient)
                                 // .doctor(doctor)
                                 // .stamp(currentDateTime)
-                                .reportText(reportRequest.getReportText())
+                                .contents(reportRequest.getContents())
                                 .build();
                 return report;
         }

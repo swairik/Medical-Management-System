@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
@@ -110,7 +111,8 @@ public class AppointmentController {
                 // appointments after a specific date (now)
                 LocalDateTime temporalTargetStart = LocalDateTime.now();
                 LocalDateTime temporalTargetEnd = LocalDateTime.now().withMonth(12).withDayOfMonth(31);
-                List<Schedule> schedulesUpcoming = scheduleService.getSchedulesByDoctorAndWeekDay(doctor, temporalTargetStart.toLocalDate(), temporalTargetEnd.toLocalDate())
+                List<Schedule> schedulesUpcoming = scheduleService.getSchedulesByDoctorAndWeekDay(doctor,
+                                temporalTargetStart.toLocalDate(), temporalTargetEnd.toLocalDate());
                 Set<Slot> validSlots = new HashSet<>();
                 for (Schedule sched : schedulesUpcoming) {
                         validSlots.add(sched.getSlot());
@@ -119,13 +121,61 @@ public class AppointmentController {
                 List<Appointment> validAppointments = new ArrayList<Appointment>();
                 for (Slot slot : validSlots) {
                         validAppointments.addAll(appointmentService.getAppointmentsBySlot(slot).stream()
-                        .filter(a   ->  a.getSlot().getStart().isAfter(temporalTargetStart.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
-                                        a.getSlot().getEnd().isBefore(temporalTargetEnd.truncatedTo(ChronoUnit.SECONDS).toLocalTime())    )
-                        .collect(Collectors.toList()));
+                                        .filter(a -> a.getSlot().getStart()
+                                                        .isAfter(temporalTargetStart
+                                                                        .truncatedTo(ChronoUnit.SECONDS).toLocalTime())
+                                                        &&
+                                                        a.getSlot().getEnd().isBefore(temporalTargetEnd
+                                                                        .truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
+                                        .collect(Collectors.toList()));
                 }
 
+                List<AppointmentResponse> response = validAppointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
 
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
+        @GetMapping("/display/patient/{id}/upcoming")
+        public ResponseEntity<List<AppointmentResponse>> showAllPatientUpcoming(@PathVariable Long id,
+                        @RequestParam String stamp) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime dateTime;
+                try {
+                        dateTime = LocalDateTime.parse(stamp, formatter);
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of stamp", "WRONG_FORMAT");
+                }
+                Patient patient = patientService.getPatientById(id)
+                                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                "PATIENT_NOT_FOUND"));
+                List<Appointment> appointments = appointmentService.getAllByPatientAfter(patient, dateTime);
+                List<AppointmentResponse> response = appointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        @GetMapping("/display/patient/{id}/between")
+        public ResponseEntity<List<AppointmentResponse>> showAllPatientBetween(@PathVariable Long id,
+                        @RequestParam String start, @RequestParam String end) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime startTime, endTime;
+                try {
+                        startTime = LocalDateTime.parse(start, formatter);
+                        endTime = LocalDateTime.parse(end, formatter);
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of timestamp", "WRONG_FORMAT");
+                }
+                Patient patient = patientService.getPatientById(id)
+                                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                "PATIENT_NOT_FOUND"));
+                List<Appointment> appointments = appointmentService.getAllByPatientBetween(patient, startTime, endTime);
+                List<AppointmentResponse> response = appointments.stream()
+                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @PostMapping("/")

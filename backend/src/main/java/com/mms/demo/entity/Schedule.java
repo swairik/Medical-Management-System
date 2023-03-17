@@ -43,7 +43,7 @@ public class Schedule {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
     private Doctor doctor;
-    
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(referencedColumnName = "slot_id", nullable = false)
     private Slot slot;
