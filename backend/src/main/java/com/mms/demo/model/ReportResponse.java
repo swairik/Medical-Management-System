@@ -1,6 +1,6 @@
 package com.mms.demo.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,15 +15,15 @@ import com.mms.demo.entity.Report;
 @Builder
 public class ReportResponse {
     private Long id;
-    private LocalDate stamp;
-    private byte[] reportText;
+    private LocalDateTime stamp;
+    private byte[] contents;
 
     public static ReportResponse createResponseFromReport(Report report) {
 
         ReportResponse reportResponse = ReportResponse.builder()
                 .id(report.getId())
                 .stamp(report.getStamp())
-                .reportText(report.getReportText())
+                .contents(report.getContents())
                 .build();
 
         return reportResponse;

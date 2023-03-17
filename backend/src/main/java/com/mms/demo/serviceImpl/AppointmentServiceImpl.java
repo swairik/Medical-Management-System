@@ -1,7 +1,10 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,21 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Optional<Appointment> getAppointmentById(Long id) {
         return repo.findById(id);
+    }
+
+
+    @Override
+    public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end) {
+        List<Appointment> patientAppointments = repo.findAllByPatient(patient);
+        return patientAppointments.stream()
+                .filter(a   ->  a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
+                                a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime())    )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Appointment> getAllByPatientAfter(Patient patient, LocalDateTime stamp) {
+        return getAllByPatientBetween(patient, stamp, LocalDateTime.now());
     }
 
     @Override

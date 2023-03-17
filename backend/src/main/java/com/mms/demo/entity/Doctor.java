@@ -13,7 +13,8 @@ import jakarta.persistence.FetchType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
@@ -63,5 +64,5 @@ public class Doctor {
 
     @Column(name = "doctor_registration_timestamp", nullable = false)
     @Builder.Default
-    private LocalDate stamp = LocalDate.now();
+    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 }

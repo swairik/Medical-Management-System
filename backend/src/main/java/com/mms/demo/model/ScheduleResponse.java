@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 import com.mms.demo.entity.Schedule;
 
 @Data
@@ -15,8 +17,7 @@ public class ScheduleResponse {
     private Long id;
     private DoctorResponse doctorResponse;
     private SlotResponse slotResponse;
-    private Integer week;
-    private Integer year;
+    private LocalDate weekDate;
     private Boolean approval;
 
     public static ScheduleResponse createResponseFromSchedule(Schedule schedule) {
@@ -29,8 +30,7 @@ public class ScheduleResponse {
                 .id(schedule.getId())
                 .doctorResponse(doctorResponse)
                 .slotResponse(slotResponse)
-                .year(schedule.getYear())
-                .week(schedule.getWeek())
+                .weekDate(schedule.getWeekDate())
                 .approval(schedule.getApproval())
                 .build();
 

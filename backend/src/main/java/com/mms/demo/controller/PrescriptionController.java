@@ -34,88 +34,101 @@ import com.mms.demo.service.PrescriptionService;
 @RequestMapping("/prescription")
 public class PrescriptionController {
 
-    @Autowired
-    PrescriptionService prescriptionService;
+        @Autowired
+        PrescriptionService prescriptionService;
 
-    @Autowired
-    PatientService patientService;
+        @Autowired
+        PatientService patientService;
 
-    @Autowired
-    DoctorService doctorService;
+        @Autowired
+        DoctorService doctorService;
 
-    @GetMapping("/display/{id}")
-    public ResponseEntity<PrescriptionResponse> showPrescriptionById(@PathVariable Long id) {
-        Prescription prescription = prescriptionService.getPrescriptionById(id).orElseThrow(
-                () -> new CustomException("Prescription with given id not found", "PRESCRIPTION_NOT_FOUND"));
+        @GetMapping("/display/{id}")
+        public ResponseEntity<PrescriptionResponse> showPrescriptionById(@PathVariable Long id) {
+                Prescription prescription = prescriptionService.getPrescriptionById(id).orElseThrow(
+                                () -> new CustomException("Prescription with given id not found",
+                                                "PRESCRIPTION_NOT_FOUND"));
 
-        PrescriptionResponse response = PrescriptionResponse.createResponseFromPrescription(prescription);
+                PrescriptionResponse response = PrescriptionResponse.createResponseFromPrescription(prescription);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @GetMapping("/display/stamp/{stamp}")
-    public ResponseEntity<List<PrescriptionResponse>> showPrescriptionByStamp(@PathVariable String stamp) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
+        @GetMapping("/display/stamp/{stamp}")
+        public ResponseEntity<List<PrescriptionResponse>> showPrescriptionByStamp(@PathVariable String stamp) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
 
-        List<Prescription> prescriptions = prescriptionService.getPrescriptionsByStamp(dateTime);
-        List<PrescriptionResponse> response = prescriptions.stream()
-                .map((p) -> PrescriptionResponse.createResponseFromPrescription(p)).collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+                List<Prescription> prescriptions = prescriptionService.getPrescriptionsByStamp(dateTime);
+                List<PrescriptionResponse> response = prescriptions.stream()
+                                .map((p) -> PrescriptionResponse.createResponseFromPrescription(p))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @GetMapping("/display/stampBetween")
-    public ResponseEntity<List<PrescriptionResponse>> showPrescriptionByStampBetween(@RequestParam String start,
-            @RequestParam String end) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime startTime = LocalDateTime.parse(start, formatter);
-        LocalDateTime endTime = LocalDateTime.parse(end, formatter);
+        @GetMapping("/display/stampBetween")
+        public ResponseEntity<List<PrescriptionResponse>> showPrescriptionByStampBetween(@RequestParam String start,
+                        @RequestParam String end) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime startTime, endTime;
+                try {
+                        startTime = LocalDateTime.parse(start, formatter);
+                        endTime = LocalDateTime.parse(end, formatter);
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of timestamp", "WRONG_FORMAT");
+                }
+                List<Prescription> prescriptions = prescriptionService.getAllPrescriptionsByStampBetween(startTime,
+                                endTime);
+                List<PrescriptionResponse> response = prescriptions.stream()
+                                .map((p) -> PrescriptionResponse.createResponseFromPrescription(p))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        List<Prescription> prescriptions = prescriptionService.getAllPrescriptionsByStampBetween(startTime, endTime);
-        List<PrescriptionResponse> response = prescriptions.stream()
-                .map((p) -> PrescriptionResponse.createResponseFromPrescription(p)).collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @PostMapping("/")
+        public ResponseEntity<PrescriptionResponse> createPrescription(
+                        @RequestBody PrescriptionRequest prescriptionRequest) {
+                Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
+                Prescription createdPrescription = prescriptionService.createPrescription(prescription);
+                PrescriptionResponse response = PrescriptionResponse
+                                .createResponseFromPrescription(createdPrescription);
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
 
-    @PostMapping("/")
-    public ResponseEntity<PrescriptionResponse> createPrescription(
-            @RequestBody PrescriptionRequest prescriptionRequest) {
-        Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
-        Prescription createdPrescription = prescriptionService.createPrescription(prescription);
-        PrescriptionResponse response = PrescriptionResponse.createResponseFromPrescription(createdPrescription);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
+        @PutMapping("/{id}")
+        public ResponseEntity<PrescriptionResponse> updatePrescription(@PathVariable Long id,
+                        @RequestBody PrescriptionRequest prescriptionRequest) {
+                Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
+                Prescription updatedPrescription = prescriptionService.updatePrescription(id, prescription).orElseThrow(
+                                () -> new CustomException("Prescription with given id not found",
+                                                "PRESCRIPTION_NOT_FOUND"));
+                PrescriptionResponse response = PrescriptionResponse
+                                .createResponseFromPrescription(updatedPrescription);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PrescriptionResponse> updatePrescription(@PathVariable Long id,
-            @RequestBody PrescriptionRequest prescriptionRequest) {
-        Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
-        Prescription updatedPrescription = prescriptionService.updatePrescription(id, prescription).orElseThrow(
-                () -> new CustomException("Prescription with given id not found", "PRESCRIPTION_NOT_FOUND"));
-        PrescriptionResponse response = PrescriptionResponse.createResponseFromPrescription(updatedPrescription);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deletePrescription(@PathVariable Long id) {
+                prescriptionService.deletePrescription(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePrescription(@PathVariable Long id) {
-        prescriptionService.deletePrescription(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+        public Prescription createPrescriptionFromRequest(PrescriptionRequest prescriptionRequest) {
+                Patient patient = patientService.getPatientById(prescriptionRequest.getPatientId())
+                                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                "PATIENT_NOT_FOUND"));
+                Doctor doctor = doctorService.getDoctortById(prescriptionRequest.getDoctorId())
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
 
-    public Prescription createPrescriptionFromRequest(PrescriptionRequest prescriptionRequest) {
-        Patient patient = patientService.getPatientById(prescriptionRequest.getPatientId())
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
-        Doctor doctor = doctorService.getDoctortById(prescriptionRequest.getDoctorId())
-                .orElseThrow(() -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
+                byte[] contents = Base64.getEncoder().encode(prescriptionRequest.getContents().getBytes());
 
-        byte[] contents = Base64.getEncoder().encode(prescriptionRequest.getContents().getBytes());
-
-        Prescription prescription = Prescription.builder()
-                .doctor(doctor)
-                .patient(patient)
-                .contents(contents)
-                .build();
-        return prescription;
-    }
+                Prescription prescription = Prescription.builder()
+                                .doctor(doctor)
+                                .patient(patient)
+                                .contents(contents)
+                                .build();
+                return prescription;
+        }
 
 }

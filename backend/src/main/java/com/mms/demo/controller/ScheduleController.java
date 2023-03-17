@@ -1,5 +1,6 @@
 package com.mms.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
@@ -155,6 +157,27 @@ public class ScheduleController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
+        @GetMapping("/display/doctor/{id}/weekday")
+        public ResponseEntity<List<ScheduleResponse>> displayDoctorSchedulesByPatientWeekday(@PathVariable Long id,
+                        @RequestParam String from, @RequestParam String to) {
+                Doctor doctor = doctorService.getDoctortById(id)
+                                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                                "DOCTOR_NOT_FOUND"));
+                LocalDate start, end;
+                try {
+                        start = LocalDate.parse(from);
+                        end = LocalDate.parse(to);
+                } catch (Exception e) {
+                        throw new CustomException("Error while parsing from and to date", "WRONG_FORMAT");
+                }
+                List<Schedule> schedules = scheduleService.getSchedulesByDoctorAndWeekDay(doctor, start, end);
+                List<ScheduleResponse> response = schedules.stream()
+                                .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }
+
         @PutMapping("/{id}/approve")
         public ResponseEntity<ScheduleResponse> updateApproval(@PathVariable Long id) {
                 Schedule schedule = scheduleService.getScheduleById(id).orElseThrow(
@@ -173,6 +196,17 @@ public class ScheduleController {
                         throw new Custom403Exception("Logged in user is not permitted to edit another user's schedule",
                                         "SCHEDULE_CREATION_NOT_ALLOWED");
                 }
+
+                List<Schedule> createdSchedules = scheduleService.getSchedulesByDoctor(schedule.getDoctor());
+                Schedule alreadyCreatedSchedule = createdSchedules.stream()
+                                .filter((s) -> (s.getDoctor().getId() == schedule.getDoctor().getId()
+                                                && s.getSlot().getId() == schedule.getSlot().getId()))
+                                .findFirst().orElse(null);
+                if (alreadyCreatedSchedule != null) {
+                        throw new CustomException("Schedule with given combination of doctor and slot already created",
+                                        "SCHEDULE_ALREADY_CREATED");
+                }
+
                 Schedule createdSchedule = scheduleService.createSchedule(schedule);
                 ScheduleResponse response = ScheduleResponse.createResponseFromSchedule(createdSchedule);
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -228,13 +262,15 @@ public class ScheduleController {
                         throw new CustomException("Week is not valid", "INVALID_WEEK_FORMAT");
                 }
 
+                // a default value of weekdate is given
                 Schedule schedule = Schedule.builder()
                                 .doctor(doctor)
                                 .slot(slot)
-                                .week(week)
-                                .year(year)
-                                .approval(false)
+                                .weekDate(LocalDate.parse("1999-01-01"))
+                                .approval(scheduleRequest.getApproval())
                                 .build();
+                schedule.setWeek(week);
+                schedule.setYear(year);
 
                 return schedule;
         }

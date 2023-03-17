@@ -2,7 +2,8 @@ package com.mms.demo.entity;
 
 
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 
 import jakarta.persistence.Column;
@@ -42,9 +43,9 @@ public class Report {
 
     @Column(name = "report_timestamp")
     @Builder.Default
-    private LocalDate stamp = LocalDate.now();
+    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     @Lob
-    @Column(name = "report_text")
-    private byte[] reportText;
+    @Column(name = "report_contents", length = 100000)
+    private byte[] contents;
 }

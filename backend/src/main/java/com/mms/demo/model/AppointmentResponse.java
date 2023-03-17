@@ -15,6 +15,7 @@ public class AppointmentResponse {
     private Long id;
     private PatientResponse patientResponse;
     private SlotResponse slotResponse;
+    private Boolean attended;
 
     public static AppointmentResponse createResponseFromAppointment(Appointment appointment) {
         PatientResponse patientResponse = PatientResponse.createResponseFromPatient(appointment.getPatient());
@@ -23,6 +24,7 @@ public class AppointmentResponse {
                 .id(appointment.getId())
                 .patientResponse(patientResponse)
                 .slotResponse(slotResponse)
+                .attended(appointment.getAttended())
                 .build();
         return appointmentResponse;
     }

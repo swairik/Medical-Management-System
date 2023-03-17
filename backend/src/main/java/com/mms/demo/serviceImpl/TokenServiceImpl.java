@@ -35,30 +35,6 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Optional<Token> expireToken(Long id) {
-        Optional<Token> temp = repo.findById(id);
-
-        if (temp.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Token token = temp.get();
-
-        token.setIsExpired(true);
-        return Optional.of(repo.save(token));
-    }
-
-    @Override
-    public Optional<Token> expireToken(String identifier) {
-        Optional<Token> temp = repo.findByIdentifier(identifier);
-        if (temp.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return expireToken(temp.get().getId());
-    }
-
-    @Override
     public Optional<Token> revokeToken(Long id) {
         Optional<Token> temp = repo.findById(id);
 
@@ -92,9 +68,9 @@ public class TokenServiceImpl implements TokenService {
 
         Token token = temp.get();
         token.setIdentifier(tokenUpdates.getIdentifier());
-        token.setIsExpired(tokenUpdates.getIsExpired());
         token.setIsRevoked(tokenUpdates.getIsRevoked());
         token.setType(tokenUpdates.getType());
+        token.setExpirationStamp(tokenUpdates.getExpirationStamp());
 
         return repo.save(token);
     }

@@ -1,6 +1,6 @@
 package com.mms.demo.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 import com.mms.demo.entity.Prescription;
@@ -18,7 +18,7 @@ public class PrescriptionResponse {
     private Long id;
     private DoctorResponse doctorResponse;
     private PatientResponse patientResponse;
-    private LocalDate stamp;
+    private LocalDateTime stamp;
     private String contents;
 
     public static PrescriptionResponse createResponseFromPrescription(Prescription prescription) {

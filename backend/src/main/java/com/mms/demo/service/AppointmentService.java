@@ -1,8 +1,7 @@
 package com.mms.demo.service;
 
 import java.util.Optional;
-
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.mms.demo.entity.Appointment;
@@ -14,6 +13,8 @@ public interface AppointmentService {
     List<Appointment> getAllAppointments();
     List<Appointment> getAppointmentsByPatient(Patient patient);
     List<Appointment> getAppointmentsBySlot(Slot slot);
+    List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end);
+    List<Appointment> getAllByPatientAfter(Patient patient, LocalDateTime stamp);
 
     Appointment createAppointment(Appointment appointment);
     Appointment updateAppointment(Long id, Appointment appointmentUpdates);

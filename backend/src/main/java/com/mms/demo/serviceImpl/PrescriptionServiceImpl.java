@@ -1,7 +1,9 @@
 package com.mms.demo.serviceImpl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +32,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start, LocalDateTime end) {
-        return repository.findAllByStampBetween(start.toLocalDate(), end.toLocalDate());
+        return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES), end.truncatedTo(ChronoUnit.MINUTES));
     }
 
     @Override
@@ -40,7 +42,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public List<Prescription> getPrescriptionsByStamp(LocalDateTime stamp) {
-        return repository.findAllByStamp(stamp.toLocalDate());
+        return repository.findAllByStamp(stamp.truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Override
@@ -54,7 +56,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         prescription.setContents(update.getContents());
         prescription.setDoctor(update.getDoctor());
         prescription.setPatient(update.getPatient());
-        prescription.setStamp(LocalDate.now());
+        prescription.setStamp(LocalDateTime.now());
 
         return Optional.of(repository.save(prescription));
     }

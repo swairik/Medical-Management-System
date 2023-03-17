@@ -84,3 +84,10 @@ nb-configuration.xml
 ## OS X
 ##############################
 .DS_Store
+
+##############################
+## Project specific
+##############################
+workbook.zip
+workbook/
+*.xlsx

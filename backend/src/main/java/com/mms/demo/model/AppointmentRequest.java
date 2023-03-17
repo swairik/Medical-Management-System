@@ -17,4 +17,7 @@ public class AppointmentRequest {
 
     @NotNull(message = "Slot cannot be null")
     private long slotId;
+
+    @Builder.Default
+    private Boolean attended = false;
 }
