@@ -13,10 +13,13 @@ import com.mms.demo.entity.Role;
 @Builder
 public class RegisterRequest {
     private String name;
-    private String gender;
-    private Integer age;
+    @Builder.Default
+    private String gender = null;
+    @Builder.Default
+    private Integer age = null;
     private String email;
-    private String phone;
+    @Builder.Default
+    private String phone = null;
     private String password;
     private Role role;
 }
