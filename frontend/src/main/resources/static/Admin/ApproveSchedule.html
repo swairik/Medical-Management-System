@@ -3,6 +3,8 @@
   <head>
     <title>Doctor Info</title>
     <link rel="stylesheet" type="text/css" href="./css/ApproveSchedule.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/AdminApproveSchedule.js"></script>
   </head>
   <body>
     <header class="header-content">
@@ -17,15 +19,54 @@
         </div>
     
     </header>
-  
-    <div class="box_grp">
+    
+    <div id="schedule_menu">
+    <!-- <div class="box_grp">
         <div class="box_one">
-            <input type="text" class="text" placeholder="Doctor Id" />
+            <input type="text" class="text" placeholder="Doctor Id"/>
             <input type="text" class="text" placeholder="Speciality" />
             <input type="text" class="text" placeholder="Name" />
             <input type="text" class="text" placeholder="Slot Id" />
         </div>
 
+        <div class="box_two">
+            
+            <label class="text_two"> Week:
+                <input type="text" class="text_two" value="" />
+                </label>
+                <label class="text_two"> Year:
+                    <input type="text" class="text_two" value="" />
+                    </label>
+                    
+                    <br/>
+                    <input type="text" class="text_two" value="Slot-Timing: " />
+                    <br/>
+                    <label class="text_two"> Start-Time:
+                    <input type="text" class="text_two" value="" />
+                    </label>
+                    <label class="text_two"> End-Time:
+                    <input type="text" class="text_two" value="" />
+                    </label>
+                    <label class="text_two"> Capacity:
+                    <input type="text" class="text_two" value="" />
+                    </label>
+                
+            
+            <div class="btn_grp">
+                <button class="btn_accept">Accept</button>
+                <button class="btn_remove">Remove</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <div class="box_grp">
+        <div class="box_one">
+            <input type="text" class="text" placeholder="Doctor Id" />
+            <input type="text" class="text" placeholder="Speciality" />
+            <input type="text" class="text" placeholder="Name" />
+            <input type="text" class="text" placeholder="Slot Id" />
+
+        </div>
         <div class="box_two">
             <input type="text" class="text_two" placeholder="Timings" />
             <div class="btn_grp">
@@ -33,25 +74,11 @@
                 <button class="btn_remove">Remove</button>
             </div>
         </div>
-    </div>
 
-    <div class="box_grp">
-        <div class="box_one">
-            <input type="text" class="text" placeholder="Doctor Id" />
-            <input type="text" class="text" placeholder="Speciality" />
-            <input type="text" class="text" placeholder="Name" />
-            <input type="text" class="text" placeholder="Slot Id" />
+    </div> -->
 
-        </div>
-        <div class="box_two">
-            <input type="text" class="text_two" placeholder="Timings" />
-            <div class="btn_grp">
-                <button class="btn_accept">Accept</button>
-                <button class="btn_remove">Remove</button>
-            </div>
-        </div>
+</div>
 
-    </div>
     <p class="footer">Care4u@gmail.com</p>
 </body>
 </html>

@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Doctor;
-import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
-import com.mms.demo.model.PatientRequest;
-import com.mms.demo.model.SpecialityRequest;
-import com.mms.demo.model.SpecialityResponse;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
@@ -52,7 +48,7 @@ public class DoctorController {
         @GetMapping("/display")
         public ResponseEntity<List<DoctorResponse>> showAllDoctors() {
                 List<Doctor> doctors = doctorService.getAllDoctors();
-                List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
+                List<DoctorResponse> response = doctors.stream().map((d) -> DoctorResponse.createResponseFromDoctor(d))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -63,7 +59,7 @@ public class DoctorController {
                                 .orElseThrow(() -> new CustomException("Doctor with given id not found",
                                                 "DOCTOR_NOT_FOUND"));
 
-                DoctorResponse response = createResponseFromDoctor(dr);
+                DoctorResponse response = DoctorResponse.createResponseFromDoctor(dr);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -74,7 +70,7 @@ public class DoctorController {
                                                 "SPECIALITY_NOT_FOUND"));
 
                 List<Doctor> doctors = doctorService.getDoctorBySpeciality(speciality);
-                List<DoctorResponse> response = doctors.stream().map((d) -> createResponseFromDoctor(d))
+                List<DoctorResponse> response = doctors.stream().map((d) -> DoctorResponse.createResponseFromDoctor(d))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -97,7 +93,7 @@ public class DoctorController {
                 }
                 Doctor doctor = createDoctorFromRequest(doctorRequest);
                 Doctor createdDoctor = doctorService.createDoctor(doctor);
-                DoctorResponse doctorResponse = createResponseFromDoctor(createdDoctor);
+                DoctorResponse doctorResponse = DoctorResponse.createResponseFromDoctor(createdDoctor);
                 return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
         }
 
@@ -106,7 +102,7 @@ public class DoctorController {
                         @Valid @RequestBody DoctorRequest doctorRequest) {
                 Doctor doctor = createDoctorFromRequest(doctorRequest);
                 Doctor updatedDoctor = doctorService.updateDoctor(id, doctor);
-                DoctorResponse doctorResponse = createResponseFromDoctor(updatedDoctor);
+                DoctorResponse doctorResponse = DoctorResponse.createResponseFromDoctor(updatedDoctor);
                 return new ResponseEntity<>(doctorResponse, HttpStatus.OK);
         }
 
@@ -114,20 +110,6 @@ public class DoctorController {
         public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
                 doctorService.deleteDoctor(id);
                 return new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        public DoctorResponse createResponseFromDoctor(Doctor doctor) {
-                SpecialityResponse specialityResponse = createResponseFromSpeciality(doctor.getSpeciality());
-                DoctorResponse doctorResponse = DoctorResponse.builder()
-                                .id(doctor.getId())
-                                .name(doctor.getName())
-                                .age(doctor.getAge())
-                                .email(doctor.getEmail())
-                                .gender(doctor.getGender())
-                                .phone(doctor.getPhone())
-                                .speciality(specialityResponse)
-                                .build();
-                return doctorResponse;
         }
 
         public Doctor createDoctorFromRequest(DoctorRequest doctorRequest) {
@@ -144,32 +126,6 @@ public class DoctorController {
                                 .speciality(speciality)
                                 .build();
                 return doctor;
-        }
-
-        public Speciality createSpecialityFromRequest(SpecialityRequest specialityRequest) {
-                Speciality speciality = Speciality.builder()
-                                .name(specialityRequest.getName())
-                                .build();
-                return speciality;
-        }
-
-        public SpecialityResponse createResponseFromSpeciality(Speciality speciality) {
-                SpecialityResponse specialityResponse = SpecialityResponse.builder()
-                                .id(speciality.getId())
-                                .name(speciality.getName())
-                                .build();
-                return specialityResponse;
-        }
-
-        public Patient createPatientFromRequest(PatientRequest patientRequest) {
-                Patient patient = Patient.builder()
-                                .name(patientRequest.getName())
-                                .gender(patientRequest.getGender())
-                                .age(patientRequest.getAge())
-                                .email(patientRequest.getEmail())
-                                .phone(patientRequest.getPhone())
-                                .build();
-                return patient;
         }
 
 }

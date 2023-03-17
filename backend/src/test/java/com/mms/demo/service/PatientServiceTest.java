@@ -26,8 +26,8 @@ public class PatientServiceTest {
     PatientService impl;
 
     static final Patient temp = Patient.builder().age(10).email("temp@temp.com")
-    .gender("M").phone("1010101010").name("Jerry")
-    .build();
+                                    .gender("M").phone("1010101010").name("Jerry")
+                                    .build();
 
     @Order(1)
     @DisplayName("Testing create on a single patient")

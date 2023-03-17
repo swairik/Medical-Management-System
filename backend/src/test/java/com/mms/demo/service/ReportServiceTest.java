@@ -16,9 +16,12 @@ import com.mms.demo.entity.Report;
 import com.mms.demo.entity.Speciality;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+import java.util.ArrayList;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -26,46 +29,15 @@ import java.time.temporal.ChronoUnit;
 public class ReportServiceTest {
     @Autowired
     ReportService impl;
-    
-    @Autowired
-    PatientService patientImpl;
 
-    @Autowired
-    DoctorService doctorImpl;
-
-    @Autowired
-    SpecialityService specImpl;
-
-    static Speciality spec;
-    static Patient patient;
-    static Doctor doctor;
     static Report report;
 
     @Test
     @Order(1)
     @DisplayName("Testing create on a single report")
     void testCreateReport() {
-        patient = Patient.builder().age(25).email("temp@temp.com").gender("M").name("Jerry").phone("XYZ").build();
-        patientImpl.createPatient(patient);
-        assertThat(patientImpl.getPatientById(patient.getId())).isNotEmpty().contains(patient);
-        
-        spec = Speciality.builder().name("Dentist").build();
-        specImpl.createSpeciality(spec);
-        assertThat(specImpl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
-
-        doctor = Doctor.builder().age(40).email("abc@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec).build();
-        doctorImpl.createDoctor(doctor);
-        assertThat(doctorImpl.getDoctortById(doctor.getId())).isNotEmpty().contains(doctor);
-
-        report = Report.builder().doctor(doctor).patient(patient).reportText(null).stamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
+        report = Report.builder().contents(null).stamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
         assertThat(impl.createReport(report)).isEqualTo(report);
-    }
-
-    @Order(2)
-    @Test
-    @DisplayName("Testing fetch on all reports")
-    void testGetReportByDoctor() {
-        assertThat(impl.getReportByDoctor(doctor)).isNotEmpty().contains(report);
     }
 
     @Order(3)
@@ -77,31 +49,46 @@ public class ReportServiceTest {
 
     @Order(4)
     @Test
-    @DisplayName("(UNIMPLEMENTED) Testing fetch on a single report by stamp")
+    @DisplayName("Testing fetch on a single report by stamp")
     void testGetReportByStamp() {
-        assertThat(true).isTrue();
+        ArrayList<Report> reports = new ArrayList<Report>();
+        LocalDateTime temporalTarget = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+        reports.add(Report.builder().stamp(temporalTarget).contents(null).build());
+
+        for (Report rep : reports) {
+            impl.createReport(rep);
+        }
+
+        assertThat(impl.getReportByStamp(temporalTarget)).containsAll(reports);
     }
 
     @Order(5)
     @Test
-    @DisplayName("Testing fetch on all reports by patient")
-    void testGetReportsByPatient() {
-        assertThat(impl.getReportsByPatient(patient)).isNotEmpty().contains(report);
+    void testGetAllReportsByStampBetween() {
+        ArrayList<Report> reports = new ArrayList<Report>();
+        reports.add(Report.builder().contents(null).build());
+        reports.add(Report.builder().contents(null).build());
+        reports.add(Report.builder().contents(null).build());
+        for (Report rep : reports) {
+            impl.createReport(rep);
+        }
+        Report temp = Report.builder().contents(null).stamp(LocalDateTime.now().plusDays(1)).build();
+        impl.createReport(temp);
+
+        assertThat(impl.getAllReportsByStampBetween(LocalDateTime.now(), LocalDateTime.now())).containsAll(reports).doesNotContain(temp);
     }
 
     @Order(6)
     @Test
     @DisplayName("Testing update on a single report by id")
     void testUpdateReport() {
-        Patient tempPatient = patient.toBuilder().name("Tom").build();
-        assertThat(patientImpl.createPatient(tempPatient)).isEqualTo(tempPatient).isNotEqualTo(patient);
-
-        Doctor tempDoctor = doctor.toBuilder().name("Bob").build();
-        assertThat(doctorImpl.createDoctor(tempDoctor)).isEqualTo(tempDoctor).isNotEqualTo(doctor);
-
-        Report tempReport = report.toBuilder().doctor(tempDoctor).patient(tempPatient).build();
-        assertThat(impl.updateReport(report.getId(), tempReport)).isEqualTo(tempReport).isNotEqualTo(report);
+        Report tempReport = report.toBuilder().build();
+        assertThat(impl.updateReport(report.getId(), tempReport)).isEqualTo(tempReport);
     }
+
 
     @Order(7)
     @Test

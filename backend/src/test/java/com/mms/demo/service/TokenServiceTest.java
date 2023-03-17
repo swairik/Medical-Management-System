@@ -13,6 +13,9 @@ import com.mms.demo.entity.Token;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
@@ -26,11 +29,13 @@ public class TokenServiceTest {
     @Test
     @DisplayName("Testing create on a single token")
     void testCreateToken() {
-        token = Token.builder().identifier("somestring").build();
+        token = Token.builder().identifier("somestring")
+                    .expirationStamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                    .build();
         assertThat(impl.createToken(token))
             .isNotNull()
-            .extracting("isExpired", "isRevoked", "type")
-            .containsExactly(false, false, "BEARER");
+            .extracting("isRevoked", "type")
+            .containsExactly(false, "BEARER");
 
     }
 
@@ -48,39 +53,14 @@ public class TokenServiceTest {
         assertThat(impl.getTokenByIdentifier(token.getIdentifier())).isNotEmpty().contains(token);
     }
 
-    @Order(4)
-    @Test
-    @DisplayName("Testing expiry on a single token by ID")
-    void testExpireToken() {
-        Token temp = Token.builder().identifier("test1").build();
-        
-        assertThat(impl.createToken(temp)).isNotNull().isEqualTo(temp);
-        
-        assertThat(impl.expireToken(temp.getId()))
-            .isPresent()
-            .map(val -> val.getIsExpired())
-            .hasValue(true);
-    }
-
-    @Order(5)
-    @Test
-    @DisplayName("Testing expiry on a single token by identifier")
-    void testExpireToken2() {
-        Token temp = Token.builder().identifier("test2").build();
-        
-        assertThat(impl.createToken(temp)).isNotNull().isEqualTo(temp);
-        
-        assertThat(impl.expireToken(temp.getIdentifier()))
-            .isPresent()
-            .map(val -> val.getIsExpired())
-            .hasValue(true);
-    }
 
     @Order(6)
     @Test
     @DisplayName("Testing revoke on a single token by ID")
     void testRevokeToken() {
-        Token temp = Token.builder().identifier("test3").build();
+        Token temp = Token.builder().identifier("test3")
+                        .expirationStamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                        .build();
         
         assertThat(impl.createToken(temp)).isNotNull().isEqualTo(temp);
         
@@ -94,7 +74,9 @@ public class TokenServiceTest {
     @Test
     @DisplayName("Testing revoke on a single token by identifier")
     void testRevokeToken2() {
-        Token temp = Token.builder().identifier("test4").build();
+        Token temp = Token.builder().identifier("test4")
+                        .expirationStamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                        .build();
         
         assertThat(impl.createToken(temp)).isNotNull().isEqualTo(temp);
         
@@ -108,7 +90,9 @@ public class TokenServiceTest {
     @Test
     @DisplayName("Testing update on a single token by ID")
     void testUpdateToken() {
-        Token temp = token.toBuilder().isExpired(true).isRevoked(true).build();
+        Token temp = token.toBuilder().isRevoked(true)
+                            .expirationStamp(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS))
+                            .build();
         
         assertThat(impl.updateToken(token.getId(), temp))
             .isNotNull()

@@ -1,5 +1,8 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,9 +45,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         return repo.findAllByDoctor(doctor);
     }
 
+
     @Override
     public List<Schedule> getSchedulesBySlot(Slot slot) {
         return repo.findAllBySlot(slot);
+    }
+
+    @Override
+    public List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start, LocalDate end) {
+        return repo.findAllByDoctorAndWeekDateBetween(doctor, start, end);
     }
 
     @Override
@@ -63,4 +72,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return repo.save(schedule);
     }
 
+    
+    
 }

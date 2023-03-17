@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReportRequest {
-
-    private byte[] contents;
-
+public class PrescriptionRequest {
+    private Long doctorId;
+    private Long patientId;
+    private String contents;
 }

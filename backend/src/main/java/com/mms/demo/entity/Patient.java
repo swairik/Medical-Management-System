@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Setter
 @Getter
@@ -50,5 +52,9 @@ public class Patient {
 
     @Column(name="patient_phone", length = 14, nullable = false)
     private String phone;
+
+    @Column(name="patient_registration_timestamp", nullable = false)
+    @Builder.Default
+    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
 }

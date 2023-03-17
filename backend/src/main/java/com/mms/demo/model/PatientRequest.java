@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.mms.demo.entity.Patient;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,4 +34,16 @@ public class PatientRequest {
     @Size(min = 7, max = 14, message = "Phone number must be between 7-14 characters")
     @NotNull
     private String phone;
+
+    public static Patient createPatientFromRequest(PatientRequest patientRequest) {
+        Patient patient = Patient.builder()
+                .name(patientRequest.getName())
+                .gender(patientRequest.getGender())
+                .age(patientRequest.getAge())
+                .email(patientRequest.getEmail())
+                .phone(patientRequest.getPhone())
+                .build();
+        return patient;
+    }
+
 }

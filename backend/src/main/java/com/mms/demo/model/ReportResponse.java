@@ -7,14 +7,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.mms.demo.entity.Report;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ReportResponse {
     private Long id;
-    private PatientResponse patientResponse;
-    private DoctorResponse doctorResponse;
     private LocalDateTime stamp;
-    private byte[] reportText;
+    private byte[] contents;
+
+    public static ReportResponse createResponseFromReport(Report report) {
+
+        ReportResponse reportResponse = ReportResponse.builder()
+                .id(report.getId())
+                .stamp(report.getStamp())
+                .contents(report.getContents())
+                .build();
+
+        return reportResponse;
+    }
+
 }
