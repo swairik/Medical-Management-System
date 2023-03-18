@@ -16,19 +16,6 @@
 
   <body>
 
-    <!-- <div class="NavBar">
-      <div class="Logo">
-        <img src="../images/doc.png" alt="Care4U"/>
-      </div>
-      <h1>Care4U</h1>
-      <nav>
-        <ul class="options">
-          <li><a href="DoctorDashboard.html">Home</a></li>
-          <li><a href="ViewProfile.html">View Profile</a></li>
-        </ul>
-      </nav>
-    </div> -->
-
     <nav class="navbar">
       <div id="logo">
         <img src="../images/doc.png">
@@ -63,43 +50,21 @@
           <br><br>
           <input type="week" id="week" value="" min="" max="">
         </p>
-        <div class="dropdown1">
-          <p class="day">Day</p>
-          <button onclick="myFunction()" class="dropbtn1">Select Day...<i class="down-arrow"></i></button>
-          <div id="myDropdown" class="dropdown-content1">
-            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-            <a href="">Monday</a>
-            <a href="">Tuesday</a>
-            <a href="">Wednesday</a>
-            <a href="">Thursday</a>
-            <a href="">Friday</a>
-            <a href="">Saturday</a>
-            <a href="">Sunday</a>
-          </div>
+        
+        <div class="content">Day
+          <br><br>
+            <select name="days" id="days">
+              <option value="7">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
         </div>
 
-        <script>
-          function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-          }
-
-          function filterFunction() {
-            var input, filter, ul, li, a, i;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            div = document.getElementById("myDropdown");
-            a = div.getElementsByTagName("a");
-            for (i = 0; i < a.length; i++) {
-              txtValue = a[i].textContent || a[i].innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-              } 
-              else {
-                a[i].style.display = "none";
-              }
-            }
-          }
-        </script>
+       
 
         <p class="content">Start Time 
           <br><br>
@@ -113,42 +78,22 @@
       </div>
     </div>
 
-    <!-- <table id="schedule_table">
-      <tr>
-        <th>Year</th>
-        <th>Week No.</th>
-        <th>Day</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Capacity</th>
-        <th>Status</th>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button type="button" onclick="">Remove</button></td>
-      </tr>
-    </table> -->
+
 
     <div id="schedule_table">
-      <!-- <h2>Available Slots</h2> -->
       <ul class="responsive-table">
         <li class="table-header">
-          <div class="col col-1">Year</div>
-          <div class="col col-2">Week No.</div>
+          <!-- <div class="col col-1">Year</div>
+          <div class="col col-2">Week No.</div> -->
+          <div class="col col-2">Date.</div> 
           <div class="col col-3">Day</div>
           <div class="col col-4">Start Time</div>
           <div class="col col-5">End Time</div>
-          <div class="col col-6">Capacity</div>
+          <!-- <div class="col col-6">Capacity</div> -->
           <div class="col col-7">Status</div>
           <div class="col col-8"></div>
         </li>
-        <li class="table-row">
+        <!-- <li class="table-row">
           <div class="col col-1" data-label="Year"></div>
           <div class="col col-2" data-label="Week"></div>
           <div class="col col-3" data-label="Day"></div>
@@ -157,7 +102,7 @@
           <div class="col col-6" data-label="Capacity"></div>
           <div class="col col-7" data-label="Status"></div>
           <div class="col col-8" data-label="Remove"><button id="remove_button" type="remove">Remove</button></div>
-        </li>
+        </li> -->
       </ul>
     </div>
 

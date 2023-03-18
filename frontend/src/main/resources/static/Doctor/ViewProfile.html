@@ -7,26 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
     <link rel="stylesheet" href="../css/ViewProfileStyle.css">
-    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/ViewProfile.js"></script>
   </head>
 
   <body>
-
-    <!-- <div class="NavBar">
-      <div class="Logo">
-        <img src="../images/doc.png" alt="Care4U"/>
-      </div>
-      <h1>Care4U</h1>
-      <nav>
-        <ul class="options">
-          <li><a href="DoctorDashboard.html">Home</a></li>
-          <li><a href="ViewProfile.html">View Profile</a></li>
-        </ul>
-      </nav>
-    </div> -->
-
     <nav class="navbar">
       <div id="logo">
         <img src="../images/doc.png">
@@ -54,33 +41,7 @@
       </div>
     </div>
 
-    <!-- <main>
-      <div class="first_box">
-        <h3>''We Care For Your Well Being''</h3> 
-      </div>
-      <img class="main-img" src="../images/main.png" >
-      <div class="second_box">
-        <ul class="ul">
-          <li class="li">Choose the doctor</li>
-          <li class="li">Book a slot</li>
-          <li class="li">Make payment</li>
-          <li class="li">Be present in the consult room</li>
-        </ul>
-      </div>
-    </main>
-
-    <div class="profile">
-      <h2>Your Profile</h2>
-      <hr>
-      <br>
-      <p>Name:</p>
-      <p>Gender:</p>
-      <p>Speciality:</p>
-      <p>Contact No.:</p>
-      <p>E-Mail ID:</p>
-      <p>Address:</p>
-      <br>
-    </div> -->
+    
 
     <div class="card">
       <img src="../images/image.png" alt="Profile Picture">
@@ -116,11 +77,11 @@
           <td>:</td>
           <td id="demail"></td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td>ADDRESS</td>
           <td>:</td>
           <td id="daddress"></td>
-        </tr>
+        </tr> -->
       </table>
     </div>
 
@@ -128,27 +89,25 @@
       <form class = "dedit-form" id="doctor-form">
         <h2>Enter Your Details</h2>
           <label>Name : </label><br>
-          <input type="text" name="dname" required><br>
+          <input type="text" name="dfname" id="dfname" disabled><br>
           <label>Age : </label><br> 
-          <input type="text" name="dage" required><br>
+          <input type="text" name="dfage" id="dfage" disabled><br>
           <label>Gender : </label><br>  
-          <input type="text" name="dgender" required><br>
+          <input type="text" name="dfgender" id="dfgender"  disabled><br>
           <label>Speciality : </label><br>  
-          <input type="text" name="dspeciality" required><br>
+          <input type="text" name="dfspeciality" id="dfspeciality" data-value=""  disabled><br>
           <label>Contact No. : </label><br>   
-          <input type="text" name="dcontact" required><br><br>
+          <input type="text" name="dfcontact"  id="dfcontact"><br>
           <label>E-Mail ID : </label><br>  
-          <input type="text" name="demail" required><br>
-          <label>Address : </label><br>  
-          <input type="text" name="daddress" required><br>
-          <button id="edited" type="submit">Save</button>   
+          <input type="text" name="dfemail" id="dfemail" disabled><br>
+          <button id="edited" type="submit">Update</button>   
       </form>
     </div>
 
-    <footer>
+    <!-- <footer>
       <p>Mail us at : </p>
       <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
-    </footer>
+    </footer> -->
 
   </body>
 </html>
