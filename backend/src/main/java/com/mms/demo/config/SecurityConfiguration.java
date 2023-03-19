@@ -69,6 +69,10 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/speciality/**").hasAnyAuthority("ADMIN")
 
+                .requestMatchers(HttpMethod.POST, "/prescription/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                .requestMatchers(HttpMethod.PUT, "/prescription/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                .requestMatchers(HttpMethod.DELETE, "/prescription/**").hasAnyAuthority("ADMIN", "DOCTOR")
+
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -41,10 +42,14 @@ public class Prescription {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
     private Doctor doctor;
-    
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(referencedColumnName = "patient_id", nullable = false)
     private Patient patient;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(referencedColumnName = "appointment_id", nullable = false)
+    private Appointment appointment;
 
     @Column(name = "prescription_timestamp")
     @Builder.Default
@@ -54,4 +59,3 @@ public class Prescription {
     @Column(name = "prescription_contents")
     private byte[] contents;
 }
-

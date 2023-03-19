@@ -11,6 +11,7 @@ public interface PrescriptionService {
     Optional<Prescription> getPrescriptionById(Long id);
     List<Prescription> getPrescriptionsByStamp(LocalDateTime stamp);
     List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start, LocalDateTime end);
+    List<Prescription> getAllPrescriptions();
 
     Prescription createPrescription(Prescription prescription);
     void deletePrescription(Long id);

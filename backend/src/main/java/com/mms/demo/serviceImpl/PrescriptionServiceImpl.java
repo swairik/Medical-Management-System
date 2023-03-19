@@ -27,12 +27,18 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public void deletePrescription(Long id) {
         repository.deleteById(id);
-        
+
+    }
+
+    @Override
+    public List<Prescription> getAllPrescriptions() {
+        return repository.findAll();
     }
 
     @Override
     public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start, LocalDateTime end) {
-        return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES), end.truncatedTo(ChronoUnit.MINUTES));
+        return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES),
+                end.truncatedTo(ChronoUnit.MINUTES));
     }
 
     @Override
@@ -60,5 +66,5 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
         return Optional.of(repository.save(prescription));
     }
-    
+
 }
