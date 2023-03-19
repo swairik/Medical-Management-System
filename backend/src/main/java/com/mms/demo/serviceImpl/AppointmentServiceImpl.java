@@ -28,7 +28,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void deleteAppointment(Long id) {
         repo.deleteById(id);
-        
+
     }
 
     @Override
@@ -41,13 +41,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         return repo.findById(id);
     }
 
-
     @Override
     public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end) {
         List<Appointment> patientAppointments = repo.findAllByPatient(patient);
         return patientAppointments.stream()
-                .filter(a   ->  a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
-                                a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime())    )
+                .filter(a -> a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
+                        a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
                 .collect(Collectors.toList());
     }
 
@@ -77,10 +76,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = temp.get();
         appointment.setPatient(appointmentUpdates.getPatient());
         appointment.setSlot(appointmentUpdates.getSlot());
-        
 
         return repo.save(appointment);
     }
-    
-    
+
 }
