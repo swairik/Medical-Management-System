@@ -1,0 +1,34 @@
+<html>
+  <head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/PatientProfile.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script> 
+      $(function(){
+        $("#load_content").load('PatientNavbar'); 
+      });
+      </script> 
+  </head>
+  <body>
+
+    <div id="load_content"></div>
+
+    <div class="pedit">
+      
+      <form class = "pedit-form" id="patient-form">
+        <h2>Enter Your Details</h2>
+            <label>Name : </label><br>
+            <input type="text" name="pname" required><br>
+            <label>Age : </label><br> 
+            <input type="text" name="pname" required><br>
+            <label>Gender : </label><br>  
+            <input type="text" name="pname" required><br> 
+            <label>Contact No. : </label><br>   
+            <input type="text" name="pcontact" required><br><br> 
+            <button id="edited" type="submit" style="background-color: #0a9c11" onClick="location.href='PatientProfile'">Save</button>   
+      </form>
+    </div>
+    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+  </body>
+  </html>

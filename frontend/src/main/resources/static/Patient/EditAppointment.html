@@ -1,0 +1,61 @@
+<html>
+  <head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/PatientEditAppointment.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="../js/PatientFunctions.js"></script>
+  <script> 
+    $(function(){
+      $("#load_content").load("PatientNavbar.html"); 
+    });
+    </script> 
+</head>
+<body>
+
+  <div id="load_content"></div>
+  <table>
+    <caption>UPCOMING APPOINTMENT DETAILS</caption>
+    <thead>
+      <tr>
+        <th scope="col">Doctor's Name</th>
+        <th scope="col">Speciality</th>
+        <th scope="col">Date</th>
+        <th scope="col">Slot Time</th>
+        <th scope="col">Cancel Appointment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="DocNmae">AB</td>
+        <td data-label="speciality">ORTHO</td>
+        <td data-label="Date">21st</td>
+        <td data-label="Slot">1-2</td>
+        <td data-label="">
+            <button class="cancel">Cancel</button>
+        </td>
+      </tr>
+      <tr>
+        <td data-label="DocNmae">AB</td>
+        <td data-label="speciality">ORTHO</td>
+        <td data-label="Date">21st</td>
+        <td data-label="Slot">1-2</td>
+        <td data-label="">
+            <button class="cancel">Cancel</button>
+        </td>
+      </tr>
+      <tr>
+        <td data-label="DocNmae">AB</td>
+        <td data-label="speciality">ORTHO</td>
+        <td data-label="Date">21st</td>
+        <td data-label="Slot">1-2</td>
+        <td data-label="">
+            <button class="cancel">Cancel</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </body>
+  <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+  </body>
+</html>
