@@ -44,12 +44,24 @@ const constructSlotMenu = (result) => {
 </div> */}
 
 $(document).ready(function () {
+
+  $.ajax({
+    url: "http://localhost:8050/doctor/display/1",
+    type: "GET",
+    success: function (result) {
+      console.log(result);
+      $(".DoctorInfo").append(constructDoctorInfo(result));
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+
   $.ajax({
     url: "http://localhost:8050/schedule/display/patient/approved/1",
     type: "GET",
     success: function (result) {
       console.log(result);
-      $(".DoctorInfo").append(constructDoctorInfo(result[0]));
       $.each(result, function (key, value) {
         console.log(value);
         $("#slot_menu").append(constructSlotMenu(value));
