@@ -1,13 +1,18 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="../css/AppointmentStyle.css" />
+    <link rel="stylesheet" href="../css/BookAppointmentStyle.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="../js/BookAppointment.js"></script>
+    <script> 
+      $(function(){
+        $("#load_content").load("PatientNavbar"); 
+      });
+      </script> 
   </head>
   <body>
-    <nav class="navbar">
+    <!-- <nav class="navbar">
       <div id="logo">
         <img src="images/logo.jpg" />
         <p>Care4U</p>
@@ -16,7 +21,9 @@
         <a href="Patient">Home</a>
         <a href="PatientProfile">View Profile</a>
       </div>
-    </nav>
+    </nav> -->
+
+    <div id="load_content"></div>
     
     <h2>Doctor's Information</h2>
     <table class="DoctorInfo"></table>
