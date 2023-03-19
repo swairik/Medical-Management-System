@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Credential;
+import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Token;
@@ -24,6 +25,7 @@ import com.mms.demo.model.RegisterRequest;
 import com.mms.demo.model.RegisterResponse;
 import com.mms.demo.service.AuthenticationService;
 import com.mms.demo.service.CredentialService;
+import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.EmailService;
 import com.mms.demo.service.JwtService;
 import com.mms.demo.service.PatientService;
@@ -37,6 +39,9 @@ import lombok.var;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
         private final PatientService patientService;
+
+        private final DoctorService doctorService;
+
         private final CredentialService credentialService;
 
         private final PasswordEncoder passwordEncoder;
@@ -104,23 +109,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .build();
                 tokenService.createToken(token);
 
-                return AuthenticationResponse.builder()
+                AuthenticationResponse response = AuthenticationResponse.builder()
                                 .token(jwtToken)
                                 .role(user.getRole())
                                 .build();
+
+                if (user.getRole().equals(Role.PATIENT)) {
+                        Patient patient = patientService.getAllPatients().stream()
+                                        .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+                        if (patient != null)
+                                response.setId(patient.getId());
+
+                } else if (user.getRole().equals(Role.DOCTOR)) {
+                        Doctor doctor = doctorService.getAllDoctors().stream()
+                                        .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst().orElse(null);
+                        if (doctor != null)
+                                response.setId(doctor.getId());
+                }
+
+                return response;
         }
 
         @Override
         public String forgotPassword(String email) {
                 var user = credentialService.getCredentialsByEmail(email)
                                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
-                
+
                 String token = jwtService.generateToken(user);
 
                 String subject = "Reset your Password";
 
                 String msgBody = "To reset your password click on the link : \n" +
-                                "http://localhost:8080/UpdatePassword?token="+token+"&email="+email;
+                                "http://localhost:8080/UpdatePassword?token=" + token + "&email=" + email;
 
                 EmailDetails emailDetails = EmailDetails.builder()
                                 .recipient(email)

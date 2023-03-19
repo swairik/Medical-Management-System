@@ -14,4 +14,5 @@ import com.mms.demo.entity.Role;
 public class AuthenticationResponse {
     private String token;
     private Role role;
+    private Long id;
 }
