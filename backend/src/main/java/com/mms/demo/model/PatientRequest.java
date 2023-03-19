@@ -1,5 +1,6 @@
 package com.mms.demo.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -31,12 +32,16 @@ public class PatientRequest {
     @NotNull
     private String phone;
 
+    @Email
+    private String email;
+
     public static Patient createPatientFromRequest(PatientRequest patientRequest) {
         Patient patient = Patient.builder()
                 .name(patientRequest.getName())
                 .gender(patientRequest.getGender())
                 .age(patientRequest.getAge())
                 .phone(patientRequest.getPhone())
+                .email(patientRequest.getEmail())
                 .build();
         return patient;
     }

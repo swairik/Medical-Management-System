@@ -24,6 +24,7 @@ import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.PatientRequest;
 import com.mms.demo.model.PatientResponse;
+import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.PatientService;
 
 import jakarta.validation.Valid;
@@ -35,6 +36,9 @@ public class PatientController {
 
     @Autowired
     PatientService patientService;
+
+    @Autowired
+    CredentialService credentialService;
 
     @GetMapping("/display")
     public ResponseEntity<List<PatientResponse>> showAllPatients(@AuthenticationPrincipal Credential user) {
@@ -101,6 +105,11 @@ public class PatientController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+        Patient patient = patientService.getPatientById(id)
+                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
+        Credential credential = credentialService.getCredentialsByEmail(patient.getEmail())
+                .orElseThrow(() -> new CustomException("Patient credentials not found", "CREDENTIAL_NOT_FOUND"));
+        credentialService.deleteCredentials(credential.getId());
         patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
