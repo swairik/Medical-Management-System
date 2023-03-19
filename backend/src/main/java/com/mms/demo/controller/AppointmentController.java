@@ -408,7 +408,7 @@ public class AppointmentController {
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
                 if (slot.getCapacity() == 0) {
-                        throw new CustomException("No more capacity for this slot", "SLOT_CAPACITY_LIMIT_REACHED");
+                        throw new CustomException("Slot has already been booked", "SLOT_ALREADY_BOOKED");
                 }
                 Appointment appointment = Appointment.builder()
                                 .patient(patient)
