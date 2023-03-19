@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import com.mms.demo.entity.Role;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,5 @@ public class RegisterDoctorRequest {
     private Integer age;
     private String email;
     private String phone;
-    private String password;
-    private Role role;
     private Long specialityId;
 }

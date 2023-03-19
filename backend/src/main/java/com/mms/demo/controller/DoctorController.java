@@ -117,7 +117,7 @@ public class DoctorController {
                 var credentials = Credential.builder()
                                 .email(doctorRequest.getEmail())
                                 .password(passwordEncoder.encode(password))
-                                .role(doctorRequest.getRole())
+                                .role(Role.DOCTOR)
                                 .build();
 
                 credentialService.createCredentials(credentials);
