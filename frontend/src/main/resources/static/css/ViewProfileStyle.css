@@ -2,46 +2,6 @@ body {
   margin: 0;
 }
 
-/* .NavBar {
-  background-color: #1e5a9e;
-  height: 75px;
-}
-  
-.NavBar h1 {
-  color: white;
-  width: 10%;
-  display: inline-block;
-}
-
-nav {
-  float:right;
-}
-  
-.Logo img {
-  height: 50px;
-  width: 50px;
-  padding: 15px 10px 10px 10px;
-  float: left;
-  border-radius: 50%;
-}
-  
-.options li {
-  display: inline-block; 
-  padding: 10px;
-  font-size: 20px; 
-  font-family: raleway;
-}
-  
-.options li a {
-  color: white;
-  text-decoration: none;
-  padding: inherit;
-}
-  
-.options li a:hover {
-  text-decoration: underline;
-} */
-
 * {
   font-family: 'Times New Roman';
 }
@@ -54,6 +14,7 @@ nav {
   background-color: #004798;
   color: #fff;
   box-sizing: border-box;
+  height: 65px;
 }
 
 #logo {
@@ -335,16 +296,17 @@ footer {
   background-color: #004798;
   color: white;
   text-align: center;
-  position: absolute;
-  margin-bottom: 0;
+  position: fixed;
+  bottom: 0;
   margin-top: 2%;
-  height: fit-content;
+  height: 40px;
   width: 100%;
   font-size: 20px;
 }
   
 footer p {
   display: inline-block;
+  margin-top: 10px;
 }
 
 footer p a {
