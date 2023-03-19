@@ -248,6 +248,46 @@ public class AppointmentController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
+        @GetMapping("/display/doctor/{id}/between")
+        public ResponseEntity<List<AppointmentResponse>> showAllDoctorAppointmentBetween(@PathVariable Long id,
+                        @RequestParam String start, @RequestParam String end) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime startTime, endTime;
+                try {
+                        startTime = LocalDateTime.parse(start, formatter);
+                        endTime = LocalDateTime.parse(end, formatter);
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of timestamp", "WRONG_FORMAT");
+                }
+                List<Appointment> appointments = appointmentService.getAllAppointments();
+                List<Appointment> filteredAppointments = appointments.stream().filter((a) -> {
+                        List<Schedule> schedules = scheduleService.getSchedulesBySlot(a.getSlot());
+                        List<Schedule> filteredSchedules = schedules.stream()
+                                        .filter((s) -> s.getSlot().getId() == a.getSlot().getId())
+                                        .collect(Collectors.toList());
+
+                        if (filteredSchedules.size() == 0) {
+                                throw new CustomException("Invalid slot id", "SCHEDULE_NOT_FOUND");
+                        }
+
+                        Slot slot = slotService.getSlotById(a.getSlot().getId()).orElseThrow(
+                                        () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+
+                        LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
+                                        .atTime(slot.getStart());
+
+                        return appointmentDateTime.isAfter(startTime) && appointmentDateTime.isBefore(endTime);
+                }).collect(Collectors.toList());
+                if (filteredAppointments.size() == 0) {
+                        throw new CustomException("No appointments found in given time interval",
+                                        "NO_APPOINTMENT_FOUND");
+                }
+                List<AppointmentResponse> response = filteredAppointments.stream()
+                                .map((a) -> createResponseFromAppointment(a))
+                                .collect(Collectors.toList());
+                return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
         @PostMapping("/")
         public ResponseEntity<AppointmentResponse> createAppointment(
                         @Valid @RequestBody AppointmentRequest appointmentRequest,

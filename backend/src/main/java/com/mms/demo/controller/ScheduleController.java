@@ -270,7 +270,26 @@ public class ScheduleController {
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+        public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @AuthenticationPrincipal Credential user) {
+                Schedule schedule = scheduleService.getScheduleById(id).orElseThrow(
+                                () -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND"));
+
+                if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
+                        throw new Custom403Exception(
+                                        "Logged in user is not permitted to delete another user's schedule",
+                                        "SCHEDULE_DELETE_NOT_ALLOWED");
+                }
+
+                List<Appointment> appointments = appointmentService.getAllAppointments();
+
+                Appointment appointmentAlreadyPresent = appointments.stream()
+                                .filter((a) -> a.getSlot().getId() == schedule.getSlot().getId()).findFirst()
+                                .orElse(null);
+                if (appointmentAlreadyPresent != null) {
+                        throw new CustomException("Appointment with this schedule's slot id exists",
+                                        "APPOINTMENT_WITH_SLOT_EXISTS");
+                }
+
                 scheduleService.deleteSchedule(id);
                 return new ResponseEntity<>(HttpStatus.OK);
         }
