@@ -1,111 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Your Schedule</title>
-    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="../css/UpdateYourScheduleStyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/DoctorUpdateSchedule.js"></script>
-    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
-</head>
+  </head>
 
-<body>
-    
-    <!-- <div class="NavBar">
-        <div class="Logo">
-          <img src="Logo.jpg" alt="Care4U"/>
-        </div>
-        <h1>Care4U</h1>
+  <body>
 
-        <nav>
-          <ul class="options">
-            <li><a href="DoctorDashboard.html">Home</a></li>
-            <li><a href="ViewProfile.html">View Profile</a></li>
-          </ul>
-        </nav>
-    </div> -->
-
-    <!-- <header>
-      <div class="header-content">
-        <div>
-            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
-        </div>
-        <div class="view">
-            View Profile
-        </div>
-     </div>
-    </header> -->
-
-    <div class="NavBar">
-      <div class="Logo">
-        <img src="../images/doc.png" alt="Care4U"/>
+    <nav class="navbar">
+      <div id="logo">
+        <img src="../images/doc.png">
+        <p>Care4U</p>
       </div>
-      <h1>Care4U</h1>
+      <div class="menu">
+        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <div class="dropdown">
+          <button class="dropbtn">Profile
+          <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link" href="#confirm">Sign Out</a>
+          </div>
+        </div>
+      </div> 
+    </nav>
 
-      <nav>
-        <ul class="options">
-          <li><a href="DoctorDashboard.html">Home</a></li>
-          <li><a href="ViewProfile.html">View Profile</a></li>
-        </ul>
-      </nav>
-  </div>
+    <div id="confirm" class="overlay">
+      <div class="popup">
+        <h3>Do you want to Sign Out?</h3>
+        <a class="close " style="background-color: #ba0000" href="#">No</a>
+        <button id="out" style="background-color: #0ca912">Yes</button>
+      </div>
+    </div>
 
     <div>
       <h2 class="heading">UPDATE YOUR SCHEDULE</h2>
-
       <div class="fields">
+        <p class="content">Week 
+          <br><br>
+          <input type="week" id="week" value="" min="" max="">
+        </p>
+        
+        <div class="content">Day
+          <br><br>
+            <select name="days" id="days">
+              <option value="7">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+        </div>
 
-      <p class="content">Week 
-        <br><br>
-        <input type="week" id="week" value="" min="" max="">
-      </p>
+       
 
-      <p class="content">Date 
-        <br><br>
-        <input type="date" id="date" value="" min="" max="">
-      </p>
-
-      <p class="content">Start Time 
-        <br><br>
-        <input type="time" id="start_time" value="" min="" max="">
-      </p>
-
-      <p class="content">End Time 
-        <br><br>
-        <input type="time" id="end_time" value="" min="" max="">
-      </p>
-
-      <button type="button" id="save_button" onclick="">Save</button>
+        <p class="content">Start Time 
+          <br><br>
+          <input type="time" id="start_time" value="" min="" max="">
+        </p>
+        <p class="content">End Time 
+          <br><br>
+          <input type="time" id="end_time" value="" min="" max="">
+        </p>
+          <button type="button" id="save_button" onclick="">Save</button>
+      </div>
     </div>
-      
+
+
+
+    <div id="schedule_table">
+      <ul class="responsive-table">
+        <li class="table-header">
+          <!-- <div class="col col-1">Year</div>
+          <div class="col col-2">Week No.</div> -->
+          <div class="col col-2">Date.</div> 
+          <div class="col col-3">Day</div>
+          <div class="col col-4">Start Time</div>
+          <div class="col col-5">End Time</div>
+          <!-- <div class="col col-6">Capacity</div> -->
+          <div class="col col-7">Status</div>
+          <div class="col col-8"></div>
+        </li>
+        <!-- <li class="table-row">
+          <div class="col col-1" data-label="Year"></div>
+          <div class="col col-2" data-label="Week"></div>
+          <div class="col col-3" data-label="Day"></div>
+          <div class="col col-4" data-label="StartTime"></div>
+          <div class="col col-5" data-label="EndTime"></div>
+          <div class="col col-6" data-label="Capacity"></div>
+          <div class="col col-7" data-label="Status"></div>
+          <div class="col col-8" data-label="Remove"><button id="remove_button" type="remove">Remove</button></div>
+        </li> -->
+      </ul>
     </div>
-
-    <table id="schedule_table">
-      <tr>
-        <th>Year</th>
-        <th>Week No.</th>
-        <th>Day</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Capacity</th>
-        <th>Status</th>
-      </tr>
-    </table>
-
-
-    <!-- <footer>
-      <p>Mail us at : </p>
-      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
-    </footer> -->
-    <!-- <p class="footer">Care4u@gmail.com</p> -->
 
     <footer>
-      <p>Mail us at : </p>
-      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+      <p>Mail us at :
+      <a href="mailto:support@care4u.com">support@care4u.com</a></p>
     </footer>
   
   </body>
-  </html>
+</html>

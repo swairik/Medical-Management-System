@@ -1,63 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Prescription</title>
+    <link rel="stylesheet" href="../css/AddPrescriptioFormStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
-    <link rel="stylesheet" href="./css/AddPrescriptioFormStyle.css">
-    <link rel="shortcut icon" href="Favicon.ico" type="image/x-icon">
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+  </head>
 
-<body>
-    
+  <body>
+
     <!-- <div class="NavBar">
-        <div class="Logo">
-          <img src="Logo.jpg" alt="Care4U"/>
-        </div>
-        <h1>Care4U</h1>
-
-        <nav>
-          <ul class="options">
-            <li><a href="DoctorDashboard.html">Home</a></li>
-            <li><a href="ViewProfile.html">View Profile</a></li>
-          </ul>
-        </nav>
+      <div class="Logo">
+        <img src="../images/doc.png" alt="Care4U"/>
+      </div>
+      <h1>Care4U</h1>
+      <nav>
+        <ul class="options">
+          <li><a href="DoctorDashboard.html">Home</a></li>
+          <li><a href="ViewProfile.html">View Profile</a></li>
+        </ul>
+      </nav>
     </div> -->
 
-    <header>
-      <div class="header-content">
-        <div>
-            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
+    <nav class="navbar">
+      <div id="logo">
+        <img src="../images/doc.png">
+        <p>Care4U</p>
+      </div>
+      <div class="menu">
+        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <div class="dropdown">
+          <button class="dropbtn">Profile
+          <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link" href="#confirm">Sign Out</a>
+          </div>
         </div>
-        <div class="view">
-            View Profile
-        </div>
-     </div>
-    </header>
+      </div> 
+    </nav>
 
-    <div class="form">
-        <h2>PRESCRIPTION</h2>
-
-        <form action="">
-            <label for="diagnosis">Diagnosis</label><br>
-            <input class="input" type="text" id="diagnosis" name="diagnosis"><br>
-            <label for="medication">Medications</label><br>
-            <input class="input" type="text" id="medication" name="medication"><br>
-            <label for="tests">Tests</label><br>
-            <input class="input" type="text" id="tests" name="tests"><br>
-            <label for="recapp">Recurring Appointment</label><br>
-            <input class="input" type="text" id="recapp" name="recapp"><br>
-            <input class="submit" type="submit" value="Submit">
-        </form>
+    <div id="confirm" class="overlay">
+      <div class="popup">
+        <h3>Do you want to Sign Out?</h3>
+        <a class="close " style="background-color: #ba0000" href="#">No</a>
+        <button id="out" style="background-color: #0ca912">Yes</button>
+      </div>
     </div>
 
-    <p class="footer">Care4u@gmail.com</p>
-    <!-- <footer>
-        <p>Mail us at : </p>
-        <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
-      </footer> -->
-    
-</body>
+    <div class="form">
+      <h2>PRESCRIPTION</h2>
+      <form action="">
+        <label for="diagnosis">Diagnosis</label><br>
+        <input class="input" type="text" id="diagnosis" name="diagnosis"><br>
+        <label for="medication">Medications</label><br>
+        <input class="input" type="text" id="medication" name="medication"><br>
+        <label for="tests">Tests</label><br>
+        <input class="input" type="text" id="tests" name="tests"><br>
+        <label for="recapp">Recurring Appointment</label><br>
+        <input class="input" type="text" id="recapp" name="recapp"><br>
+        <input class="submit" type="submit" value="Submit">
+      </form>
+    </div>
+
+    <footer>
+      <p>Mail us at : </p>
+      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+    </footer>
+      
+  </body>
 </html>
