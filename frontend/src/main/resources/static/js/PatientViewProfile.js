@@ -1,0 +1,39 @@
+$(document).ready(function () {
+
+  const cookie = document.cookie;
+  const token = cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="))
+    .split("=")[1];
+  const patient_id = cookie
+    .split("; ")
+    .find((row) => row.startsWith("id="))
+    .split("=")[1];
+  console.log(token);
+  console.log(patient_id);
+
+  var reqs = $.ajax({
+    url: `http://localhost:8050/patient/${patient_id}`,
+    type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (result) {
+      console.log(result);
+      $("#pname").html(result.name);
+      $("#page").html(result.age);
+      $("#pgender").html(result.gender);
+      $("#pcontact").html(result.phone);
+      $("#pemail").html(result.email);
+    },
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
+      }
+    },
+  });
+
+  console.log(reqs);
+});

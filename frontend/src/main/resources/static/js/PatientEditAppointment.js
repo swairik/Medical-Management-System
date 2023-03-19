@@ -1,5 +1,5 @@
 const constructAppointmentInfo = (result) => {
-    return `
+  return `
     <tr>
     <td data-label="DocNmae">${result.scheduleResponse.doctorResponse.name}</td>
     <td data-label="speciality">${result.scheduleResponse.doctorResponse.speciality.name}</td>
@@ -7,12 +7,11 @@ const constructAppointmentInfo = (result) => {
     <td data-label="Slot">${result.scheduleResponse.slotResponse.weekday}</td>
     <td data-label="Slot">${result.scheduleResponse.slotResponse.start}-${result.scheduleResponse.slotResponse.end}</td>
     <td data-label="">
-        <button class="cancel">Cancel</button>
+        <button class="cancel" value=${result.id}>Cancel</button>
     </td>
   </tr>
       `;
-  };
-
+};
 
 $(document).ready(function () {
   var date = new Date();
@@ -52,8 +51,8 @@ $(document).ready(function () {
     success: function (result) {
       console.log(result);
       $.each(result, function (key, value) {
-      $("#patient_appointment").append(constructAppointmentInfo(value));
-      })
+        $("#patient_appointment").append(constructAppointmentInfo(value));
+      });
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
@@ -62,5 +61,30 @@ $(document).ready(function () {
         alert("Some Error Occurred");
       }
     },
+  });
+
+  $("#patient_appointment").on("click", "button.cancel", function (e) {
+    console.log("clicked");
+    console.log(this);
+    e.preventDefault();
+    $.ajax({
+      type: "DELETE",
+      url: `http://localhost:8050/appointment/${this.value}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      success: function (result) {
+        console.log(result);
+        alert("Appointment Cancelled")
+        window.location.href = "EditAppointment";
+      },
+      error: function (xhr, status, errorThrown) {
+        if (xhr.status == 403) {
+          window.location.href = "Auth";
+        } else {
+          alert("Some Error Occurred");
+        }
+      },
+    });
   });
 });

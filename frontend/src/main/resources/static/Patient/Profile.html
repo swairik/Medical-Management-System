@@ -1,22 +1,29 @@
 <html>
   <head>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="../css/PatientProfile.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../css/PatientProfile.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script> 
-      $(function(){
-        $("#load_content").load('PatientNavbar'); 
+    <script>
+      $(function () {
+        $("#load_content").load("PatientNavbar");
       });
-      </script> 
+    </script>
+    <script src="../js/PatientViewProfile.js">
+    </script>
   </head>
   <body>
-
     <div id="load_content"></div>
 
     <div class="card">
-      <img src="images/image.png" alt="profile pic">
-      <button id="edit" style="background-color: #9c3f09" onClick="location.href='PatientEditProfile'">Edit</button>
+      <img src="images/image.png" alt="profile pic" />
+      <button
+        id="edit"
+        style="background-color: #9c3f09"
+        onClick="location.href='PatientEditProfile'"
+      >
+        Edit
+      </button>
       <table>
         <tr>
           <td>NAME</td>
@@ -45,7 +52,9 @@
         </tr>
       </table>
     </div>
-   
-    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+
+    <footer>
+      Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a>
+    </footer>
   </body>
-  </html>
+</html>

@@ -7,7 +7,9 @@ $(document).ready(function () {
 
   $("#login").click(function (e) {
     console.log("clicked");
-    console.log($("#login_form").serialize());
+
+    e.preventDefault();
+    
     var loginData = {
       email: $("#email").val(),
       password: $("#password").val(),
@@ -15,9 +17,6 @@ $(document).ready(function () {
 
     console.log(loginData)
 
-    // $('#name').val()
-    // console.log(loginData)
-    e.preventDefault();
     $.ajax({
       url: "http://localhost:8050/auth/login",
       type: "POST",
@@ -40,23 +39,19 @@ $(document).ready(function () {
     });
   });
 
-  $("#sign_up").click(function (e) {
+  $('#patient_form').on('submit', function(e) {
+    e.preventDefault();
+
     console.log("clicked");
 
     var patientData = {
       name: $("#name").val(),
-      gender: $("#gender").val(),
-      age: $("#age").val(),
       email: $("#email_patient").val(),
-      phone:$("#phone").val(),
-      password: $("#password").val(),
+      password: $("#passwordpf").val(),
       role: "PATIENT",
     };
     console.log(patientData)
 
-    // $('#name').val()
-    // console.log(loginData)
-    e.preventDefault();
     $.ajax({
       url: "http://localhost:8050/auth/register",
       type: "POST",
@@ -66,11 +61,14 @@ $(document).ready(function () {
       success: function (result) {
         // window.location.href = 'EditDoctor';
         console.log(result);
+        alert('Account Created')
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
-      error: function (error) {
-        console.log(error);
-        alert("Some error occurred!");
+      error: function (xhr,status,errorThrown) {
+        if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+
+        if (errorObj) alert(errorObj.errorMessage);
+        else alert("Some Error Occurred");
       },
     });
   });

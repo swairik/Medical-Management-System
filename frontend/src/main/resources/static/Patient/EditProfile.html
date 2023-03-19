@@ -9,6 +9,8 @@
         $("#load_content").load('PatientNavbar'); 
       });
       </script> 
+      <script src="../js/PatientEditProfile.js">
+      </script>
   </head>
   <body>
 
@@ -21,11 +23,13 @@
             <label>Name : </label><br>
             <input type="text" name="pname" required><br>
             <label>Age : </label><br> 
-            <input type="text" name="pname" required><br>
+            <input type="text" name="page" required><br>
             <label>Gender : </label><br>  
-            <input type="text" name="pname" required><br> 
+            <input type="text" name="pgender" required><br> 
+            <label> Email : </label><br>  
+            <input type="text" name="pemail" required disabled><br> 
             <label>Contact No. : </label><br>   
-            <input type="text" name="pcontact" required><br><br> 
+            <input type="text" name="pphone" required><br><br> 
             <button id="edited" type="submit" style="background-color: #0a9c11" onClick="location.href='PatientProfile'">Save</button>   
       </form>
     </div>

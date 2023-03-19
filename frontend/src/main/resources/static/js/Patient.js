@@ -51,12 +51,13 @@ $(document).ready(function () {
 
   $(".specialities").on("click", "#show_doctor", function (e) {
     console.log("clicked");
-   const speciality_id =  $("#show_doctor").attr("value");
-   console.log(speciality_id); 
-   e.preventDefault();
+
+    e.preventDefault();
     $.ajax({
       type: "GET",
-      url: `http://localhost:8050/doctor/display/speciality/${speciality_id}`,
+      url: `http://localhost:8050/doctor/display/speciality/${this.getAttribute(
+        "value"
+      )}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -80,8 +81,8 @@ $(document).ready(function () {
 
   $("#doctor_list").on("click", "button#show_slot", function (e) {
     console.log("clicked");
-    console.log(this.value)
-    
-    window.location.href = 'BookAppointment?id=' + this.value;
+    console.log(this.value);
+
+    window.location.href = "BookAppointment?id=" + this.value;
   });
 });
