@@ -1,10 +1,11 @@
-const constructSlotMenu = (result) => {
+const constructAppointmentInfo = (result) => {
     return `
     <tr>
     <td data-label="DocNmae">${result.scheduleResponse.doctorResponse.name}</td>
     <td data-label="speciality">${result.scheduleResponse.doctorResponse.speciality.name}</td>
     <td data-label="Date">${result.scheduleResponse.weekDate}</td>
-    <td data-label="Slot">${result.scheduleResponse.slotResponse.weekDay}</td>
+    <td data-label="Slot">${result.scheduleResponse.slotResponse.weekday}</td>
+    <td data-label="Slot">${result.scheduleResponse.slotResponse.start}-${result.scheduleResponse.slotResponse.end}</td>
     <td data-label="">
         <button class="cancel">Cancel</button>
     </td>
@@ -51,7 +52,7 @@ $(document).ready(function () {
     success: function (result) {
       console.log(result);
       $.each(result, function (key, value) {
-      $("#patient_appointment").append(constructAppointmentInfo(result));
+      $("#patient_appointment").append(constructAppointmentInfo(value));
       })
     },
     error: function (xhr, status, errorThrown) {

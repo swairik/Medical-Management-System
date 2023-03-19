@@ -46,6 +46,17 @@ const constructSlotMenu = (result) => {
 
 $(document).ready(function () {
 
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  console.log(urlParams)
+
+  // Get the value of the "id" parameter
+  const doctor_id = urlParams.get('id');
+
+  // Use the id value to do something
+  console.log(doctor_id); // Output: my-element
+
   const cookie = document.cookie;
   const token = cookie
     .split("; ")
@@ -59,7 +70,7 @@ $(document).ready(function () {
   console.log(patient_id);
 
   $.ajax({
-    url: "http://localhost:8050/doctor/display/2",
+    url: `http://localhost:8050/doctor/display/${doctor_id}`,
     type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -78,7 +89,7 @@ $(document).ready(function () {
   });
 
   $.ajax({
-    url: "http://localhost:8050/schedule/display/approved/2",
+    url: `http://localhost:8050/schedule/display/approved/${doctor_id}`,
     type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -121,7 +132,7 @@ $(document).ready(function () {
         console.log(result);
         console.log("Booked");
         alert("Slot Booked");
-        // window.location.href = 'Patient';
+        window.location.href = 'EditAppointment';
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
