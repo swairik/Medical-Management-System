@@ -7,6 +7,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="../css/ViewProfileStyle.css">
   <script src="../js/AddDoctor.js"></script>
+  <script>
+    $(function () {
+      $("#load_content").load("AdminNavbar");
+    });
+  </script>
   </head>
   <body>
 
@@ -17,6 +22,8 @@
     
     </div>  
     </nav> -->
+
+    <div id="load_content"></div>
 
     <div class="dedit">
       <form class = "dedit-form" id="doctor-form">
