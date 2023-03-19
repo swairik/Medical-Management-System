@@ -114,12 +114,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         public String forgotPassword(String email) {
                 var user = credentialService.getCredentialsByEmail(email)
                                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
+                
                 String token = jwtService.generateToken(user);
 
                 String subject = "Reset your Password";
 
                 String msgBody = "To reset your password click on the link : \n" +
-                                "http://localhost:8081?q=" + token;
+                                "http://localhost:8080/UpdatePassword?token="+token+"&email="+email;
 
                 EmailDetails emailDetails = EmailDetails.builder()
                                 .recipient(email)

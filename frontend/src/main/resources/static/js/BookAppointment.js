@@ -84,12 +84,16 @@ const constructSlotMenu = (result) => {
     <div class="col col-3" data-label="Day">${result.slotResponse.weekday}</div>
     <div class="col col-4" data-label="StartTime">${result.slotResponse.start}</div>
     <div class="col col-5" data-label="EndTime">${result.slotResponse.end}</div>
-    <div class="col col-6" data-label="Book">
-      <button type="submit" id="book_slot">Book</button>
+    <div class="col col-6">
+    <button type="submit" id="book_slot" value=${result.slotResponse.id}>Book</button>
     </div>
     </li>
     `;
 };
+
+{/* <div class="col col-6" data-label="Book">
+<button type="submit" id="book_slot" value=${result.slotResponse.id}>Book</button>
+</div> */}
 
 $(document).ready(function () {
   $.ajax({
@@ -107,5 +111,33 @@ $(document).ready(function () {
     error: function (error) {
       console.log(error);
     },
+  });
+
+  $("#slot_menu").on("click","button#book_slot",function(e) {
+    console.log("clicked")
+    console.log(this)
+    var appointData = 
+        {
+            "patientId": 1,
+            "slotId": this.value
+        }
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: `http://localhost:8050/appointment/`,
+      dataType: 'json',
+    contentType: 'application/json',
+    data: JSON.stringify(appointData),
+      
+      success: function(result) {
+        console.log(result)
+        console.log("Booked")
+        alert('Slot Booked');
+        // window.location.href = 'Patient';
+      },
+      error: function(result) {
+        alert('Some Error has occurred');
+      }
+    });
   });
 });

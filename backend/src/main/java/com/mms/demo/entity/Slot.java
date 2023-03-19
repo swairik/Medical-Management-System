@@ -47,7 +47,6 @@ public class Slot {
     private LocalTime end;
 
     @Column(name = "slot_capacity", nullable = false)
-    @Min(1)
     @Builder.Default
     private Integer capacity = 1;
 }
