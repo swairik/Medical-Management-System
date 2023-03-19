@@ -37,6 +37,7 @@ import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
 import com.mms.demo.model.DoctorResponse;
 import com.mms.demo.model.PatientResponse;
+import com.mms.demo.model.ScheduleResponse;
 import com.mms.demo.model.SlotResponse;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
@@ -279,7 +280,6 @@ public class AppointmentController {
 
         public AppointmentResponse createResponseFromAppointment(Appointment appointment) {
                 PatientResponse patientResponse = PatientResponse.createResponseFromPatient(appointment.getPatient());
-                SlotResponse slotResponse = SlotResponse.createResponseFromSlot(appointment.getSlot());
                 List<Schedule> schedules = scheduleService.getAllSchedules();
                 List<Schedule> filteredSchedules = schedules.stream()
                                 .filter((s) -> {
@@ -289,13 +289,12 @@ public class AppointmentController {
                 if (filteredSchedules.size() == 0) {
                         throw new CustomException("Schedule does not exist", "SCHEDULE_NOT_FOUND");
                 }
-                DoctorResponse doctorResponse = DoctorResponse
-                                .createResponseFromDoctor(filteredSchedules.get(0).getDoctor());
+                ScheduleResponse scheduleResponse = ScheduleResponse
+                                .createResponseFromSchedule(filteredSchedules.get(0));
                 AppointmentResponse appointmentResponse = AppointmentResponse.builder()
                                 .id(appointment.getId())
                                 .patientResponse(patientResponse)
-                                .slotResponse(slotResponse)
-                                .doctorResponse(doctorResponse)
+                                .scheduleResponse(scheduleResponse)
                                 .attended(appointment.getAttended())
                                 .build();
                 return appointmentResponse;
