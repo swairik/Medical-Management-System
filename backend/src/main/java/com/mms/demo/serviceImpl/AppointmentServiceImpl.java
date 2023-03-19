@@ -45,6 +45,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end) {
         List<Appointment> patientAppointments = repo.findAllByPatient(patient);
+        end.plusMonths(12);
         return patientAppointments.stream()
                 .filter(a   ->  a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
                                 a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime())    )
