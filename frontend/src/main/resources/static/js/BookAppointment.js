@@ -45,6 +45,20 @@ const constructSlotMenu = (result) => {
 
 $(document).ready(function () {
 
+  var date=new Date()
+  
+  var formattedDate = date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/, '$3/$1/$2 $4:$5:$6');
+
+  console.log(formattedDate)
+
   $.ajax({
     url: "http://localhost:8050/doctor/display/1",
     type: "GET",

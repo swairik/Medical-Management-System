@@ -1,0 +1,52 @@
+<html>
+  <head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/ViewPatientStyle.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script> 
+    $(function(){
+      $("#load_content").load("AdminNavbar"); 
+    });
+    </script> 
+  </head>
+  <body>
+
+    <div id="load_content"></div>
+    <h2>List Of Patients</h2>
+    <div class="patient">
+        <div class="container">
+        <img src="../images/image.png" alt=" ">
+        <table>
+            <tr>
+              <td>NAME</td>
+              <td>:</td>
+              <td id="pname"></td>
+            </tr>
+            <tr>
+              <td>AGE</td>
+              <td>:</td>
+              <td id="page"></td>
+              <td>GENDER</td>
+              <td>:</td>
+              <td id="pgender"></td>
+            </tr>
+            <tr>
+              <td>EMAIL</td>
+              <td>:</td>
+              <td id="pemail"></td>
+              <td>CONTACT</td>
+              <td>:</td>
+              <td id="pcontact"></td>
+            </tr>
+            <tr>
+                <td>APPOINTMENT DETAILS</td>
+                <td>:</td>
+                <td id="pappointment"></td>
+              </tr>
+          </table>
+    </div>
+    </div>
+    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+  </body>
+</html>

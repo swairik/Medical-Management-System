@@ -5,21 +5,15 @@
     <link rel="stylesheet" type="text/css" href="./css/ApproveSchedule.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/AdminApproveSchedule.js"></script>
+    <script> 
+        $(function(){
+          $("#load_content").load("AdminNavbar"); 
+        });
+        </script> 
   </head>
   <body>
-    <header class="header-content">
-      
-        <div class="img_grp">
-            <img class="doc-img" src="../images/doc.png" alt="An example image"> 
-            <img class="care-img" src="../images/Care4U.png" alt="An example image"> 
-        </div>
-        <div class="header_btn_grp">
-            <button>Home</button>
-            <button>View Profile</button>
-        </div>
     
-    </header>
-    
+    <div id="load_content"></div>
     <div id="schedule_menu">
     <!-- <div class="box_grp">
         <div class="box_one">

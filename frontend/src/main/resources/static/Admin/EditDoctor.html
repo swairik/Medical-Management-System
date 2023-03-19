@@ -5,9 +5,15 @@
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/Admin.js"></script>
+    <script> 
+        $(function(){
+          $("#load_content").load("AdminNavbar"); 
+        });
+        </script> 
   </head>
   <body>
-    <header>
+    <div id="load_content"></div>
+    <!-- <header>
       <div class="header-content">
         <div>
             <img class="doc-img" src="../images/doc.png" alt="An example image"> 
@@ -16,7 +22,7 @@
             View Profile
         </div>
      </div>
-    </header>
+    </header> -->
 
     <!-- <div class="add_doctor_box">
         <div class="add_doctor_box_right">
@@ -74,3 +80,5 @@
     <p class="footer">Care4u@gmail.com</p>
 </body>
 </html>
+
+
