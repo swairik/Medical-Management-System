@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../js/SignOut.js"></script>
   </head>
 
   <body>
@@ -34,13 +36,13 @@
         <p>Care4U</p>
       </div>
       <div class="menu">
-        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <a class="link homeactive" href="Doctor" >Home</a>
         <div class="dropdown">
           <button class="dropbtn">Profile
           <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link profileactive" href="ViewProfile">View Profile</a>
             <a class="link" href="#confirm">Sign Out</a>
           </div>
         </div>
@@ -120,7 +122,7 @@
           <div class="col col-2" data-label="Date"></div>
           <div class="col col-3" data-label="Name"></div>
           <div class="col col-4" data-label="Age"></div>
-          <div class="col col-5" data-label="Prescription"><a id="pres" href="AddPrescriptionForm.html">Add</a></div>
+          <div class="col col-5" data-label="Prescription"><a id="pres" href="AddPrescription">Add</a></div>
         </li>
       </ul>
     </div>
