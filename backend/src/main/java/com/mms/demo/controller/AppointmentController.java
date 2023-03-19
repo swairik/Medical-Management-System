@@ -201,7 +201,7 @@ public class AppointmentController {
                                         .orElseThrow(() -> new CustomException("Patient with given id not found",
                                                         "PATIENT_NOT_FOUND"));
                         if (patient.getGender() == null || patient.getAge() == null || patient.getPhone() == null) {
-                                throw new CustomException("Patient with given details has incomplete details",
+                                throw new CustomException("Patient with given id has incomplete details",
                                                 "PATIENT_DETAILS_INCOMPLETE");
                         }
                 }
