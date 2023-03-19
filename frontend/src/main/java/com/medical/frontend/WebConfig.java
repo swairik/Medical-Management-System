@@ -19,16 +19,23 @@ public class WebConfig implements  WebMvcConfigurer {
         registry.addViewController("/ViewProfile").setViewName("/Doctor/ViewProfile.html");
         registry.addViewController("/YourPatients").setViewName("/Doctor/YourPatients.html");
         registry.addViewController("/AddPrescription").setViewName("/Doctor/AddPrescriptionForm.html");
-        registry.addViewController("/Patient").setViewName("/Patient/HomePage.html");
-        registry.addViewController("/BookAppointment").setViewName("/Patient/Appointment.html");
-        registry.addViewController("/Profile").setViewName("/Patient/Profile.html");
-        registry.addViewController("/PatientSignUp").setViewName("/Patient/SignUp.html");
-        registry.addViewController("/SignIn").setViewName("/Patient/SignIn.html");
+       
         
 
         //Auth
         registry.addViewController("/Auth").setViewName("/Auth/Auth.html");
         registry.addViewController("/ForgotPassword").setViewName("/Auth/ForgotPassword.html");
         registry.addViewController("/UpdatePassword").setViewName("/Auth/UpdatePassword.html");
+
+        //Patient
+        registry.addViewController("/PatientNavbar").setViewName("/Patient/Navbar.html");
+        registry.addViewController("/PatientProfile").setViewName("/Patient/Profile.html");
+        registry.addViewController("/PatientEditProfile").setViewName("/Patient/EditProfile.html");
+        registry.addViewController("/Patient").setViewName("/Patient/HomePage.html");
+        registry.addViewController("/BookAppointment").setViewName("/Patient/Appointment.html");
+        registry.addViewController("/EditAppointment").setViewName("/Patient/EditAppointment.html");
+        registry.addViewController("/PatientSignUp").setViewName("/Patient/SignUp.html");
+        registry.addViewController("/SignIn").setViewName("/Patient/SignIn.html");
+
     }
 }

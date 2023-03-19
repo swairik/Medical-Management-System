@@ -1,23 +1,22 @@
 <html>
   <head>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="../css/Profile.css">
+  <link rel="stylesheet" href="../css/PatientProfile.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script> 
+      $(function(){
+        $("#load_content").load('PatientNavbar'); 
+      });
+      </script> 
   </head>
   <body>
 
-    <nav class="navbar">
-    <div class="logo"><span><img src="images/logo.jpg"></span>Care4U</div>
-    <div class="menu">
-    <a href="Patient" class="active">Home</a>
-    <a href="Profile">View Profile</a>
-    
-    </div>  
-    </nav>
+    <div id="load_content"></div>
+
     <div class="card">
       <img src="images/image.png" alt="profile pic">
-      <button style="background-color: #cc3e17">Edit</button>
+      <button id="edit" style="background-color: #9c3f09" onClick="location.href='PatientEditProfile'">Edit</button>
       <table>
         <tr>
           <td>NAME</td>
@@ -46,6 +45,7 @@
         </tr>
       </table>
     </div>
-    <footer>footer</footer>
+   
+    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
   </body>
   </html>
