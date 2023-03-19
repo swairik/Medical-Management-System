@@ -192,8 +192,9 @@ public class ScheduleController {
         public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest,
                         @AuthenticationPrincipal Credential user) {
                 Schedule schedule = createScheduleFromRequest(scheduleRequest);
-                if (checkPermissions(user, schedule.getDoctor().getEmail())) {
-                        throw new Custom403Exception("Logged in user is not permitted to edit another user's schedule",
+                if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
+                        throw new Custom403Exception(
+                                        "Logged in user is not permitted to create another user's schedule",
                                         "SCHEDULE_CREATION_NOT_ALLOWED");
                 }
 

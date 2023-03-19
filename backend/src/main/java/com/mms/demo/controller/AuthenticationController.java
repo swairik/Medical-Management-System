@@ -36,7 +36,7 @@ public class AuthenticationController {
 
     }
 
-    @GetMapping("/forgotPassword")
+    @PostMapping("/forgotPassword")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         return new ResponseEntity<>(authenticationService.forgotPassword(email), HttpStatus.OK);
     }

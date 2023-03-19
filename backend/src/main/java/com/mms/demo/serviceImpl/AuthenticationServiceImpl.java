@@ -1,5 +1,9 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -66,10 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (registerRequest.getRole() == Role.PATIENT) {
                         var patient = Patient.builder()
                                         .name(registerRequest.getName())
-                                        .gender(registerRequest.getGender())
-                                        .age(registerRequest.getAge())
                                         .email(registerRequest.getEmail())
-                                        .phone(registerRequest.getPhone())
                                         .build();
 
                         patientService.createPatient(patient);
@@ -92,7 +93,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 // TODO : Fix issue for multiple login for same user - revoke their old token
                 // access
-                saveToken(jwtToken);
+                Date expirationDateStamp = jwtService.extractExpiration(jwtToken);
+                LocalDateTime expirationStamp = expirationDateStamp.toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDateTime();
+
+                Token token = Token.builder()
+                                .identifier(jwtToken)
+                                .expirationStamp(expirationStamp)
+                                .build();
+                tokenService.createToken(token);
 
                 return AuthenticationResponse.builder()
                                 .token(jwtToken)
@@ -120,8 +130,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (response.equals("Error")) {
                         throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
                 }
-                user.setResetToken(token);
-                credentialService.updateCredentials(user.getId(), user);
                 return response;
         }
 
@@ -131,34 +139,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 if (!passwordRequest.getPassword().equals(passwordRequest.getConfirmPassword())) {
                         throw new CustomException("Passwords do not match", "PASSWORD_NOT_MATCHED");
                 }
-                if (user.getResetToken() == null) {
-                        throw new CustomException("No reset token found in database", "RESET_TOKEN_NOT_FOUND");
-                }
-                if (!passwordRequest.getToken().equals(user.getResetToken())) {
-                        throw new CustomException("Reset token incorrect", "INCORRECT_RESET_TOKEN");
-                }
 
-                if (!jwtService.isTokenValid(passwordRequest.getToken(), user)) {
+                if (jwtService.isTokenValid(passwordRequest.getToken(), user) == false
+                                || jwtService.extractUsername(passwordRequest.getToken())
+                                                .equals(passwordRequest.getEmail()) == false) {
                         throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN");
                 }
-
                 user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
-                user.setResetToken(null);
+
+                Date expirationDateStamp = jwtService.extractExpiration(passwordRequest.getToken());
+                LocalDateTime expirationStamp = expirationDateStamp.toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDateTime();
+
+                Token token = Token.builder()
+                                .identifier(passwordRequest.getToken())
+                                .type("RESET")
+                                .isRevoked(true)
+                                .expirationStamp(expirationStamp)
+                                .build();
+                tokenService.createToken(token);
+
                 credentialService.updateCredentials(user.getId(), user);
 
                 return "Password updated successfully";
         }
-
-        private void saveToken(String jwtToken) {
-                Token token = Token.builder()
-                                .identifier(jwtToken)
-                                .build();
-                tokenService.createToken(token);
-        }
-
-        // private void revokeUserToken(String jwtToken) {
-        // tokenService.expireToken(jwtToken);
-        // tokenService.revokeToken(jwtToken);
-        // }
-
 }

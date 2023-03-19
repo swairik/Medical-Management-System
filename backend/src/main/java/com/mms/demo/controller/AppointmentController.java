@@ -194,6 +194,16 @@ public class AppointmentController {
                                         "APPOINTMENT_CREATION_NOT_ALLOWED");
                 }
 
+                if (user.getRole().equals(Role.PATIENT)) {
+                        Patient patient = patientService.getPatientById(appointmentRequest.getPatientId())
+                                        .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                                        "PATIENT_NOT_FOUND"));
+                        if (patient.getGender() == null || patient.getAge() == null || patient.getPhone() == null) {
+                                throw new CustomException("Patient with given details has incomplete details",
+                                                "PATIENT_DETAILS_INCOMPLETE");
+                        }
+                }
+
                 List<Appointment> allAppointments = appointmentService.getAllAppointments();
 
                 Appointment alreadyCreatedAppointment = allAppointments.stream()

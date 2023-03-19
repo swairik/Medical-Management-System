@@ -62,12 +62,12 @@ public class JwtServiceImpl implements JwtService {
         Token storedToken = tokenService.getTokenByIdentifier(token).orElse(null);
         Boolean isBlacklisted = false;
         if (storedToken != null) {
-            isBlacklisted = storedToken.getIsExpired() && storedToken.getIsRevoked();
+            isBlacklisted = storedToken.getIsRevoked();
         }
         return extractExpiration(token).before(new Date()) || isBlacklisted;
     }
 
-    private Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 

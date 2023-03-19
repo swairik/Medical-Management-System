@@ -107,7 +107,7 @@ class ReportController {
                 byte[] reports = reportService.generateReports(start, end).orElseThrow(
                                 () -> new CustomException("Error while generating report", "REPORT_NOT_GENERATED"));
                 ByteArrayResource response = new ByteArrayResource(reports);
-                String filename = String.format("Report_%s_%s.xlsx", start.toString(), end.toString());
+                String filename = String.format("Report_%s_%s.zip", start.toString(), end.toString());
                 return ResponseEntity.ok()
                                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                                 .contentLength(response.contentLength())
@@ -137,7 +137,7 @@ class ReportController {
                 byte[] reports = reportService.generateScheduleReportForDoctor(start, end, doctor).orElseThrow(
                                 () -> new CustomException("Error while generating report", "REPORT_NOT_GENERATED"));
                 ByteArrayResource response = new ByteArrayResource(reports);
-                String filename = String.format("Report_Doctor_%s_%s.xlsx", start.toString(), end.toString());
+                String filename = String.format("Report_Doctor_%s_%s.zip", start.toString(), end.toString());
                 return ResponseEntity.ok()
                                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                                 .contentLength(response.contentLength())

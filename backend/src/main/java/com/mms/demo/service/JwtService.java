@@ -1,5 +1,6 @@
 package com.mms.demo.service;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -16,6 +17,9 @@ public interface JwtService {
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 
+    public Date extractExpiration(String token);
+
+    
     public boolean isTokenValid(String token, UserDetails userDetails);
 
 }

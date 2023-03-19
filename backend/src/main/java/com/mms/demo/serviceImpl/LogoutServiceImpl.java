@@ -31,7 +31,6 @@ public class LogoutServiceImpl implements LogoutHandler {
         var storedToken = tokenService.getTokenByIdentifier(jwt)
                 .orElse(null);
         if (storedToken != null) {
-            tokenService.expireToken(jwt);
             tokenService.revokeToken(jwt);
             SecurityContextHolder.clearContext();
         }

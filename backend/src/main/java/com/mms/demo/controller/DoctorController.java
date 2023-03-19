@@ -27,6 +27,7 @@ import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
 import com.mms.demo.model.RegisterDoctorRequest;
+import com.mms.demo.model.RegisterDoctorResponse;
 import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
@@ -90,7 +91,8 @@ public class DoctorController {
         }
 
         @PostMapping("/")
-        public ResponseEntity<DoctorResponse> createDoctor(@Valid @RequestBody RegisterDoctorRequest doctorRequest) {
+        public ResponseEntity<RegisterDoctorResponse> createDoctor(
+                        @Valid @RequestBody RegisterDoctorRequest doctorRequest) {
                 List<Doctor> doctors = doctorService.getAllDoctors();
                 Doctor doctorAlreadyCreatedWithEmail = doctors.stream().filter(
                                 (d) -> d.getEmail().equals(doctorRequest.getEmail()))
@@ -110,9 +112,11 @@ public class DoctorController {
                                 .orElseThrow(() -> new CustomException("Speciality with given id not found",
                                                 "SPECIALITY_NOT_FOUND"));
 
+                String password = doctorRequest.getEmail().substring(0, 3) + "passsword";
+
                 var credentials = Credential.builder()
                                 .email(doctorRequest.getEmail())
-                                .password(passwordEncoder.encode(doctorRequest.getPassword()))
+                                .password(passwordEncoder.encode(password))
                                 .role(doctorRequest.getRole())
                                 .build();
 
@@ -129,7 +133,8 @@ public class DoctorController {
                                 .build();
 
                 Doctor createdDoctor = doctorService.createDoctor(doctor);
-                DoctorResponse doctorResponse = DoctorResponse.createResponseFromDoctor(createdDoctor);
+                RegisterDoctorResponse doctorResponse = RegisterDoctorResponse.createResponseFromDoctor(createdDoctor);
+                doctorResponse.setPassword(password);
                 return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
         }
 

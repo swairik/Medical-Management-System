@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class PrescriptionRequest {
     private Long doctorId;
     private Long patientId;
-    private String contents;
+    private PrescriptionContentRequest contents;
 }
