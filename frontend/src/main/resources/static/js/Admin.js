@@ -1,6 +1,3 @@
-//var docList;
-//var docMenu = document.getElementById('add_doctor_menu');
-
 const constructDoctorMenu = (value) => {
   var div1=`<img src="../images/AddDoctor.png" alt="An example image" style="margin-left:1%">`
 
@@ -37,7 +34,6 @@ $(document).ready(function () {
       console.log(docList);
       $.each(result, function (key, value) {
         console.log(value);
-        // $(".add_doctor_personal").append("Name= " + value.name + "Speciality= " + value.speciality.name);
         $(".add_doctor_menu").append(constructDoctorMenu(value));
       });
     },
@@ -52,10 +48,6 @@ $(document).ready(function () {
     $.ajax({
       type: "DELETE",
       url: `http://localhost:8050/doctor/${this.value}`,
-      // data: {
-      //   id: $("#button_1").val(),
-      //   access_token: $("#access_token").val()
-      // },
       success: function(result) {
         window.location.href = 'EditDoctor';
       },
@@ -67,6 +59,4 @@ $(document).ready(function () {
 
 });
 
-// jQuery.each( docList, function( i, val ) {
-//    $( "#" + i ).append( document.createTextNode( " - " + val ) );
-//  });
+

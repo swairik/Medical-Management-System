@@ -28,20 +28,20 @@ public class PatientRequest {
     @Min(0)
     private Integer age;
 
-    @Email
-    private String email;
-
     @Size(min = 7, max = 14, message = "Phone number must be between 7-14 characters")
     @NotNull
     private String phone;
+
+    @Email
+    private String email;
 
     public static Patient createPatientFromRequest(PatientRequest patientRequest) {
         Patient patient = Patient.builder()
                 .name(patientRequest.getName())
                 .gender(patientRequest.getGender())
                 .age(patientRequest.getAge())
-                .email(patientRequest.getEmail())
                 .phone(patientRequest.getPhone())
+                .email(patientRequest.getEmail())
                 .build();
         return patient;
     }

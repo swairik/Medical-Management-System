@@ -38,11 +38,11 @@ public class Patient {
     @Column(name = "patient_name", nullable = false)
     private String name;
 
-    @Column(name = "patient_gender")
+    @Column(name = "patient_gender", nullable = true)
     @Pattern(regexp = "M|F")
     private String gender;
 
-    @Column(name = "patient_age", nullable = false)
+    @Column(name = "patient_age", nullable = true)
     @Min(0)
     private Integer age;
 
@@ -50,10 +50,10 @@ public class Patient {
     @Email
     private String email;
 
-    @Column(name="patient_phone", length = 14, nullable = false)
+    @Column(name = "patient_phone", length = 14, nullable = true)
     private String phone;
 
-    @Column(name="patient_registration_timestamp", nullable = false)
+    @Column(name = "patient_registration_timestamp", nullable = false)
     @Builder.Default
     private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 

@@ -7,9 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Patients</title>
     <link rel="stylesheet" href="../css/YourPatientsStyle.css">
+    <link rel="stylesheet" href="../css/ViewYourAppointmentsStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../js/SignOut.js"></script>
   </head>
 
   <body>
@@ -20,13 +23,13 @@
         <p>Care4U</p>
       </div>
       <div class="menu">
-        <a class="link homeactive" href="DoctorDashboard.html" >Home</a>
+        <a class="link homeactive" href="Doctor" >Home</a>
         <div class="dropdown">
           <button class="dropbtn">Profile
           <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a class="link profileactive" href="ViewProfile.html">View Profile</a>
+            <a class="link profileactive" href="ViewProfile">View Profile</a>
             <a class="link" href="#confirm">Sign Out</a>
           </div>
         </div>
@@ -41,26 +44,37 @@
       </div>
     </div>
 
+    <div>
     <h2 class="heading">YOUR PATIENTS</h2>
+    <div class="fields">
+        <p class="content">Start Date 
+          <br><br>
+          <input type="date" id="date" value="" min="" max="">
+        </p>
+        <p class="content">End Date 
+          <br><br>
+          <input type="date" id="date" value="" min="" max="">
+        </p>
+        <button id="view_button" type="button" onclick="">View</button>
+      </div>
+    </div>
 
     <div class="container">
       <ul class="responsive-table">
         <li class="table-header">
           <div class="col col-1">S. No.</div>
-          <div class="col col-2">Name</div>
-          <div class="col col-3">Age</div>
-          <div class="col col-4">Previous Appointment</div>
-          <div class="col col-5">Next Appointment</div>
-          <div class="col col-6">Prescription</div>
+          <div class="col col-2">Date</div>
+          <div class="col col-3">Name</div>
+          <div class="col col-4">Age</div>
+          <div class="col col-5">Prescription</div>
 
         </li>
         <li class="table-row">
           <div class="col col-1" data-label="No"></div>
-          <div class="col col-2" data-label="Name"></div>
-          <div class="col col-3" data-label="Age"></div>
-          <div class="col col-4" data-label="PrevApp"></div>
-          <div class="col col-5" data-label="NextApp"></div>
-          <div class="col col-6" data-label="Prescription"><a id="pres" href="AddPrescriptionForm.html">Add</a></div>
+          <div class="col col-2" data-label="Date"></div>
+          <div class="col col-3" data-label="Name"></div>
+          <div class="col col-4" data-label="Age"></div>
+          <div class="col col-5" data-label="Prescription"><a id="pres" href="AddPrescription">Add</a></div>
         </li>
       </ul>
     </div>

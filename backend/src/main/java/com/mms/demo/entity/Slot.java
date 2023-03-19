@@ -1,6 +1,5 @@
 package com.mms.demo.entity;
 
-
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
@@ -20,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 @Setter
 @Getter
@@ -49,7 +47,6 @@ public class Slot {
     private LocalTime end;
 
     @Column(name = "slot_capacity", nullable = false)
-    @Min(1)
     @Builder.Default
     private Integer capacity = 1;
 }

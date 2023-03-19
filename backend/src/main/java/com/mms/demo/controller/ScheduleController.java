@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
 import com.mms.demo.exception.CustomException;
+import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.model.ScheduleRequest;
 import com.mms.demo.model.ScheduleResponse;
 import com.mms.demo.service.AppointmentService;
@@ -185,14 +189,35 @@ public class ScheduleController {
         }
 
         @PostMapping("/")
-        public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest) {
+        public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleRequest scheduleRequest,
+                        @AuthenticationPrincipal Credential user) {
                 Schedule schedule = createScheduleFromRequest(scheduleRequest);
+                if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
+                        throw new Custom403Exception(
+                                        "Logged in user is not permitted to create another user's schedule",
+                                        "SCHEDULE_CREATION_NOT_ALLOWED");
+                }
 
                 List<Schedule> createdSchedules = scheduleService.getSchedulesByDoctor(schedule.getDoctor());
-                Schedule alreadyCreatedSchedule = createdSchedules.stream()
+                List<Schedule> alreadyCreatedSchedules = createdSchedules.stream()
                                 .filter((s) -> (s.getDoctor().getId() == schedule.getDoctor().getId()
                                                 && s.getSlot().getId() == schedule.getSlot().getId()))
+                                .collect(Collectors.toList());
+
+                String weekDate = scheduleRequest.getWeekDate();
+                Pattern pattern = Pattern.compile("^(?<year>\\d{4})-W(?<week>\\d{2})$");
+                Matcher matcher = pattern.matcher(weekDate);
+
+                if (!matcher.find()) {
+                        throw new CustomException("Wrong format of weekDate", "WRONG_FORMAT");
+                }
+
+                Integer week = Integer.parseInt(matcher.group("week"));
+
+                Schedule alreadyCreatedSchedule = alreadyCreatedSchedules.stream()
+                                .filter((s) -> s.getWeek() == week + 1)
                                 .findFirst().orElse(null);
+
                 if (alreadyCreatedSchedule != null) {
                         throw new CustomException("Schedule with given combination of doctor and slot already created",
                                         "SCHEDULE_ALREADY_CREATED");
@@ -205,15 +230,66 @@ public class ScheduleController {
 
         @PutMapping("/{id}")
         public ResponseEntity<ScheduleResponse> updateSchedule(@PathVariable Long id,
-                        @Valid @RequestBody ScheduleRequest scheduleRequest) {
-                Schedule schedule = createScheduleFromRequest(scheduleRequest);
-                Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
+                        @Valid @RequestBody ScheduleRequest scheduleRequest, @AuthenticationPrincipal Credential user) {
+
+                Schedule udpateSchedule = createScheduleFromRequest(scheduleRequest);
+
+                if (checkPermissions(user, udpateSchedule.getDoctor().getEmail()) == false) {
+                        throw new Custom403Exception(
+                                        "Logged in user is not permitted to edit another user's schedule",
+                                        "SCHEDULE_UPDATE_NOT_ALLOWED");
+                }
+
+                List<Schedule> createdSchedules = scheduleService.getSchedulesByDoctor(udpateSchedule.getDoctor());
+                List<Schedule> alreadyCreatedSchedules = createdSchedules.stream()
+                                .filter((s) -> (s.getDoctor().getId() == udpateSchedule.getDoctor().getId()
+                                                && s.getSlot().getId() == udpateSchedule.getSlot().getId()))
+                                .collect(Collectors.toList());
+
+                String weekDate = scheduleRequest.getWeekDate();
+                Pattern pattern = Pattern.compile("^(?<year>\\d{4})-W(?<week>\\d{2})$");
+                Matcher matcher = pattern.matcher(weekDate);
+
+                if (!matcher.find()) {
+                        throw new CustomException("Wrong format of weekDate", "WRONG_FORMAT");
+                }
+
+                Integer week = Integer.parseInt(matcher.group("week"));
+                Schedule alreadyCreatedSchedule = alreadyCreatedSchedules.stream()
+                                .filter((s) -> s.getWeek() == week + 1)
+                                .findFirst().orElse(null);
+
+                if (alreadyCreatedSchedule != null) {
+                        throw new CustomException("Schedule with given combination of doctor and slot already created",
+                                        "SCHEDULE_ALREADY_CREATED");
+                }
+
+                Schedule updatedSchedule = scheduleService.updateSchedule(id, udpateSchedule);
                 ScheduleResponse response = ScheduleResponse.createResponseFromSchedule(updatedSchedule);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+        public ResponseEntity<Void> deleteSchedule(@PathVariable Long id, @AuthenticationPrincipal Credential user) {
+                Schedule schedule = scheduleService.getScheduleById(id).orElseThrow(
+                                () -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND"));
+
+                if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
+                        throw new Custom403Exception(
+                                        "Logged in user is not permitted to delete another user's schedule",
+                                        "SCHEDULE_DELETE_NOT_ALLOWED");
+                }
+
+                List<Appointment> appointments = appointmentService.getAllAppointments();
+
+                Appointment appointmentAlreadyPresent = appointments.stream()
+                                .filter((a) -> a.getSlot().getId() == schedule.getSlot().getId()).findFirst()
+                                .orElse(null);
+                if (appointmentAlreadyPresent != null) {
+                        throw new CustomException("Appointment with this schedule's slot id exists",
+                                        "APPOINTMENT_WITH_SLOT_EXISTS");
+                }
+
                 scheduleService.deleteSchedule(id);
                 return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -226,15 +302,17 @@ public class ScheduleController {
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
 
-                List<Schedule> bookedSchedules = scheduleService.getAllSchedules();
-                Schedule alreadyBookedSameSlot = bookedSchedules.stream().filter(
-                                (s) -> s.getDoctor().getId() == doctor.getId() && s.getSlot().getId() == slot.getId())
-                                .findFirst().orElse(null);
+                // List<Schedule> bookedSchedules = scheduleService.getAllSchedules();
+                // Schedule alreadyBookedSameSlot = bookedSchedules.stream().filter(
+                // (s) -> s.getDoctor().getId() == doctor.getId() && s.getSlot().getId() ==
+                // slot.getId())
+                // .findFirst().orElse(null);
 
-                if (alreadyBookedSameSlot != null) {
-                        throw new CustomException("Schedule with combination of doctor and slot already booked",
-                                        "SCHEDULE_ALREADY_BOOKED");
-                }
+                // if (alreadyBookedSameSlot != null) {
+                // throw new CustomException("Schedule with combination of doctor and slot
+                // already booked",
+                // "SCHEDULE_ALREADY_BOOKED");
+                // }
 
                 String weekDate = scheduleRequest.getWeekDate();
 
@@ -263,6 +341,12 @@ public class ScheduleController {
                 schedule.setYear(year);
 
                 return schedule;
+        }
+
+        private Boolean checkPermissions(Credential user, String email) {
+                if (user.getRole().equals(Role.DOCTOR) && !user.getEmail().equals(email))
+                        return false;
+                return true;
         }
 
 }

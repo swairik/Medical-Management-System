@@ -19,16 +19,17 @@ public class PrescriptionResponse {
     private DoctorResponse doctorResponse;
     private PatientResponse patientResponse;
     private LocalDateTime stamp;
-    private String contents;
+    private PrescriptionContentResponse contents;
 
     public static PrescriptionResponse createResponseFromPrescription(Prescription prescription) {
-        String contents = new String(Base64.getDecoder().decode(prescription.getContents()));
+        String delimiter = ":,-";
+        String[] contentsResponse = new String(Base64.getDecoder().decode(prescription.getContents())).split(delimiter);
         PrescriptionResponse prescriptionResponse = PrescriptionResponse.builder()
                 .id(prescription.getId())
                 .doctorResponse(DoctorResponse.createResponseFromDoctor(prescription.getDoctor()))
                 .patientResponse(PatientResponse.createResponseFromPatient(prescription.getPatient()))
                 .stamp(prescription.getStamp())
-                .contents(contents)
+                .contents(PrescriptionContentResponse.createResponseFromPrescriptionContent(contentsResponse))
                 .build();
         return prescriptionResponse;
     }

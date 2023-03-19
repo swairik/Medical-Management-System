@@ -121,7 +121,13 @@ public class PrescriptionController {
                                 .orElseThrow(() -> new CustomException("Doctor with given id not found",
                                                 "DOCTOR_NOT_FOUND"));
 
-                byte[] contents = Base64.getEncoder().encode(prescriptionRequest.getContents().getBytes());
+                String delimiter = ":,-";
+
+                String contentsRequest = prescriptionRequest.getContents().getMedication() + delimiter
+                                + prescriptionRequest.getContents().getDiagnosis() + delimiter
+                                + prescriptionRequest.getContents().getTest();
+
+                byte[] contents = Base64.getEncoder().encode(contentsRequest.getBytes());
 
                 Prescription prescription = Prescription.builder()
                                 .doctor(doctor)

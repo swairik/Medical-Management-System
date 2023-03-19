@@ -55,14 +55,14 @@ public class Doctor {
     @Email
     private String email;
 
-    @Column(name="doctor_phone", length = 14, nullable = false)
+    @Column(name = "doctor_phone", length = 14, nullable = false)
     private String phone;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = { CascadeType.DETACH })
     @JoinColumn(nullable = false, referencedColumnName = "speciality_id")
     private Speciality speciality;
 
-    @Column(name="doctor_registration_timestamp", nullable = false)
+    @Column(name = "doctor_registration_timestamp", nullable = false)
     @Builder.Default
     private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 }

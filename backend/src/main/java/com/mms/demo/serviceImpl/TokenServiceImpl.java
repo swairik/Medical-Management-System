@@ -29,8 +29,6 @@ public class TokenServiceImpl implements TokenService {
         return repo.findById(id);
     }
 
-
-
     @Override
     public Optional<Token> getTokenByIdentifier(String identifier) {
         return repo.findByIdentifier(identifier);
@@ -76,5 +74,5 @@ public class TokenServiceImpl implements TokenService {
 
         return repo.save(token);
     }
-    
+
 }

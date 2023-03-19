@@ -1,4 +1,5 @@
 package com.mms.demo.serviceImpl;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,9 @@ public class CredentialServiceImpl implements CredentialService {
         Credential credentials = temp.get();
         credentials.setEmail(credentialsUpdates.getEmail());
         credentials.setPassword(credentialsUpdates.getPassword());
-        credentials.setIsAdmin(credentialsUpdates.getIsAdmin());
-        credentials.setIsPatient(credentialsUpdates.getIsPatient());
+        credentials.setRole(credentialsUpdates.getRole());
+        // credentials.setIsAdmin(credentialsUpdates.getIsAdmin());
+        // credentials.setIsPatient(credentialsUpdates.getIsPatient());
 
         return repo.save(credentials);
     }
@@ -49,5 +51,5 @@ public class CredentialServiceImpl implements CredentialService {
     public void deleteCredentials(Long id) {
         repo.deleteById(id);
     }
-    
+
 }
