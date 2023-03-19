@@ -146,12 +146,13 @@ public class DoctorController {
                                 .orElseThrow(() -> new CustomException("Doctor with given id not found",
                                                 "DOCTOR_NOT_FOUND"));
 
-                if (checkPermissions(user, doctor.getEmail())) {
+                if (checkPermissions(user, doctor.getEmail()) == false) {
                         throw new Custom403Exception("Logged in user is not permitted to edit another user's profile",
                                         "PROFILE_EDIT_NOT_ALLOWED");
                 }
 
                 Doctor updateDoctor = createDoctorFromRequest(doctorRequest);
+                updateDoctor.setEmail(doctor.getEmail());
                 Doctor updatedDoctor = doctorService.updateDoctor(id, updateDoctor);
                 DoctorResponse doctorResponse = DoctorResponse.createResponseFromDoctor(updatedDoctor);
                 return new ResponseEntity<>(doctorResponse, HttpStatus.OK);
