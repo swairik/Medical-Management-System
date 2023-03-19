@@ -1,26 +1,25 @@
-
 const constructDoctorInfo = (result) => {
   console.log(result);
   return `
     <tr>
     <td>Speciality</td>
     <td>:</td>
-    <td id="speciality">${result.doctorResponse.speciality.name}</td>
+    <td id="speciality">${result.speciality.name}</td>
   </tr>
   <tr>
     <td>Name</td>
     <td>:</td>
-    <td id="docName">${result.doctorResponse.name}</td>
+    <td id="docName">${result.name}</td>
   </tr>
   <tr>
     <td>Contact no.</td>
     <td>:</td>
-    <td id="docContact">${result.doctorResponse.phone}</td>
+    <td id="docContact">${result.phone}</td>
   </tr>
   <tr>
     <td>Email</td>
     <td>:</td>
-    <td id="DocEmail">${result.doctorResponse.email}</td>
+    <td id="DocEmail">${result.email}</td>
   </tr>
     `;
 };
@@ -39,41 +38,62 @@ const constructSlotMenu = (result) => {
     `;
 };
 
-{/* <div class="col col-6" data-label="Book">
+{
+  /* <div class="col col-6" data-label="Book">
 <button type="submit" id="book_slot" value=${result.slotResponse.id}>Book</button>
-</div> */}
+</div> */
+}
 
 $(document).ready(function () {
 
-  var date=new Date()
-  
-  var formattedDate = date.toLocaleString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  }).replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/, '$3/$1/$2 $4:$5:$6');
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
 
-  console.log(formattedDate)
+  console.log(urlParams)
+
+  // Get the value of the "id" parameter
+  const doctor_id = urlParams.get('id');
+
+  // Use the id value to do something
+  console.log(doctor_id); // Output: my-element
+
+  const cookie = document.cookie;
+  const token = cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="))
+    .split("=")[1];
+  const patient_id = cookie
+    .split("; ")
+    .find((row) => row.startsWith("id="))
+    .split("=")[1];
+  console.log(token);
+  console.log(patient_id);
 
   $.ajax({
-    url: "http://localhost:8050/doctor/display/1",
+    url: `http://localhost:8050/doctor/display/${doctor_id}`,
     type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     success: function (result) {
       console.log(result);
       $(".DoctorInfo").append(constructDoctorInfo(result));
     },
-    error: function (error) {
-      console.log(error);
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
+      }
     },
   });
 
   $.ajax({
-    url: "http://localhost:8050/schedule/display/patient/approved/1",
+    url: `http://localhost:8050/schedule/display/approved/${doctor_id}`,
     type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     success: function (result) {
       console.log(result);
       $.each(result, function (key, value) {
@@ -81,36 +101,49 @@ $(document).ready(function () {
         $("#slot_menu").append(constructSlotMenu(value));
       });
     },
-    error: function (error) {
-      console.log(error);
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
+      }
     },
   });
 
-  $("#slot_menu").on("click","button#book_slot",function(e) {
-    console.log("clicked")
-    console.log(this)
-    var appointData = 
-        {
-            "patientId": 1,
-            "slotId": this.value
-        }
+  $("#slot_menu").on("click", "button#book_slot", function (e) {
+    console.log("clicked");
+    console.log(this);
+    var appointData = {
+      patientId: patient_id,
+      slotId: this.value,
+    };
+    console.log(appointData)
     e.preventDefault();
     $.ajax({
       type: "POST",
       url: `http://localhost:8050/appointment/`,
-      dataType: 'json',
-    contentType: 'application/json',
-    data: JSON.stringify(appointData),
-      
-      success: function(result) {
-        console.log(result)
-        console.log("Booked")
-        alert('Slot Booked');
-        // window.location.href = 'Patient';
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(appointData),
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-      error: function(result) {
-        alert('Some Error has occurred');
-      }
+      success: function (result) {
+        console.log(result);
+        console.log("Booked");
+        alert("Slot Booked");
+        window.location.href = 'EditAppointment';
+      },
+      error: function (xhr, status, errorThrown) {
+        if (xhr.status == 403) {
+          window.location.href = "Auth";
+        } else {
+          if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+
+          if (errorObj) alert(errorObj.errorMessage);
+          else alert("Some Error Occurred");
+        }
+      },
     });
   });
 });
