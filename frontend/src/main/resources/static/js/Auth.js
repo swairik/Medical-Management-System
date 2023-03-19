@@ -26,9 +26,9 @@ $(document).ready(function () {
       data: JSON.stringify(loginData),
       success: function (result) {
         // window.location.href = 'EditDoctor';
-        console.log(result);
-      
         document.cookie = `authToken=${result.token}`;
+        document.cookie = `id=${result.id}`;
+      
         if(result.role==="PATIENT") window.location.href = 'Patient';
         if(result.role==="ADMIN") window.location.href = 'Admin';
         if(result.role==="DOCTOR") window.location.href = 'Doctor';
@@ -66,7 +66,6 @@ $(document).ready(function () {
       success: function (result) {
         // window.location.href = 'EditDoctor';
         console.log(result);
-        document.cookie = `authToken=${result.token}`;
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
       error: function (error) {

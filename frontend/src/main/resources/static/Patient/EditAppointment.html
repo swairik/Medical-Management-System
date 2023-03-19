@@ -4,12 +4,13 @@
   <link rel="stylesheet" href="../css/PatientEditAppointment.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-  <script src="../js/PatientFunctions.js"></script>
+  <!-- <script src="../js/PatientFunctions.js"></script> -->
   <script> 
     $(function(){
       $("#load_content").load("PatientNavbar"); 
     });
     </script> 
+    <script src="../js/PatientViewAppointment.js"></script>
 </head>
 <body>
 
@@ -25,25 +26,7 @@
         <th scope="col">Cancel Appointment</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td data-label="DocNmae">AB</td>
-        <td data-label="speciality">ORTHO</td>
-        <td data-label="Date">21st</td>
-        <td data-label="Slot">1-2</td>
-        <td data-label="">
-            <button class="cancel">Cancel</button>
-        </td>
-      </tr>
-      <tr>
-        <td data-label="DocNmae">AB</td>
-        <td data-label="speciality">ORTHO</td>
-        <td data-label="Date">21st</td>
-        <td data-label="Slot">1-2</td>
-        <td data-label="">
-            <button class="cancel">Cancel</button>
-        </td>
-      </tr>
+    <tbody id="patient_appointment">
       <tr>
         <td data-label="DocNmae">AB</td>
         <td data-label="speciality">ORTHO</td>
