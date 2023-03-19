@@ -15,6 +15,7 @@ public class AppointmentResponse {
     private Long id;
     private PatientResponse patientResponse;
     private SlotResponse slotResponse;
+    private DoctorResponse doctorResponse;
     private Boolean attended;
 
     public static AppointmentResponse createResponseFromAppointment(Appointment appointment) {

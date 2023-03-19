@@ -35,6 +35,9 @@ import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
+import com.mms.demo.model.DoctorResponse;
+import com.mms.demo.model.PatientResponse;
+import com.mms.demo.model.SlotResponse;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
@@ -67,7 +70,7 @@ public class AppointmentController {
         public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
                 List<Appointment> appointments = appointmentService.getAllAppointments();
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -77,7 +80,7 @@ public class AppointmentController {
                 Appointment appointment = appointmentService.getAppointmentById(id)
                                 .orElseThrow(() -> new CustomException("Appointment with given id not found",
                                                 "APPOINTMENT_NOT_FOUND"));
-                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(appointment);
+                AppointmentResponse response = createResponseFromAppointment(appointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -89,7 +92,7 @@ public class AppointmentController {
                                                 "PATIENT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -102,7 +105,7 @@ public class AppointmentController {
                                                 "SLOT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAppointmentsBySlot(slot);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -137,7 +140,7 @@ public class AppointmentController {
                 }
 
                 List<AppointmentResponse> response = validAppointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -158,7 +161,7 @@ public class AppointmentController {
                                                 "PATIENT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAllByPatientAfter(patient, dateTime);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -179,7 +182,7 @@ public class AppointmentController {
                                                 "PATIENT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAllByPatientBetween(patient, startTime, endTime);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> AppointmentResponse.createResponseFromAppointment(a))
+                                .map((a) -> createResponseFromAppointment(a))
                                 .collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -227,7 +230,7 @@ public class AppointmentController {
                 slot.setCapacity(slot.getCapacity() - 1);
                 slotService.updateSlot(slot.getId(), slot);
 
-                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(createdAppointment);
+                AppointmentResponse response = createResponseFromAppointment(createdAppointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -247,7 +250,7 @@ public class AppointmentController {
                 }
                 Appointment updateAppointment = createAppointmentFromRequest(appointmentRequest);
                 Appointment updatedAppointment = appointmentService.updateAppointment(id, updateAppointment);
-                AppointmentResponse response = AppointmentResponse.createResponseFromAppointment(updatedAppointment);
+                AppointmentResponse response = createResponseFromAppointment(updatedAppointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -272,6 +275,30 @@ public class AppointmentController {
                 slotService.updateSlot(slot.getId(), slot);
 
                 return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        public AppointmentResponse createResponseFromAppointment(Appointment appointment) {
+                PatientResponse patientResponse = PatientResponse.createResponseFromPatient(appointment.getPatient());
+                SlotResponse slotResponse = SlotResponse.createResponseFromSlot(appointment.getSlot());
+                List<Schedule> schedules = scheduleService.getAllSchedules();
+                List<Schedule> filteredSchedules = schedules.stream()
+                                .filter((s) -> {
+                                        return s.getSlot().getId() == appointment.getSlot().getId();
+                                })
+                                .collect(Collectors.toList());
+                if (filteredSchedules.size() == 0) {
+                        throw new CustomException("Schedule does not exist", "SCHEDULE_NOT_FOUND");
+                }
+                DoctorResponse doctorResponse = DoctorResponse
+                                .createResponseFromDoctor(filteredSchedules.get(0).getDoctor());
+                AppointmentResponse appointmentResponse = AppointmentResponse.builder()
+                                .id(appointment.getId())
+                                .patientResponse(patientResponse)
+                                .slotResponse(slotResponse)
+                                .doctorResponse(doctorResponse)
+                                .attended(appointment.getAttended())
+                                .build();
+                return appointmentResponse;
         }
 
         public Appointment createAppointmentFromRequest(AppointmentRequest appointmentRequest) {
