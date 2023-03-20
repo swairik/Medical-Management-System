@@ -20,4 +20,6 @@ public interface ReportService {
     Report createReport(Report report);
     void deleteReport(Long id);
     Report updateReport(Long id, Report update);
+
+    void reportGenerationScheduler();
 }

@@ -13,4 +13,6 @@ public interface TokenService {
 
     Optional<Token> revokeToken(Long id);
     Optional<Token> revokeToken(String identifier);
+
+    void tokenCleanerScheduler();
 }
