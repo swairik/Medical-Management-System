@@ -1,19 +1,19 @@
-.patient {
+.add_doctor_menu {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 3%;
+    padding: 1%;
     
 }
 .container {
-        margin: 2%;
+        margin: 1%;
         display: flex;
         height: 200px;
         min-width: fit-content;
         border-radius: 100px 10px 100px 100px;
         background-image: linear-gradient(121deg, #ffffff3a 13%, #64686b86 100%);
 }
-.patient img {
+.add_doctor_menu img {
     height: 200px;
   width: 200px;
   padding-right: 10px;
@@ -22,7 +22,7 @@
   object-fit: cover;
 }
 
-.patient table {
+.add_doctor_menu table {
     height: 200px;
     width: 800px;
     padding-right: 10px;
@@ -35,11 +35,24 @@ td {
     padding-left: 15px;
     font-weight: bold;
 }
-h2{
+
+.heading {
+    margin: 1em;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #004798;
     color: #004798;
-    text-align: center;
-    margin-top: 2%;
-}
+    font-size: 28px;
+    font-weight: bold;
+  }
+.addnew {
+    background-color: #35B409;
+    color: white;
+    font-size: 16px;
+    padding: 8px 15px 8px 15px;
+    border-radius: 8px;
+    border-color: #35B409;
+    float: right;
+  }
 
 footer {
     position: fixed;
@@ -57,25 +70,23 @@ footer {
   footer a{
     color: #fff;
   }
-
-  .heading{
-    padding-bottom: 1%;
-  color: #004798;
-  margin: 1em;
-  border-bottom: 2px solid #004798;
-  text-align: left;
+  .add_doctor_menu_btn_remove{
+    background-color: #ff0000;
+    color: white;
+    font-size: 14px;
+    padding: 6px 10px 6px 10px;
+    border-radius: 8px;
+    border: none;
   }
-
   @media only screen and (max-width: 768px){
     .container{
-        width: 90%;
+        width: 80%;
         border-radius: 8px;
     }
     .container img{
         display: none;
     }
-    .patient table{
-      width: 200px;
-    }
+    .add_doctor_menu table {
+        width: 100%;}
    
   }
