@@ -80,6 +80,7 @@ public class DemoApplication {
                                 .build();
             
             patientService.createPatient(temp);
+            credentialService.createCredentials(Credential.builder().email(temp.getEmail()).password(encoder.encode("password")).role(Role.PATIENT).build());
         }
 
         // create doctors and specialities
@@ -101,6 +102,7 @@ public class DemoApplication {
                                 .build();
             
             doctorService.createDoctor(temp);
+            credentialService.createCredentials(Credential.builder().email(temp.getEmail()).password(encoder.encode("password")).role(Role.DOCTOR).build());
         }
 
         // create slots, schedules, and appointments
