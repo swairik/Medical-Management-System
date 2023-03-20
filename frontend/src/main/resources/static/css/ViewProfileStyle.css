@@ -97,21 +97,11 @@ button:hover {
 }
   
 footer {
-<<<<<<< Updated upstream
-  background-color: #004798;
-  color: white;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  margin-top: 2%;
-  height: 40px;
-=======
   position: absolute;
   bottom: 0%;
   top: max-content;
   height: fit-content;
   background-color: #004798;
->>>>>>> Stashed changes
   width: 100%;
   margin: 0px;
   padding: 8px 0px;
@@ -119,15 +109,8 @@ footer {
   text-align: center;
   font-size: 20px;
 }
-<<<<<<< Updated upstream
-  
-footer p {
-  display: inline-block;
-  margin-top: 10px;
-=======
 footer a{
   color: #fff;
->>>>>>> Stashed changes
 }
 
 @media only screen and (max-width: 768px) {
