@@ -30,7 +30,7 @@ public class ScheduleResponse {
                 .id(schedule.getId())
                 .doctorResponse(doctorResponse)
                 .slotResponse(slotResponse)
-                .weekDate(schedule.getWeekDate())
+                .weekDate(schedule.getWeekDate().plusDays(slotResponse.getWeekday().getValue()))
                 .approval(schedule.getApproval())
                 .build();
 
