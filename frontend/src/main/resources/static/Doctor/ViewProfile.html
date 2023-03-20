@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
     <link rel="stylesheet" href="../css/ViewProfileStyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/AdminStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -92,9 +93,19 @@
           <label>Age : </label><br> 
           <input type="text" name="dfage" id="dfage" disabled><br>
           <label>Gender : </label><br>  
-          <input type="text" name="dfgender" id="dfgender"  disabled><br>
+          <select name="dfgender">
+            <option value="none" selected disabled hidden>Select gender...</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="others">Other</option>
+          </select><br>
           <label>Speciality : </label><br>  
-          <input type="text" name="dfspeciality" id="dfspeciality" data-value=""  disabled><br>
+          <select name="dfspeciality" id="dfspeciality">
+            <option value="none" selected disabled hidden>Select a speciality...</option>
+            <option value="spcl1">Speciality 1</option>
+            <option value="spcl2">Speciality 2</option>
+            <option value="spcl3">Speciality 3</option>
+          </select><br>
           <label>Contact No. : </label><br>   
           <input type="text" name="dfcontact"  id="dfcontact"><br>
           <label>E-Mail ID : </label><br>  
@@ -105,7 +116,7 @@
 
     <footer>
       <p>Mail us at : </p>
-      <p><a href="mailto:support@care4u.com">support@care4u.com</a></p>
+      <p><a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></p>
     </footer>
 
   </body>
