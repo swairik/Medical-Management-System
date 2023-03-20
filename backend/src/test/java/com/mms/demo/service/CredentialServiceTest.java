@@ -43,7 +43,7 @@ public class CredentialServiceTest {
     @Order(1)
     @DisplayName("Testing create on a single credential")
     void testCreateCredentials() {
-        cred = Credential.builder().email(genAlnum(10) + "@xyz.com").isAdmin(false).isPatient(true).password("xyz").build();
+        cred = Credential.builder().email(genAlnum(10) + "@xyz.com").password("xyz").build();
         assertThat(impl.createCredentials(cred)).isEqualTo(cred);
     }
 
