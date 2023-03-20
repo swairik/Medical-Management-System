@@ -1,0 +1,157 @@
+body {
+  background-image: url(../images/heading.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.admin_heading {
+  margin: 1em;
+  color: #E15E55;
+  padding-bottom: 1%;
+  border-bottom: 3px solid #E15E55;
+}
+
+.img_button {
+  display: flex;
+  margin-top: 3%;
+  margin-left: 5%;
+}
+#tag {
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+  
+}
+
+.left button {
+  border: none;
+  color: #041529;
+  margin-left: 5%;
+  font-size: large;
+  align-self: center;
+  background: transparent;
+  cursor: pointer;
+}
+
+.left a {
+  border: none;
+  color: #041529;
+  margin-left: 5%;
+  font-size: large;
+  align-self: center;
+  text-decoration: none;
+}
+.left button:hover, .left a:hover{
+  background-image: linear-gradient(to right, #5dacec, #1160bb) ;
+  color: white;
+}
+.left{
+  background-color: #ffffffc3;
+  margin: 2% 2% 2% 2%;
+  border-radius: 8px;
+  padding: 2%;
+}
+
+.right{
+  background-color: #ffffffc3;
+  margin: 2% 2% 2% 0%;
+  border-radius: 8px;
+  padding: 2%;
+}
+
+.menu a.homeactive{
+  background-image:linear-gradient(to right, #5dacec, #1160bb) ;
+  border-radius: 8px;
+  color: #fbfbfc;
+}
+
+footer {
+  position: fixed;
+  top: max-content;
+  bottom: 0;
+  height: fit-content;
+  background-color: #004798;
+  width: 100%;
+  margin: 0px;
+  padding: 8px 0px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 20px;
+}
+footer a{
+  color: #fff;
+}
+.modal table{
+  margin: 2%;
+  padding: 2%;
+}
+.modal input[type=submit]{
+  background-color: #35B409;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px 5px 10px;
+  border-radius: 8px;
+  border-color: #35B409;
+  float: right;
+}
+.modal td{
+  padding-right: 15px;
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.modal h2{
+  margin: 0;
+  padding: 3%;
+  border-radius: 8px;
+  color: #ffffff;
+  background-image: linear-gradient(to right, #5dacec, #1160bb) ;
+}
+.column {
+  float: left;
+  padding: 10px;
+  height: 300px; 
+}
+
+.left {
+  width: 34%;
+}
+
+.right {
+  width: 60%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.counts {
+  background-color: #ffffffc3;
+  margin: 0% 2% 2% 2%;
+  border-radius: 8px;
+  padding: 2%;
+}
+@media only screen and (max-width: 768px){
+  .admin_heading {
+    margin: 3%;
+    color: #E15E55;
+    padding-bottom: 2%;
+    font-size: 24px;
+    border-bottom: 3px solid #E15E55;
+  }
+
+  .column{
+    width: 90%;
+  }
+
+  .right{
+    margin: 3%;}
+
+  .left{
+    margin: 3%
+  }
+  .counts{
+    margin: 3%;
+  }
+}

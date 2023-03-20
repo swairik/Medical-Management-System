@@ -82,7 +82,7 @@
     margin-top: 10px;
     font-weight: bold;
   }
-    input[type=text] {
+    input[type=text], .pedit-form select {
       width: 40%;
       padding: 12px 20px;
       margin: 8px 0;
@@ -91,7 +91,7 @@
       border-bottom: 2px dashed #0e0857;
       background-color: rgba(204, 204, 204, 0.418);
     }
-  
+    
     .pedit button{
       padding: 8px 14px;
       color: #ffffff;

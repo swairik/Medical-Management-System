@@ -1,78 +1,92 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Doctor Info</title>
-    <link rel="stylesheet" type="text/css" href="./css/ApproveSchedule.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../js/AdminApproveSchedule.js"></script>
-    <script> 
-        $(function(){
-          $("#load_content").load("AdminNavbar"); 
-        });
-        </script> 
-  </head>
-  <body>
-    
-    <div id="load_content"></div>
-    <div id="schedule_menu">
+
+<head>
+  <title>Doctor Info</title>
+  <link rel="stylesheet" type="text/css" href="./css/ApproveSchedule.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="../js/AdminApproveSchedule.js"></script>
+  <script>
+    $(function () {
+      $("#load_content").load("AdminNavbar");
+    });
+  </script>
+</head>
+
+<body>
+
+  <div id="load_content"></div>
+  <div id="schedule_menu">
+    <h2>Slots Selected</h2>
     <!-- <div class="box_grp">
         <div class="box_one">
-            <input type="text" class="text" placeholder="Doctor Id"/>
-            <input type="text" class="text" placeholder="Speciality" />
-            <input type="text" class="text" placeholder="Name" />
-            <input type="text" class="text" placeholder="Slot Id" />
+            <input type="text" class="text" placeholder="Doctor Id"/><br>
+            <input type="text" class="text" placeholder="Speciality" /><br>
+            <input type="text" class="text" placeholder="Name" /><br>
+            <input type="text" class="text" placeholder="Slot Id" /><br>
         </div>
 
         <div class="box_two">
             
-            <label class="text_two"> Week:
+            <label class="text_two"> Year:
                 <input type="text" class="text_two" value="" />
-                </label>
-                <label class="text_two"> Year:
+                </label><br>
+                <label class="text_two"> Week:
                     <input type="text" class="text_two" value="" />
-                    </label>
-                    
-                    <br/>
-                    <input type="text" class="text_two" value="Slot-Timing: " />
-                    <br/>
+                    </label><br>
+                    <input type="text" class="text_two" value="Slot-Timing: " /><br>
                     <label class="text_two"> Start-Time:
                     <input type="text" class="text_two" value="" />
-                    </label>
+                    </label><br>
                     <label class="text_two"> End-Time:
                     <input type="text" class="text_two" value="" />
-                    </label>
+                    </label><br>
                     <label class="text_two"> Capacity:
                     <input type="text" class="text_two" value="" />
-                    </label>
+                    </label><br>
+                    <label class="text_two"> WeekDay:
+                    <input type="text" class="text_two" value="" />
+                    </label><br>
                 
             
             <div class="btn_grp">
                 <button class="btn_accept">Accept</button>
                 <button class="btn_remove">Remove</button>
             </div>
+        </div> 
+    </div>-->
+
+    <div class="container">
+      <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-1">Doctor Id</div>
+          <div class="col col-2">Name</div>
+          <div class="col col-3">Speciality</div>
+          <div class="col col-4">Date</div>
+          <div class="col col-5">Day</div>
+          <div class="col col-6">Start Time</div>
+          <div class="col col-7">End Time</div>
+          <div class="col col-8">Accept</div>
+          <div class="col col-9">Remove</div>
+        </li>
+        <div id="slot">
+          <li class="table-row">
+            <div class="col col-1" data-label="DoctorId"></div>
+            <div class="col col-2" data-label="Name"></div>
+            <div class="col col-3" data-label="Speciality"></div>
+            <div class="col col-4" data-label="Date"></div>
+            <div class="col col-5" data-label="Day"></div>
+            <div class="col col-6" data-label="StartTime"></div>
+            <div class="col col-7" data-label="EndTime"></div>
+            <div class="col col-8"><button class="btn_accept">Accept</button></div>
+            <div class="col col-9"><button class="btn_remove">Remove</button></div>
         </div>
-    </div> -->
+        </li>
+    </div>
+    </ul>
+  </div>
 
-    <!-- <div class="box_grp">
-        <div class="box_one">
-            <input type="text" class="text" placeholder="Doctor Id" />
-            <input type="text" class="text" placeholder="Speciality" />
-            <input type="text" class="text" placeholder="Name" />
-            <input type="text" class="text" placeholder="Slot Id" />
-
-        </div>
-        <div class="box_two">
-            <input type="text" class="text_two" placeholder="Timings" />
-            <div class="btn_grp">
-                <button class="btn_accept">Accept</button>
-                <button class="btn_remove">Remove</button>
-            </div>
-        </div>
-
-    </div> -->
-
-</div>
-
-<footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
 </body>
+
 </html>

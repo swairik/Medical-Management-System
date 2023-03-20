@@ -25,9 +25,11 @@
             <label>Age : </label><br> 
             <input type="text" name="page" required><br>
             <label>Gender : </label><br>  
-            <input type="text" name="pgender" required><br> 
-            <label> Email : </label><br>  
-            <input type="text" name="pemail" required disabled><br> 
+            <select name="pgender">
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="others">Others</option>
+            </select><br> 
             <label>Contact No. : </label><br>   
             <input type="text" name="pphone" required><br><br> 
             <button id="edited" type="submit" style="background-color: #0a9c11" onClick="location.href='PatientProfile'">Save</button>   

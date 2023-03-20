@@ -139,7 +139,7 @@ nav img {
   font-size: small;
 }
 
-.close:hover{
+.close:hover {
   cursor: default;
   font-weight: bolder;
   font-size: medium;
@@ -159,7 +159,7 @@ nav img {
   margin: 5px;
 }
 
-@media only screen and (max-width: 768px){
+@media only screen and (max-width: 768px) {
   .menu .homeactive{
     display: none;
   }
@@ -191,7 +191,7 @@ nav img {
   border-radius: 50%;
 }
 
-.card button{
+.card button {
   float: right;
   padding: 8px 14px;
   color: #ffffff;
@@ -216,7 +216,7 @@ td {
 }
 
 .dedit {
-  background-image: url("../PatientModule/images/formbg.png"); 
+  background-image: url("../images/formbg.png"); 
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -238,7 +238,7 @@ label {
   font-weight: bold;
 }
 
-input[type=text] {
+input[type=text] , .dedit-form select {
   width: 40%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -248,7 +248,7 @@ input[type=text] {
   background-color: rgba(204, 204, 204, 0.418);
 }
 
-.dedit button{
+.dedit button {
   padding: 8px 14px;
   color: #ffffff;
   border-radius: 8px;
@@ -257,39 +257,49 @@ input[type=text] {
   background-color: #0a9c11
 }
 
-@media only screen and (max-width: 768px) {
-  .dedit-form {
-    width: 100%;
-    
-  }
-  .card {
-    width: 70%;
-    left: 10%;
-  }
+.dedit h2 {
+  color: #004798;
+  padding-bottom: 1.5em;
 }
+
 
 button:hover {
   font-weight: bolder;
 }
   
 footer {
+  position: absolute;
+  bottom: 0%;
+  top: max-content;
+  height: fit-content;
   background-color: #004798;
-  color: white;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  margin-top: 2%;
-  height: 40px;
   width: 100%;
+  margin: 0px;
+  padding: 8px 0px;
+  color: #ffffff;
+  text-align: center;
   font-size: 20px;
 }
-  
-footer p {
-  display: inline-block;
-  margin-top: 10px;
+
+footer a {
+  color: #fff;
 }
 
-footer p a {
-  color: white;
-  display: inline-block;
+@media only screen and (max-width: 768px) {
+  .dedit-form {
+    width: 100%;
+   
+  }
+  .card{
+    width: 70%;
+    left: 10%;
+    
+  }
+  .dedit-form{
+    width: 70%;
+    margin-left: 15%;
+  }
+  input[type=text] {
+    width: 80%;
+}
 }
