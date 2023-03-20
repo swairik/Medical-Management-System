@@ -58,7 +58,7 @@ public class ScheduleServiceTest {
     @Test
     @DisplayName("Testing on a single schedule by")
     void testCreateSchedule() {
-        spec = Speciality.builder().name("Dentist").build();
+        spec = Speciality.builder().name(genAlnum(10)).build();
         specImpl.createSpeciality(spec);
         assertThat(specImpl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
 
