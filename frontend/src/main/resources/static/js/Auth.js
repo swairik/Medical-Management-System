@@ -65,6 +65,7 @@ $(document).ready(function () {
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
       error: function (xhr,status,errorThrown) {
+        var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
         if (errorObj) alert(errorObj.errorMessage);

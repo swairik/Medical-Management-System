@@ -13,7 +13,7 @@ $(document).ready(function () {
   console.log(patient_id);
 
   var reqs = $.ajax({
-    url: `http://localhost:8050/patient/${patient_id}`,
+    url: `http://localhost:8050/patient/display/${patient_id}`,
     type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -21,9 +21,9 @@ $(document).ready(function () {
     success: function (result) {
       console.log(result);
       $("#pname").html(result.name);
-      $("#page").html(result.age);
-      $("#pgender").html(result.gender);
-      $("#pcontact").html(result.phone);
+      $("#page").html(result.age?result.age:'-');
+      $("#pgender").html(result.gender?result.gender:'-');
+      $("#pcontact").html(result.phone?result.phone:'-');
       $("#pemail").html(result.email);
     },
     error: function (xhr, status, errorThrown) {

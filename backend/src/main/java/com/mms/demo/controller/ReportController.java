@@ -93,6 +93,7 @@ class ReportController {
 
         @GetMapping("/display/generateReport")
         public ResponseEntity<Resource> generateReport(@RequestParam String from, @RequestParam String to) {
+                reportService.forceRunReportGenerator(LocalDateTime.now());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime start, end;
                 try {
@@ -103,7 +104,7 @@ class ReportController {
                         throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
                 }
                 byte[] reports = reportService.generateReports(start, end).orElseThrow(
-                                () -> new CustomException("Error while generating report", "REPORT_NOT_GENERATED"));
+                                () -> new CustomException("Error while generating report", "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
                 ByteArrayResource response = new ByteArrayResource(reports);
                 String filename = String.format("Report_%s_%s.zip", start.toString(), end.toString());
                 return ResponseEntity.ok()

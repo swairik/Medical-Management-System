@@ -1,18 +1,12 @@
 const constructSpecialityMenu = (value) => {
   var content = `<div class="grid">
-<div class="card">
-  <div class="card-inner">
-    <img
-      src="images/image4.png"
-      alt="Avatar"
-      style="width: 120px; height: 120px"
-    />
-    <div class="name">
-      <a href="#doctorList" rel="modal:open" value=${value.id} id="show_doctor">${value.name}</a>
+  <div class="card">
+    <div class="card-inner">
+        <img src="images/image4.png" alt="Avatar" style="width:120px;height:120px;">
+        <div class="name"><a href="#docList" rel="modal:open" value=${value.id} id="show_doctor">${value.name}</a></div>
     </div>
   </div>
-</div>
-</div>`;
+  </div>`;
 
   return content;
 };
@@ -64,8 +58,10 @@ $(document).ready(function () {
       success: function (result) {
         $.each(result, function (key, value) {
           console.log(value);
-          $("#doctor_list").append(
-            `<li><button id="show_slot" value=${value.id}>${value.name}</button></li>`
+          $("#doctor_list").html(
+            `<ul>
+            <li><button id="show_slot" value=${value.id}>${value.name}</button></li>
+            </ul>`
           );
         });
       },
