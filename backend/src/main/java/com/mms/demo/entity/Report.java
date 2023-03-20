@@ -48,4 +48,5 @@ public class Report {
     @Lob
     @Column(name = "report_contents", length = 100000)
     private byte[] contents;
+
 }

@@ -31,6 +31,6 @@ public class Speciality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "speciality_name", nullable = false)
+    @Column(name = "speciality_name", nullable = false, unique = true)
     private String name;
 }

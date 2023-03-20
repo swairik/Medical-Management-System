@@ -21,6 +21,7 @@ public class SlotServiceTest {
     @Autowired
     SlotService impl;
 
+
     static final Slot slot = Slot.builder().start(LocalTime.of(0, 0, 0)).end(LocalTime.of(0, 0, 1)).weekday(DayOfWeek.MONDAY).capacity(5).build();
 
     @Order(1)

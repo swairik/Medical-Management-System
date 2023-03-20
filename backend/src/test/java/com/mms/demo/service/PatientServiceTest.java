@@ -16,6 +16,8 @@ import com.mms.demo.entity.Patient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Random;
+
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -25,7 +27,21 @@ public class PatientServiceTest {
     @Autowired
     PatientService impl;
 
-    static final Patient temp = Patient.builder().age(10).email("temp@temp.com")
+    static private String genAlnum(int targetStringLength) {
+        int leftLimit = 48;
+        int rightLimit = 122; 
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+        
+        return generatedString;
+    }
+
+    static final Patient temp = Patient.builder().age(10).email(genAlnum(10) + "@xyz.com")
                                     .gender("M").phone("1010101010").name("Jerry")
                                     .build();
 
