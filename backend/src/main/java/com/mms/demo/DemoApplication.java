@@ -147,12 +147,12 @@ public class DemoApplication {
         
 	}
 
-    @PostConstruct
-	private void populateDemoDatabase() {
-		credentialService.createCredentials(Credential.builder().email("admin@admin.com").role(Role.ADMIN).password(encoder.encode("admin")).build());
-		populateEntitiesFor(LocalDateTime.now().minusDays(3), 100);
-		// populateEntitiesFor(LocalDateTime.now().minusDays(2), 200);
-		// populateEntitiesFor(LocalDateTime.now().minusDays(1), 200);
-	}
+    // @PostConstruct
+	// private void populateDemoDatabase() {
+	// 	credentialService.createCredentials(Credential.builder().email("admin@admin.com").role(Role.ADMIN).password(encoder.encode("admin")).build());
+	// 	populateEntitiesFor(LocalDateTime.now().minusDays(3), 100);
+	// 	// populateEntitiesFor(LocalDateTime.now().minusDays(2), 200);
+	// 	// populateEntitiesFor(LocalDateTime.now().minusDays(1), 200);
+	// }
 
 }

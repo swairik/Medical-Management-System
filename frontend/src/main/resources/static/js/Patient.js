@@ -58,7 +58,7 @@ $(document).ready(function () {
       success: function (result) {
         $.each(result, function (key, value) {
           console.log(value);
-          $("#doctor_list").html(
+          $("#doctor_list").append(
             `<ul>
             <li><button id="show_slot" value=${value.id}>${value.name}</button></li>
             </ul>`

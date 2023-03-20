@@ -26,25 +26,24 @@
     <div id="load_content"></div>
 
     <div class="dedit">
-      <form class = "dedit-form" id="doctor-form">
+      <form class = "dedit-form">
         <h2>Enter Doctor Details</h2>
           <label>Name : </label><br>
-          <input type="text" name="dfname" id="dfname"><br>
+          <input type="text" name="dfname" id="dfname" required><br>
           <label>Age : </label><br> 
-          <input type="text" name="dfage" id="dfage"><br>
+          <input type="text" name="dfage" id="dfage" required><br>
           <label>Gender : </label><br>  
-            <select name="dfgender">
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="others">Others</option>
+            <select name="dfgender" id="dfgender" required>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select><br> 
           <label>Speciality : </label><br>
-          <select name="speciality" id="speciality">
+          <select name="dfspeciality" id="dfspeciality" required>
           </select><br>
           <label>Contact No. : </label><br>   
-          <input type="text" name="dfcontact"  id="dfcontact"><br>
+          <input type="text" name="dfcontact"  id="dfcontact" required><br>
           <label>E-Mail ID : </label><br>  
-          <input type="text" name="dfemail" id="dfemail"><br>
+          <input type="text" name="dfemail" id="dfemail" required><br>
           <button id="edited" type="submit">Add</button>   
       </form>
     </div>
