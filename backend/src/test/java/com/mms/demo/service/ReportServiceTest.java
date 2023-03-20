@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -69,16 +70,17 @@ public class ReportServiceTest {
     @Test
     void testGetAllReportsByStampBetween() {
         ArrayList<Report> reports = new ArrayList<Report>();
-        reports.add(Report.builder().contents(null).build());
-        reports.add(Report.builder().contents(null).build());
-        reports.add(Report.builder().contents(null).build());
+        LocalDateTime temporalTarget = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        reports.add(Report.builder().contents(null).stamp(temporalTarget).build());
+        reports.add(Report.builder().contents(null).stamp(temporalTarget).build());
+        reports.add(Report.builder().contents(null).stamp(temporalTarget).build());
         for (Report rep : reports) {
             impl.createReport(rep);
         }
-        Report temp = Report.builder().contents(null).stamp(LocalDateTime.now().plusDays(1)).build();
+        Report temp = Report.builder().contents(null).stamp(temporalTarget.plusDays(1)).build();
         impl.createReport(temp);
 
-        assertThat(impl.getAllReportsByStampBetween(LocalDateTime.now(), LocalDateTime.now())).containsAll(reports).doesNotContain(temp);
+        assertThat(impl.getAllReportsByStampBetween(temporalTarget, LocalDateTime.now())).containsAll(reports).doesNotContain(temp);
     }
 
     @Order(6)
