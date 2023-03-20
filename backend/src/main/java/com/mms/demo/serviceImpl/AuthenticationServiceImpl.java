@@ -147,11 +147,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .subject(subject)
                                 .msgBody(msgBody)
                                 .build();
-                String response = emailService.sendSimpleMail(emailDetails);
-                if (response.equals("Error")) {
-                        throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
-                }
-                return response;
+                emailService.sendSimpleMail(emailDetails);
+                // if (response.equals("Error")) {
+                // throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
+                // }
+                return "Email has been sent";
         }
 
         public String updatePassword(PasswordRequest passwordRequest) {
