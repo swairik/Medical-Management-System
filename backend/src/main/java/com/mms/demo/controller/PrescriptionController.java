@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ import com.mms.demo.service.PatientService;
 import com.mms.demo.service.PrescriptionService;
 import com.mms.demo.service.ScheduleService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/prescription")
 public class PrescriptionController {

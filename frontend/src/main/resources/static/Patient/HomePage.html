@@ -16,6 +16,7 @@
       });
     </script>
     <script src="../js/Patient.js"></script>
+    <script src="../js/PatientViewPrescription.js"></script>
   </head>
   <body>
     <div id="load_content"></div>
@@ -78,21 +79,11 @@
     <div id="popup" class="modal">
       <h2>E-PRESCRIPTION</h2>
       <div id="Prescription" class="content">
-        <table>
-          <th>Name</th>
-          <th>Doctor</th>
+        <table class="prescription-table">
+          <th>Doctor Name</th>
           <th>Speciality</th>
           <th>Date</th>
           <th></th>
-          <tr>
-            <td id="prescription_name"></td>
-            <td id="prescription_doctor"></td>
-            <td id="prescription_speciality"></td>
-            <td id="prescription_date"></td>
-            <td id="prescription_download">
-              <button style="background-color: #4caf50">Download</button>
-            </td>
-          </tr>
         </table>
       </div>
       <a href="#" rel="modal:close"> </a>

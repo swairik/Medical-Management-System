@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Prescription</title>
+    <link rel="stylesheet" href="../css/AddPrescriptioFormStyle.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../images/favicon.ico"
+      type="image/x-icon"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../js/PatientPrescription.js"></script>
+    <script>
+      $(function () {
+        $("#load_content").load("PatientNavbar");
+      });
+    </script>
+    <style>
+      footer {
+        position: fixed;
+        bottom: 0%;
+        height: fit-content;
+        background-color: #004798;
+        width: 100%;
+        margin: 0px;
+        padding: 8px 0px;
+        color: #ffffff;
+        text-align: center;
+        font-size: 20px;
+      }
+
+      footer a {
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="load_content"></div>
+    <div class="form">
+      <h2>PRESCRIPTION</h2>
+      <label for="diagnosis">Diagnosis</label><br />
+      <textarea class="input" id="diagnosis" disabled></textarea><br />
+      <label for="medication">Medications</label><br />
+      <textarea class="input" id="medication" disabled></textarea><br />
+      <label for="tests">Tests</label><br />
+      <textarea class="input" id="tests" disabled></textarea><br />
+    </div>
+
+    <footer>
+      Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a>
+    </footer>
+  </body>
+</html>
