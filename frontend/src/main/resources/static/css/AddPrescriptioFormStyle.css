@@ -24,11 +24,13 @@ body {
   display: flex;
   align-items: center;
 }
+
 nav img {
   height: 50px;
   border-radius: 50%;
   margin-right: 15px;
 }
+
 .menu {
   display: flex;
   justify-content: center;
@@ -39,13 +41,13 @@ nav img {
   color: #ffffff;
   text-decoration: none;
   padding: 10px 15px;
-  
 }
 
 .menu a:hover,.dropdown:hover .dropbtn {
   background-color: #ddddddb2;
   color: #004798;
 }
+
 .dropdown {
   float: left;
   overflow: hidden;
@@ -94,16 +96,11 @@ nav img {
   transition: opacity 200ms;
   visibility: hidden;
   opacity: 0;
-}
-.overlay{
-  background: rgba(255, 255, 255, 0.5);
-}
-.overlay{
-  position: absolute;
   width: 100%;
   height: 100%;
   cursor: default;
 }
+
 .overlay:target {
   visibility: visible;
   opacity: 1;
@@ -129,6 +126,7 @@ nav img {
   padding: 2.5% 0% 8% 5%;
   color: #141974;
 }
+
 .popup .close {
   float: right;
   padding: 8px;
@@ -140,6 +138,7 @@ nav img {
   text-decoration: none;
   font-size: small;
 }
+
 .close:hover{
   cursor: default;
   font-weight: bolder;
@@ -175,12 +174,12 @@ nav img {
 }
 
 .form {
-  background-color: #8DAED3;
+  background: linear-gradient(to right bottom, #004798, rgba(7, 53, 80, 0.1));
   width: 40%;
   border-radius: 12px;
-  height: 550px;
+  height: 560px;
   border: 1px solid #000000;
-  margin-top: 1%;
+  margin-top: 5%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -192,7 +191,7 @@ nav img {
 
 .form label {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: bold;
   margin-left: 5%;
 }
 
@@ -204,6 +203,7 @@ nav img {
   background-color: #D9C6C6;
   font-size: medium;
   font-weight: 500;
+  resize: none;
 }
 
 .submit {
@@ -218,28 +218,15 @@ nav img {
   border-color: #000093;
   width: 100px;
   height: 35px;
-  margin-top: 15px;
+  margin-top: 5px;
 }
 
 .submit:hover {
   font-weight: bolder;
 }
-
-footer {
-  background-color: #004798;
-  color: white;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  margin-top: 2%;
-  height: 40px;
-  width: 100%;
-  font-size: 20px;
-}
   
 footer p {
-  display: inline-block;
-  margin-top: 10px;
+  display: contents;
 }
   
 footer p a {

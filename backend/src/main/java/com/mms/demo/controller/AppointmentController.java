@@ -143,6 +143,7 @@ public class AppointmentController {
                                         () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
 
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
+                                        .plusDays(slot.getWeekday().getValue())
                                         .atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(dateTime);
@@ -215,6 +216,7 @@ public class AppointmentController {
                                         () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
 
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
+                                        .plusDays(slot.getWeekday().getValue())
                                         .atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(dateTime);
@@ -274,6 +276,7 @@ public class AppointmentController {
                                         () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
 
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
+                                        .plusDays(slot.getWeekday().getValue())
                                         .atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(startTime) && appointmentDateTime.isBefore(endTime);
