@@ -161,6 +161,14 @@ public class ReportServiceImpl implements ReportService{
         return Optional.empty();
     }
 
+    private String extractNullableValue(Optional<Object> optional) {
+        if (optional.isEmpty()) {
+            return "";
+        }
+
+        return optional.get().toString();
+    }
+
     @Override
     public void forceRunReportGenerator(LocalDateTime when) {
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -181,10 +189,10 @@ public class ReportServiceImpl implements ReportService{
             XSSFRow currentPatient = patientsSheet.createRow(patientsSheet.getLastRowNum() + 1);
             currentPatient.createCell(0).setCellValue(patient.getId());
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getName());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getGender());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getAge());
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getGender())));
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getAge())));
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getEmail());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getPhone());
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getPhone())));
         }
 
         // Append list of all new doctors
@@ -200,10 +208,10 @@ public class ReportServiceImpl implements ReportService{
             XSSFRow currentDoctor = doctorsSheet.createRow(doctorsSheet.getLastRowNum() + 1);
             currentDoctor.createCell(0).setCellValue(doctor.getId());
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getName());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getGender());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getAge());
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getGender())));
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getAge())));
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getEmail());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getPhone());
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getPhone())));
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getSpeciality().getName());
         }
 
