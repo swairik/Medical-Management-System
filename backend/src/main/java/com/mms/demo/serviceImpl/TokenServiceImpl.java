@@ -1,12 +1,20 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Token;
 import com.mms.demo.service.TokenService;
+
+import jakarta.transaction.Transactional;
+
 import com.mms.demo.repository.TokenRepository;
 
 @Service
@@ -28,6 +36,8 @@ public class TokenServiceImpl implements TokenService {
     public Optional<Token> getTokenById(Long id) {
         return repo.findById(id);
     }
+
+
 
     @Override
     public Optional<Token> getTokenByIdentifier(String identifier) {
@@ -75,4 +85,11 @@ public class TokenServiceImpl implements TokenService {
         return repo.save(token);
     }
 
+    @Scheduled(cron = "${token.clean.interval}")
+    @Transactional
+    @Async
+    public void tokenCleanerScheduler() {
+        repo.deleteAllByExpirationStampBefore(LocalDateTime.now());
+    }
+    
 }

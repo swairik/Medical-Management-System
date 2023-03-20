@@ -25,10 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -133,10 +135,12 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Optional<byte[]> generateReports(LocalDateTime from, LocalDateTime to) {
-        List<Report> reports = getAllReportsByStampBetween(from, to);
+        List<Report> reports = getAllReportsByStampBetween(from, to).stream().filter(r -> r.getContents() != null).collect(Collectors.toList());
         if (reports.isEmpty()) {
             return Optional.empty();
         }
+
+
 
         byte[] reportsZipByteArray = null;
         try {
@@ -258,11 +262,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Scheduled(cron = "${report.gen.interval}")
-    public void generateAndClean() {
-        forceRunReportGenerator(LocalDateTime.now().minusDays(1));
-
-        // TODO: Clean old slots
-        // TODO: Clean old schedules
-        // TODO: Clean old tokens
+    @Async
+    public void reportGenerationScheduler() {
+        forceRunReportGenerator(LocalDateTime.now().minusDays(1));        
     }
 }
