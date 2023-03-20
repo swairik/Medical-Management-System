@@ -267,22 +267,13 @@ button:hover {
   font-weight: bolder;
 }
   
-footer {
-  position: absolute;
-  bottom: 0%;
-  top: max-content;
-  height: fit-content;
-  background-color: #004798;
-  width: 100%;
-  margin: 0px;
-  padding: 8px 0px;
-  color: #ffffff;
-  text-align: center;
-  font-size: 20px;
+footer p {
+  display: contents;
 }
 
-footer a {
-  color: #fff;
+footer p a {
+  color: white;
+  display: inline-block;
 }
 
 @media only screen and (max-width: 768px) {
