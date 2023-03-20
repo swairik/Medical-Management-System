@@ -27,12 +27,14 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        var result=confirm("Are you sure you want to Sign-OUT?");
+        // if(result) {
+        // document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-        if(result) {
+        // window.location.href = "Auth";
+        // }
+
         document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
         window.location.href = "Auth";
-        }
     });
 });

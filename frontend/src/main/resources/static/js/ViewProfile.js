@@ -11,11 +11,26 @@ $(document).ready(function () {
            $(".dedit").hide();
     
         })
+
+        const cookie = document.cookie;
+  const token = cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="))
+    .split("=")[1];
+  const doctor_id = cookie
+    .split("; ")
+    .find((row) => row.startsWith("id="))
+    .split("=")[1];
+  console.log(token);
+  console.log(doctor_id);
           
     
     $.ajax({
-        url: "http://localhost:8050/doctor/display/1",
+        url: `http://localhost:8050/doctor/display/${doctor_id}`,
         type: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         success: function (result) {
           console.log(result);
           $("#dname").html(result.name);
@@ -30,13 +45,20 @@ $(document).ready(function () {
         $("#dfgender").val(result.gender);
         $("#dfspeciality").val(result.speciality.name);
         $("#dfspeciality").data('value',result.speciality.id)
-        // console.log($("#dfspeciality").data())
         $("#dfcontact").val(result.phone);
         $("#dfemail").val(result.email);
           
         },
         error: function (xhr, status, error) {
-          console.log(error);
+          if (xhr.status == 403) {
+            window.location.href = "Auth";
+          } else {
+            var errorObj;
+            if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+    
+            if (errorObj) alert(errorObj.errorMessage);
+            else alert("Some Error Occurred");
+          }
         },
       });
 
@@ -57,11 +79,14 @@ $(document).ready(function () {
     
         // Send Ajax request
         $.ajax({
-          url: `http://localhost:8050/doctor/1`,
+          url: `http://localhost:8050/doctor/${doctor_id}`,
           method: 'PUT',
           dataType: 'json',
         contentType: 'application/json',
           data: JSON.stringify(docData),
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           success: function(response) {
             // Handle successful response
             console.log(response);
@@ -70,8 +95,11 @@ $(document).ready(function () {
           },
           error: function(xhr, status, error) {
             // Handle error response
-            console.log(xhr.responseText);
-            alert('Some Error Occurred!')
+            var errorObj;
+            if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+    
+            if (errorObj) alert(errorObj.errorMessage);
+            else alert("Some Error Occurred");
           }
         });
     });
