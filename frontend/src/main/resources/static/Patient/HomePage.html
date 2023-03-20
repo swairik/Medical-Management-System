@@ -55,7 +55,7 @@
       <div class="service-child">
         <p class="quote">Eat the best, leave the rest!</p>
         <p class="service">View Prescription</p>
-        <a href="#popup2"><img src="images/image 14.png" alt="click here" /></a>
+        <a href="#popup" rel="modal:open"><img src="images/image 14.png" alt="click here"/></a>
       </div>
     </div>
 
@@ -64,27 +64,52 @@
       <h2>KEY SPECIALITIES</h2>
     </div>
 
-    <div id="doctorList" class="modal-content">
-      <h2>Doctor's Name</h2>
-      <ul id="doctor_list">
-      </ul>
-    </div>
-
-    <div id="popup2" class="overlay">
-      <div class="popup">
-        <h2>E-PRESCRIPTION</h2>
-        <a class="close" href="#">&times;</a>
-        <div id="Prescription" class="content">
-          <p>Date and Time:</p>
-          <p id="date"></p>
-          <button style="background-color: #4caf50">Download</button>
-          <button style="background-color: #008cba">View</button>
+   <div class="specialities">
+        <h2>KEY SPECIALITIES</h2>
+        <div class="grid">
+        <div class="card">
+          <div class="card-inner">
+              <img src="images/image4.png" alt="Avatar" style="width:120px;height:120px;">
+              <div class="name"><a href="#docList" rel="modal:open">Speciality</a></div>
+          </div>
         </div>
-      </div>
-    </div>
+        </div>
+   </div>
+        
+        <footer id="part2">Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+   
 
-    <footer id="part2">
-      Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a>
-    </footer>
-  </body>
-</html>
+        <div id="docList" class="modal">
+          <h2>Doctor's Name</h2>
+          <ul id="doctor_list">
+            <li><a href="BookAppointment">doc 1</a></li>
+            <li><a href="BookAppointment">doc 2</a></li>
+          </ul>
+          <a id="close" href="#" rel="modal:close">Go Back</a>
+        </div>
+
+        <div id="popup" class="modal">
+          <h2>E-PRESCRIPTION</h2>
+          <div id="Prescription" class="content">
+            <table>
+              <th>Name</th>
+              <th>Doctor</th>
+              <th>Speciality</th>
+              <th>Date</th>
+              <th></th>
+              <tr>
+                <td id="prescription_name"></td>
+                <td id="prescription_doctor"></td>
+                <td id="prescription_speciality"></td>
+                <td id="prescription_date"></td>
+                <td id="prescription_download"><button style="background-color: #4CAF50">Download</button></td>
+  
+              </tr>
+            </table>
+          </div>
+          <a href="#" rel="modal:close"> </a>
+        </div>
+
+    </body>
+    </html>
+  
