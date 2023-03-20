@@ -134,9 +134,8 @@ public class POIReportServiceTest {
         
         // create patients
         for (int i = 0; i < 1000; i++) {
-            Patient temp = Patient.builder().age(25)
+            Patient temp = Patient.builder()
                                 .email(genAlnum(14) + "@xyz.com")
-                                .gender("M")
                                 .name(genAlnum(10) + genAlnum(10))
                                 .phone(genAlnum(10))
                                 .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))

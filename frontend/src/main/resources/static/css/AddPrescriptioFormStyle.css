@@ -44,8 +44,9 @@ nav img {
 }
 
 .menu a:hover,.dropdown:hover .dropbtn {
-  background-color: #ddddddb2;
-  color: #004798;
+  background-image:linear-gradient(to right, #5dacec, #1160bb) ;
+  border-radius: 8px;
+  color: #fbfbfc;
 }
 
 .dropdown {

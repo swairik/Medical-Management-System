@@ -51,7 +51,7 @@ $(document).ready(function () {
 
   console.log(formattedDate);
 
-  $.ajax({
+  const reqs=$.ajax({
     url: `http://localhost:8050/appointment/display/doctor/${doctor_id}/upcoming?stamp=${formattedDate}`,
     type: "GET",
     headers: {
@@ -71,4 +71,6 @@ $(document).ready(function () {
       }
     },
   });
+
+  console.log(reqs)
 });

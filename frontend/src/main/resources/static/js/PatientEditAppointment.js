@@ -51,7 +51,7 @@ $(document).ready(function () {
     success: function (result) {
       console.log(result);
       $.each(result, function (key, value) {
-        $("#patient_appointment").append(constructAppointmentInfo(value));
+          $("#patient_appointment").append(constructAppointmentInfo(value));
       });
     },
     error: function (xhr, status, errorThrown) {
@@ -75,7 +75,7 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
-        alert("Appointment Cancelled")
+        alert("Appointment Cancelled");
         window.location.href = "EditAppointment";
       },
       error: function (xhr, status, errorThrown) {
