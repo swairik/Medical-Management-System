@@ -82,11 +82,19 @@ footer {
     .container{
         width: 80%;
         border-radius: 8px;
+        display: block;
     }
     .container img{
         display: none;
     }
     .add_doctor_menu table {
-        width: 100%;}
-   
+        width: 200px;
+        padding: 0px;
+        font-size: 14px;
+      }
+      td {
+        padding-right: 10px;
+        
+        font-weight: normal;
+    }
   }

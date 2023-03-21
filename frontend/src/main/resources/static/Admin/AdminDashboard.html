@@ -25,32 +25,40 @@
       <div class="row">
         <div class="column left" >
           <div class="img_button">
-            <img src="../images/consultation.png" width="45px"/>
+            <img src="../images/consultation.png" width="50px"/>
             <button onclick="window.location.href='EditDoctor'">
               Edit Doctors List
             </button>
           </div>
           <div class="img_button">
-            <img src="../images/advice.png" width="45px"/>
+            <img src="../images/advice.png" width="50px"/>
             <button onclick="window.location.href='ApproveSchedule'">
               Approve Doctor’s Schedule
             </button>
           </div>
           <div class="img_button">
-            <img src="../images/patient.png" width="45px"/>
+            <img src="../images/patient.png" width="50px"/>
             <button onclick="window.location.href='ViewPatients'">View Patients List</button>
           </div>
           <div class="img_button">
-            <img src="../images/health-check.png" width="45px"/>
+            <img src="../images/health-check.png" width="50px"/>
             <a href="#GenerateReport" rel="modal:open">Generate Report</a>
           </div>
         </div>
         <div class="column right" >
-          <h2>Overview</h2>
+          <h2>OVERVIEW</h2>
+          <div class="graph graph1">
+            <h4>Doctors present in each speciality</h4>
+          </div>
+          <div class="graph graph2">
+            <h4>Appointments booked for each speciality</h4>
+          </div>
         </div>
       </div>
       <div class="counts">
-        <h2></h2>
+        <h3>TODAY</h3>
+        <div id="AppointmentCounts">Patient Counts</div>
+        <div id="ActiveDoctors">Active Doctors</div>
       </div>
     <div id="GenerateReport" class="modal">
       <h2>Report</h2>
@@ -73,7 +81,7 @@
       </form>
       <a href="#" rel="modal:close"> </a>
     </div>
-    <footer>Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a></footer>
+    <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
   </body>
 </html>
 

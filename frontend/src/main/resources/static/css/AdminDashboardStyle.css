@@ -31,6 +31,7 @@ body {
   align-self: center;
   background: transparent;
   cursor: pointer;
+  padding: 1em;
 }
 
 .left a {
@@ -40,21 +41,28 @@ body {
   font-size: large;
   align-self: center;
   text-decoration: none;
+  padding: 1em;
+}
+.left button, .left a{
+ 
+  border-radius: 8px;
+  margin-top: 3%;
 }
 .left button:hover, .left a:hover{
+  font-weight: bolder;
   background-image: linear-gradient(to right, #5dacec, #1160bb) ;
   color: white;
 }
 .left{
   background-color: #ffffffc3;
-  margin: 2% 2% 2% 2%;
+  margin: 0% 2% 2% 2%;
   border-radius: 8px;
   padding: 2%;
 }
 
 .right{
   background-color: #ffffffc3;
-  margin: 2% 2% 2% 0%;
+  margin: 0% 2% 2% 0%;
   border-radius: 8px;
   padding: 2%;
 }
@@ -110,15 +118,15 @@ footer a{
 .column {
   float: left;
   padding: 10px;
-  height: 300px; 
+  height: 400px; 
 }
 
 .left {
-  width: 34%;
+  width: 25%;
 }
 
 .right {
-  width: 60%;
+  width: 68%;
 }
 
 .row:after {
@@ -130,7 +138,23 @@ footer a{
   background-color: #ffffffc3;
   margin: 0% 2% 2% 2%;
   border-radius: 8px;
+  padding: 1% 2% 3% 2%;
+}
+
+.graph1,.graph2{
+  float: left;
+  display: block;
+  width: 50%;
   padding: 2%;
+  text-align: center;
+  color: #004798;
+}
+.graph1{
+  border-right:2px dashed #727275 ;
+}
+#AppointmentCounts, #ActiveDoctors{
+  float: left;
+  width: 50%;
 }
 @media only screen and (max-width: 768px){
   .admin_heading {
@@ -140,7 +164,24 @@ footer a{
     font-size: 24px;
     border-bottom: 3px solid #E15E55;
   }
-
+  #GenerateReport.modal{
+    width: fit-content;
+    padding: 0px 0px 10px 0px;
+  }
+  
+  .modal table{
+    margin: 0%;
+    padding: 0%;
+  }
+  .modal td{
+    padding-right: 8px;
+      font-weight: bold;
+      width: 100%;
+  }
+  .modal input[type=submit]{
+    float: none;
+    padding: 0%;
+  }
   .column{
     width: 90%;
   }
@@ -153,5 +194,19 @@ footer a{
   }
   .counts{
     margin: 3%;
+  }
+  .graph1,.graph2{
+    float: none;
+    width: 100%;
+  }
+
+  .graph1{
+    border: none;
+    border-bottom:2px dashed #727275 ;}
+
+  #AppointmentCounts, #ActiveDoctors{
+    float: none;
+    width: 100%;
+    padding: 5%;
   }
 }
