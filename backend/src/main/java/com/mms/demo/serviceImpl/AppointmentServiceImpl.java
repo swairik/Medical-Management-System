@@ -18,32 +18,32 @@ import com.mms.demo.service.AppointmentService;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
-    private AppointmentRepository repo;
+    private AppointmentRepository repository;
 
     @Override
     public Appointment createAppointment(Appointment appointment) {
-        return repo.save(appointment);
+        return repository.save(appointment);
     }
 
     @Override
     public void deleteAppointment(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
 
     }
 
     @Override
     public List<Appointment> getAllAppointments() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Optional<Appointment> getAppointmentById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end) {
-        List<Appointment> patientAppointments = repo.findAllByPatient(patient);
+        List<Appointment> patientAppointments = repository.findAllByPatient(patient);
         return patientAppointments.stream()
                 .filter(a -> a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
                         a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
@@ -57,12 +57,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<Appointment> getAppointmentsByPatient(Patient patient) {
-        return repo.findAllByPatient(patient);
+        return repository.findAllByPatient(patient);
     }
 
     @Override
     public List<Appointment> getAppointmentsBySlot(Slot slot) {
-        return repo.findAllBySlot(slot);
+        return repository.findAllBySlot(slot);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setPatient(appointmentUpdates.getPatient());
         appointment.setSlot(appointmentUpdates.getSlot());
 
-        return repo.save(appointment);
+        return repository.save(appointment);
     }
 
 }

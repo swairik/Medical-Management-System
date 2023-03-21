@@ -1,9 +1,9 @@
 package com.mms.demo.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;

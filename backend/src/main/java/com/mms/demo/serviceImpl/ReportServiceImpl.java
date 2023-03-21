@@ -1,26 +1,12 @@
 package com.mms.demo.serviceImpl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,14 +15,25 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.mms.demo.entity.*;
-import com.mms.demo.repository.*;
-import com.mms.demo.service.*;
+import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Doctor;
+import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Report;
+import com.mms.demo.entity.Schedule;
+import com.mms.demo.repository.AppointmentRepository;
+import com.mms.demo.repository.DoctorRepository;
+import com.mms.demo.repository.PatientRepository;
+import com.mms.demo.repository.ReportRepository;
+import com.mms.demo.repository.ScheduleRepository;
+import com.mms.demo.service.ReportService;
 
 @Service
 public class ReportServiceImpl implements ReportService{

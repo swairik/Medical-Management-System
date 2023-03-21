@@ -2,7 +2,6 @@ package com.mms.demo.repository;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Modifying;

@@ -1,7 +1,6 @@
 package com.mms.demo.entity;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

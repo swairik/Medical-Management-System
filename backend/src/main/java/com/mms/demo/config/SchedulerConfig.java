@@ -1,4 +1,4 @@
-package com.mms.demo;
+package com.mms.demo.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
