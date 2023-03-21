@@ -7,11 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/DoctorDashboardStyle.css">
-    <link rel="stylesheet" href="../css/AdminStyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/AdminDashboardStyle.css" />
+    <!-- <link rel="stylesheet" href="../css/AdminStyle.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="../js/SignOut.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   </head>
 
   <body>
@@ -43,44 +46,60 @@
       </div>
     </div>
     
-    <main>
-      <div class="first_box">
-        <h3>''We Care For Your Well Being''</h3> 
-      </div>
-      <img class="main-img" src="../images/main.png">
-      <div class="second_box">
-        <ul class="ul">
-          <li class="li">Choose the doctor</li>
-          <li class="li">Book a slot</li>
-          <li class="li">Make payment</li>
-          <li class="li">Be present in the consult room</li>
-        </ul>
-      </div>
-    </main>
-
-    <h2 class="admin_heading">Hi Dr. Abc,</h2>  
-
-    <div class="lower_body">
-      <div class="lower_body_box">
-        <div class="img_button">
-          <img  src="../images/Vector.png" >
-          <button onclick="window.location.href='UpdateSchedule'">Update Your Schedule</button>
+    <h1 class="admin_heading">Hello Doctor</h1>
+      <div class="row">
+        <div class="column left" >
+          <div class="img_button">
+            <img src="../images/consultation.png" width="50px"/>
+            <button onclick="window.location.href='UpdateSchedule'">
+              Update Your Schedule
+            </button>
+          </div>
+          <div class="img_button">
+            <img src="../images/advice.png" width="50px"/>
+           <button onclick="window.location.href='ViewYourAppointments'">Upcoming Appointments</button>
+          </div>
+          <div class="img_button">
+            <img src="../images/patient.png" width="50px"/>
+            <button onclick="window.location.href='YourPatients'">Your Patients</button>
+          </div>
+          <div class="img_button">
+            <img src="../images/health-check.png" width="50px"/>
+            <a href="#GenerateReportForDoctor" rel="modal:open">Generate Report</a>
+          </div>
         </div>
-        <div class="img_button">
-          <img  src="../images/edit.png" >
-          <button onclick="window.location.href='ViewYourAppointments'">Upcoming Appointments</button>
-        </div>
-        <div class="img_button">
-          <img  src="../images/edit.png" >
-          <button onclick="window.location.href='YourPatients'">Your Patients</button>
+        <div class="column right" >
+          <h2>OVERVIEW</h2>
+          <div class="graph graph1">
+            <h4>Upcoming Appointment</h4>
+          </div>
+          <div class="graph graph2">
+            <h4>Patient Count</h4>
+          </div>
         </div>
       </div>
-    </div>
-
-    <footer>
-      <p>Mail us at : </p>
-      <p><a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></p>
-    </footer>
+      <div id="GenerateReportForDoctor" class="modal">
+        <h2>Report</h2>
+        <form>
+          <table>
+          <tr>
+          <td>
+          <label for="StartDate">Start Date:</label><br><br>
+          <input type="date" id="start" name="start">
+        </td>
+        <td>
+          <label for="EndDate">End Date:</label><br><br>
+          <input type="date" id="end" name="end">
+        </td>
+        <td>
+          <input type="submit" value="Download">
+        </td>
+        </tr>
+        </table>
+        </form>
+        <a href="#" rel="modal:close"> </a>
+      </div>
+    <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
     
   </body>
 </html>

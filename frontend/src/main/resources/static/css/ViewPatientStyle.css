@@ -8,14 +8,14 @@
 .container {
         margin: 2%;
         display: flex;
-        height: 200px;
+        height: 250px;
         min-width: fit-content;
         border-radius: 100px 10px 100px 100px;
         background-image: linear-gradient(121deg, #ffffff3a 13%, #64686b86 100%);
 }
 .patient img {
-    height: 200px;
-  width: 200px;
+    height: 250px;
+  width: 250px;
   padding-right: 10px;
   border-radius: 100%;
   flex-shrink: 0;
@@ -23,19 +23,19 @@
 }
 
 .patient table {
-    height: 200px;
-    width: 800px;
-    padding-right: 10px;
+    height: max-content;
+    width: fit-content;
+    padding: 10px;
     border-radius: 100%;
     flex-shrink: 0;
     object-fit: cover;
+    overflow: auto;
 }
 td {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding: 10px;
     font-weight: bold;
 }
-h2{
+h2,th{
     color: #004798;
     text-align: center;
     margin-top: 2%;
@@ -73,12 +73,22 @@ footer {
     .container{
         width: 90%;
         border-radius: 8px;
+        display: block;
+       
     }
     .container img{
         display: none;
     }
     .patient table{
-      width: 200px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    #personal, #appointment{
+      width: 100%;
+    }
+    #appointment {
+      background-image: linear-gradient(121deg, #64686b59 13%, #ffffff27 100%);
+      border-radius: 8px;
     }
    
   }
