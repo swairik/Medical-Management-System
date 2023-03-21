@@ -191,6 +191,11 @@ margin: 5px;
 .modal table {
   background-color: #fff;
 }
+
+.modal button#show_slot {
+  color: black
+}
+
 .modal td,th{
   padding: 15px;
   font-weight: bold;

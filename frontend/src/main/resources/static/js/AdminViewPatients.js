@@ -1,7 +1,8 @@
 const constructPatientInfo = (value) => {
     var div = `<div class="container">
-    <img src="../images/doctor-consultation.png" alt=" " />
-    <table>
+    <img src="../images/image.png" alt=" ">
+      <table id="personal">
+      <th>PERSONAL DETAILS:</th>
       <tr>
         <td>NAME</td>
         <td>:</td>
@@ -11,6 +12,8 @@ const constructPatientInfo = (value) => {
         <td>AGE</td>
         <td>:</td>
         <td id="page">${value.patientResponse.age}</td>
+      </tr>
+      <tr>
         <td>GENDER</td>
         <td>:</td>
         <td id="pgender">${value.patientResponse.gender}</td>
@@ -19,14 +22,21 @@ const constructPatientInfo = (value) => {
         <td>EMAIL</td>
         <td>:</td>
         <td id="pemail">${value.patientResponse.email}</td>
+      </tr>
+      <tr>
         <td>CONTACT</td>
         <td>:</td>
         <td id="pcontact">${value.patientResponse.phone}</td>
       </tr>
+      </table>
+      <table id="appointment">
+      <th>APPOINTMENT DETAILS:</th> 
       <tr>
         <td>DOCTOR</td>
         <td>:</td>
         <td id="pdoc">${value.scheduleResponse.doctorResponse.name}</td>
+        </tr>
+        <tr>
         <td>SPECIALITY</td>
         <td>:</td>
         <td id="pspeciality">${value.scheduleResponse.doctorResponse.speciality.name}</td>
@@ -35,6 +45,8 @@ const constructPatientInfo = (value) => {
         <td>DATE</td>
         <td>:</td>
         <td id="pdate">${value.scheduleResponse.weekDate}</td>
+        </tr>
+        <tr>
         <td>SLOT TIME</td>
         <td>:</td>
         <td id="pslottime">${value.scheduleResponse.slotResponse.start}-${value.scheduleResponse.slotResponse.end}</td>

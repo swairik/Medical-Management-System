@@ -152,9 +152,13 @@ footer a{
 .graph1{
   border-right:2px dashed #727275 ;
 }
-#AppointmentCounts, #ActiveDoctors{
+#AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
   float: left;
-  width: 50%;
+  width: 25%;
+}
+#ACounts, #ADoctors{
+  font-size: 32px;
+  color: #E15E55;
 }
 @media only screen and (max-width: 768px){
   .admin_heading {
@@ -204,7 +208,7 @@ footer a{
     border: none;
     border-bottom:2px dashed #727275 ;}
 
-  #AppointmentCounts, #ActiveDoctors{
+  #AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
     float: none;
     width: 100%;
     padding: 5%;

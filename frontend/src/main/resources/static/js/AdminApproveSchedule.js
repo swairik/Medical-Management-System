@@ -1,7 +1,7 @@
-const constructScheduleMenu = (value) => {
+const constructScheduleMenu = (key,value) => {
   var div = `
   <li class="table-row">
-  <div class="col col-1" data-label="DoctorId">${value.id}</div>
+  <div class="col col-1" data-label="DoctorId">${value.doctorResponse.id}</div>
   <div class="col col-2" data-label="Name">${value.doctorResponse.name}</div>
   <div class="col col-3" data-label="Speciality">${value.doctorResponse.speciality.name}</div>
   <div class="col col-4" data-label="Date">${value.weekDate}</div>
@@ -43,7 +43,7 @@ const constructScheduleMenu = (value) => {
       $.each(result, function (key, value) {
         console.log(value);
         if(!value.approval){
-        $(".responsive-table").append(constructScheduleMenu(value));
+        $(".responsive-table").append(constructScheduleMenu(key,value));
         }
       });
     },

@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ScheduleService;
 import com.mms.demo.service.SpecialityService;
 
+
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/analytics")
 public class AnalyticsController {
