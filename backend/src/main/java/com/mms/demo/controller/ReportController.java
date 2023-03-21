@@ -3,6 +3,7 @@ package com.mms.demo.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -22,6 +23,7 @@ import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/report")
 class ReportController {
