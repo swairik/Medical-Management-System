@@ -1,42 +1,49 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Token;
-import com.mms.demo.service.TokenService;
 import com.mms.demo.repository.TokenRepository;
+import com.mms.demo.service.TokenService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TokenServiceImpl implements TokenService {
     @Autowired
-    TokenRepository repo;
+    TokenRepository repository;
 
     @Override
     public Token createToken(Token token) {
-        return repo.save(token);
+        return repository.save(token);
     }
 
     @Override
     public void deleteToken(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public Optional<Token> getTokenById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
+
+
 
     @Override
     public Optional<Token> getTokenByIdentifier(String identifier) {
-        return repo.findByIdentifier(identifier);
+        return repository.findByIdentifier(identifier);
     }
 
     @Override
     public Optional<Token> revokeToken(Long id) {
-        Optional<Token> temp = repo.findById(id);
+        Optional<Token> temp = repository.findById(id);
 
         if (temp.isEmpty()) {
             return Optional.empty();
@@ -45,12 +52,12 @@ public class TokenServiceImpl implements TokenService {
         Token token = temp.get();
 
         token.setIsRevoked(true);
-        return Optional.of(repo.save(token));
+        return Optional.of(repository.save(token));
     }
 
     @Override
     public Optional<Token> revokeToken(String identifier) {
-        Optional<Token> temp = repo.findByIdentifier(identifier);
+        Optional<Token> temp = repository.findByIdentifier(identifier);
         if (temp.isEmpty()) {
             return Optional.empty();
         }
@@ -60,7 +67,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token updateToken(Long id, Token tokenUpdates) {
-        Optional<Token> temp = repo.findById(id);
+        Optional<Token> temp = repository.findById(id);
 
         if (temp.isEmpty()) {
             return null;
@@ -72,7 +79,14 @@ public class TokenServiceImpl implements TokenService {
         token.setType(tokenUpdates.getType());
         token.setExpirationStamp(tokenUpdates.getExpirationStamp());
 
-        return repo.save(token);
+        return repository.save(token);
     }
 
+    @Scheduled(cron = "${token.clean.interval}")
+    @Transactional
+    @Async
+    public void tokenCleanerScheduler() {
+        repository.deleteAllByExpirationStampBefore(LocalDateTime.now());
+    }
+    
 }

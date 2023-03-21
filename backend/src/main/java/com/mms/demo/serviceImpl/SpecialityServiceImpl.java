@@ -13,26 +13,26 @@ import com.mms.demo.service.SpecialityService;
 @Service
 public class SpecialityServiceImpl implements SpecialityService {
     @Autowired
-    private SpecialityRepository repo;
+    private SpecialityRepository repository;
 
     @Override
     public Speciality createSpeciality(Speciality speciality) {
-        return repo.save(speciality);
+        return repository.save(speciality);
     }
 
     @Override
     public void deleteSpeciality(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<Speciality> getAllSpecialities() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Optional<Speciality> getSpecialityById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     @Override
@@ -44,6 +44,6 @@ public class SpecialityServiceImpl implements SpecialityService {
 
         Speciality speciality = temp.get();
         speciality.setName(specialityUpdates.getName());
-        return repo.save(speciality);
+        return repository.save(speciality);
     }
 }

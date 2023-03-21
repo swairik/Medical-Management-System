@@ -15,6 +15,8 @@ import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Speciality;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Random;
+
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -26,6 +28,20 @@ public class DoctorServiceTest {
     @Autowired
     SpecialityService specImpl;
 
+    private String genAlnum(int targetStringLength) {
+        int leftLimit = 48;
+        int rightLimit = 122; 
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+        
+        return generatedString;
+    }
+
     static final Speciality spec = Speciality.builder().name("Dentist").build();
     static Doctor doctor;
 
@@ -36,7 +52,7 @@ public class DoctorServiceTest {
         specImpl.createSpeciality(spec);
         assertThat(specImpl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
 
-        doctor = Doctor.builder().age(40).email("abc@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec).build();
+        doctor = Doctor.builder().age(40).email(genAlnum(10) + "@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec).build();
         assertThat(impl.createDoctor(doctor)).isEqualTo(doctor);
     }
 

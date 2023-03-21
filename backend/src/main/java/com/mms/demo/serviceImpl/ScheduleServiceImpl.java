@@ -1,8 +1,6 @@
 package com.mms.demo.serviceImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,42 +16,42 @@ import com.mms.demo.service.ScheduleService;
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
-    private ScheduleRepository repo;
+    private ScheduleRepository repository;
 
     @Override
     public Schedule createSchedule(Schedule schedule) {
-        return repo.save(schedule);
+        return repository.save(schedule);
     }
 
     @Override
     public void deleteSchedule(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<Schedule> getAllSchedules() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Optional<Schedule> getScheduleById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public List<Schedule> getSchedulesByDoctor(Doctor doctor) {
-        return repo.findAllByDoctor(doctor);
+        return repository.findAllByDoctor(doctor);
     }
 
 
     @Override
     public List<Schedule> getSchedulesBySlot(Slot slot) {
-        return repo.findAllBySlot(slot);
+        return repository.findAllBySlot(slot);
     }
 
     @Override
     public List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start, LocalDate end) {
-        return repo.findAllByDoctorAndWeekDateBetween(doctor, start, end);
+        return repository.findAllByDoctorAndWeekDateBetween(doctor, start, end);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setSlot(scheduleUpdates.getSlot());
         schedule.setWeekDate(scheduleUpdates.getWeekDate());
 
-        return repo.save(schedule);
+        return repository.save(schedule);
     }
 
     

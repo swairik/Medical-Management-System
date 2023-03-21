@@ -13,7 +13,7 @@ import com.mms.demo.service.SlotService;
 @Service
 public class SlotServiceImpl implements SlotService {
     @Autowired
-    private SlotRepository repo;
+    private SlotRepository repository;
 
     @Override
     public Slot createSlot(Slot slot) {
@@ -21,27 +21,27 @@ public class SlotServiceImpl implements SlotService {
             throw new IllegalArgumentException("Start time should be before End time");
         }
 
-        return repo.save(slot);
+        return repository.save(slot);
     }
 
     @Override
     public void deleteSlot(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<Slot> getAllSlots() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Optional<Slot> getSlotById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public Slot updateSlot(Long id, Slot slotUpdates) {
-        Optional<Slot> temp = repo.findById(id);
+        Optional<Slot> temp = repository.findById(id);
 
         if (temp.isEmpty()) {
             return null;
@@ -53,7 +53,7 @@ public class SlotServiceImpl implements SlotService {
         slot.setStart(slotUpdates.getStart());
         slot.setWeekday(slotUpdates.getWeekday());
 
-        return repo.save(slot);
+        return repository.save(slot);
     }
 
     

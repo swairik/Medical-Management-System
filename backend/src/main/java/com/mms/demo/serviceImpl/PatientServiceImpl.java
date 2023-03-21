@@ -13,26 +13,26 @@ import com.mms.demo.service.PatientService;
 @Service
 public class PatientServiceImpl implements PatientService {
     @Autowired
-    private PatientRepository repo;
+    private PatientRepository repository;
 
     @Override
     public List<Patient> getAllPatients() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     @Override
     public Optional<Patient> getPatientById(Long id) {
-        return repo.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     public Patient createPatient(Patient patient) {
-        return repo.save(patient);
+        return repository.save(patient);
     }
 
     @Override
     public Patient updatePatient(Long id, Patient patientUpdates) {
-        Optional<Patient> temp = repo.findById(id);
+        Optional<Patient> temp = repository.findById(id);
         if (temp.isEmpty()) {
             return null;
         }
@@ -44,12 +44,12 @@ public class PatientServiceImpl implements PatientService {
         patient.setName(patientUpdates.getName());
         patient.setPhone(patientUpdates.getPhone());
 
-        return repo.save(patient);
+        return repository.save(patient);
     }
 
     @Override
     public void deletePatient(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 
 

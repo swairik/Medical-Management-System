@@ -1,195 +1,236 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+      $("#out").on("click", function (e) {
+        // Do something when the button is clicked
 
-<style>
- * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+        // e.preventDefault();
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
-  background-color: #004798;
-  color: #fff;
-}
+        const cookie = document.cookie;
+        const token = cookie
+          .split("; ")
+          .find((row) => row.startsWith("authToken="))
+          .split("=")[1];
+        console.log(token);
 
-#logo {
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-}
-nav img {
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-.menu {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+        // $.ajax({
+        //   url: "http://localhost:8050/auth/logout",
+        //   type: "GET",
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        //   success: function (result) {
+        //     console.log(result);
+        //     window.location.href = "Auth";
+        //   },
+        //   error: function (xhr, status, errorThrown) {
+        //     if (xhr.status == 403) {
+        //       window.location.href = "Auth";
+        //     } else {
+        //       alert("Some Error Occurred");
+        //     }
+        //   },
+        // });
 
-.menu .link {
-  color: #ffffff;
-  text-decoration: none;
-  padding: 10px 15px;
-  
-}
+        
+          document.cookie =
+            "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "Auth";
+      });
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
 
-.menu a:hover,.dropdown:hover .dropbtn {
-  background-image:linear-gradient(to right, #5dacec, #1160bb) ;
-    border-radius: 8px;
-    color: #fbfbfc;
-}
-.dropdown {
-  float: left;
-  overflow: hidden;
-}
+      /* Navbar */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 30px;
+        background-color: #004798;
+        color: #fff;
+      }
 
-.dropdown .dropbtn {
-  font-size: 16px;  
-  border: none;
-  outline: none;
-  color: white;
-  padding: 10px 15px;
-  background-color: inherit;
-  margin: 0;
-}
+      #logo {
+        font-size: 24px;
+        font-weight: bold;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+      }
+      nav img {
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+      .menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #004798;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  padding-top: 15px;
-}
+      .menu .link {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 15px;
+      }
 
-.dropdown-content .link {
-  float: none;
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
+      .menu a:hover,
+      .dropdown:hover .dropbtn {
+        background-image: linear-gradient(to right, #5dacec, #1160bb);
+        border-radius: 8px;
+        color: #fbfbfc;
+      }
+      .dropdown {
+        float: left;
+        overflow: hidden;
+      }
 
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+      .dropdown .dropbtn {
+        font-size: 16px;
+        border: none;
+        outline: none;
+        color: white;
+        padding: 10px 15px;
+        background-color: inherit;
+        margin: 0;
+      }
 
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #004798;
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        padding-top: 15px;
+      }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  transition: opacity 200ms;
-  visibility: hidden;
-  opacity: 0;
-}
-.overlay{
-  background: rgba(255, 255, 255, 0.5);
-}
-.overlay{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  cursor: default;
-}
-.overlay:target {
-  visibility: visible;
-  opacity: 1;
-  z-index: 2;
-}
+      .dropdown-content .link {
+        float: none;
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+      }
 
-.popup {
-  margin: 75px auto;
-  padding: 20px;
-  background: #fff;
-  border: 1px solid #666;
-  width: 300px;
-  height: 130px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-  position: relative;
-}
-.popup {
-  border-color: #aaa;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-}
-.popup h3 {
-  margin-top: 0;
-  padding: 2.5% 0% 8% 5%;
-  color: #141974;
-}
-.popup .close {
-  float: right;
-  padding: 8px;
-  color: #ffffff;
-  border-radius: 8px;
-  border-color: #ffffff;
-  margin: 5px;
-  transition: all 200ms;
-  text-decoration: none;
-  font-size: small;
-}
-.close:hover{
-  cursor: default;
-}
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
 
-.overlay button {
-  float: right;
-  padding: 8px;
-  border: none;
-  color: #ffffff;
-  border-radius: 8px;
-  margin: 5px;
-}
-@media only screen and (max-width: 768px){
-  .navbar{
-    padding: 10px 10px;
-  }
-}
-</style>
-</head>
-<body>
+      .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        transition: opacity 200ms;
+        visibility: hidden;
+        opacity: 0;
+      }
+      .overlay {
+        background: rgba(255, 255, 255, 0.5);
+      }
+      .overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: default;
+      }
+      .overlay:target {
+        visibility: visible;
+        opacity: 1;
+        z-index: 2;
+      }
 
- <nav class="navbar">
+      .popup {
+        margin: 75px auto;
+        padding: 20px;
+        background: #fff;
+        border: 1px solid #666;
+        width: 300px;
+        height: 130px;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+      .popup {
+        border-color: #aaa;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      }
+      .popup h3 {
+        margin-top: 0;
+        padding: 2.5% 0% 8% 5%;
+        color: #141974;
+      }
+      .popup .close {
+        float: right;
+        padding: 8px;
+        color: #ffffff;
+        border-radius: 8px;
+        border-color: #ffffff;
+        margin: 5px;
+        transition: all 200ms;
+        text-decoration: none;
+        font-size: small;
+      }
+      .close:hover {
+        cursor: default;
+      }
+
+      .overlay button {
+        float: right;
+        padding: 8px;
+        border: none;
+        color: #ffffff;
+        border-radius: 8px;
+        margin: 5px;
+      }
+      @media only screen and (max-width: 768px) {
+        .navbar {
+          padding: 10px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
       <div id="logo">
-        <img src="../images/logo.jpg">
-        <p>Care4U</p></div>
-    <div class="menu">
-    <a class="link homeactive" href="Admin" >Home</a>
-    <div class="dropdown">
-    <button class="dropbtn">Profile
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a class="link" href="#confirm">Sign Out</a>
-    </div>
-  </div> 
+        <img src="../images/logo.jpg" />
+        <p>Care4U</p>
+      </div>
+      <div class="menu">
+        <a class="link homeactive" href="Admin">Home</a>
+        <div class="dropdown">
+          <button class="dropbtn">
+            Profile
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a class="link" href="#confirm">Sign Out</a>
+          </div>
+        </div>
       </div>
     </nav>
     <div id="confirm" class="overlay">
       <div class="popup">
         <h3>Do you want to Sign Out?</h3>
-        <a class="close " style="background-color: #ba0000" href="#">No</a>
+        <a class="close" style="background-color: #ba0000" href="#">No</a>
         <button id="out" style="background-color: #0ca912">Yes</button>
       </div>
     </div>
-</body>
+  </body>
 </html>

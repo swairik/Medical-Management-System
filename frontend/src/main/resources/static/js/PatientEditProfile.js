@@ -12,18 +12,18 @@ $(document).ready(function () {
   console.log(patient_id);
 
   $.ajax({
-    url: `http://localhost:8050/patient/${patient_id}`,
+    url: `http://localhost:8050/patient/display/${patient_id}`,
     type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
     success: function (result) {
       console.log(result);
-      $("#pname").html(result.name);
-      $("#page").html(result.age);
-      $("#pgender").html(result.gender);
-      $("#pcontact").html(result.phone);
-      $("#pemail").html(result.email);
+      $("#pname").val(result.name);
+      $("#page").val(result.age);
+      $("#pgender").val(result.gender);
+      $("#pphone").val(result.phone);
+      $("#pemail").val(result.email);
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
@@ -34,7 +34,7 @@ $(document).ready(function () {
     },
   });
 
-  $("#patient_form").on("submit", function (e) {
+  $(".pedit-form").on("submit", function (e) {
     e.preventDefault();
 
     console.log("clicked");
@@ -44,7 +44,8 @@ $(document).ready(function () {
       email: $("#pemail").val(),
       age: $("#page").val(),
       gender: $("#pgender").val(),
-      phone: $("#pcontact").val(),
+      phone: $("#pphone").val(),
+      email: $("#pemail").val(),
     };
     console.log(patientData);
 
@@ -61,12 +62,13 @@ $(document).ready(function () {
         // Handle successful response
         console.log(response);
         alert("Updated Successfully!");
-        window.location.href = "PatientProfile";
+        // window.location.href = "PatientProfile";
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
           window.location.href = "Auth";
         } else {
+          var errorObj;
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
           if (errorObj) alert(errorObj.errorMessage);

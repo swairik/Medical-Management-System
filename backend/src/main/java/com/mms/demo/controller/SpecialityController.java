@@ -52,6 +52,16 @@ public class SpecialityController {
     @PostMapping("/")
     public ResponseEntity<SpecialityResponse> createSpeciality(
             @Valid @RequestBody SpecialityRequest specialityRequest) {
+
+        List<Speciality> specialities = specialityService.getAllSpecialities();
+        Speciality alreadyCreatedSpeciality = specialities.stream()
+                .filter((s) -> s.getName().equals(specialityRequest.getName()))
+                .findFirst().orElse(null);
+
+        if (alreadyCreatedSpeciality != null) {
+            throw new CustomException("Speciality with given name already created", "SPECIALITY_ALREADY_EXISTS");
+        }
+
         Speciality speciality = SpecialityRequest.createSpecialityFromRequest(specialityRequest);
         Speciality createdSpeciality = specialityService.createSpeciality(speciality);
         SpecialityResponse response = SpecialityResponse.createResponseFromSpeciality(createdSpeciality);

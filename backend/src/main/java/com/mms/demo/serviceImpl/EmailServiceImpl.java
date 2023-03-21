@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.exception.CustomException;
@@ -19,7 +20,8 @@ public class EmailServiceImpl implements EmailService {
     private String sender;
 
     @Override
-    public String sendSimpleMail(EmailDetails emailDetails) {
+    @Async
+    public void sendSimpleMail(EmailDetails emailDetails) {
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
 
@@ -29,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
             mailMessage.setText(emailDetails.getMsgBody());
 
             javaMailSender.send(mailMessage);
-            return "Mail sent successfully";
+            return;
         } catch (Exception e) {
             throw new CustomException("Error while sending mail", "EMAIL_NOT_SENT");
         }

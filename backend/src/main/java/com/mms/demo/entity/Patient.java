@@ -1,5 +1,8 @@
 package com.mms.demo.entity;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,9 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Setter
 @Getter
@@ -46,14 +46,14 @@ public class Patient {
     @Min(0)
     private Integer age;
 
-    @Column(name = "patient_email", length = 384)
+    @Column(name = "patient_email", length = 384, unique = true)
     @Email
     private String email;
 
-    @Column(name = "patient_phone", length = 14, nullable = true)
+    @Column(name="patient_phone", length = 14, nullable = true)
     private String phone;
 
-    @Column(name = "patient_registration_timestamp", nullable = false)
+    @Column(name="patient_registration_timestamp", nullable = false)
     @Builder.Default
     private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 

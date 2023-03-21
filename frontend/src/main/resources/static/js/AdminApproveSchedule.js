@@ -1,68 +1,119 @@
 const constructScheduleMenu = (value) => {
-    var div=`
-    <div class="box_grp">
-    <div class="box_one">
-    <input type="text" class="text" value=${value.doctorResponse.name}>
-    <input type="text" class="text" value=${value.doctorResponse.speciality.name}>
-    <input type="text" class="text" value=${value.doctorResponse.email}>
-    <input type="text" class="text" value=${value.doctorResponse.phone}>
-</div>
+  var div = `
+  <li class="table-row">
+  <div class="col col-1" data-label="DoctorId">${value.id}</div>
+  <div class="col col-2" data-label="Name">${value.doctorResponse.name}</div>
+  <div class="col col-3" data-label="Speciality">${value.doctorResponse.speciality.name}</div>
+  <div class="col col-4" data-label="Date">${value.weekDate}</div>
+  <div class="col col-5" data-label="Day">${value.slotResponse.weekday}</div>
+  <div class="col col-6" data-label="StartTime">${value.slotResponse.start}</div>
+  <div class="col col-7" data-label="EndTime">${value.slotResponse.end}</div>
+  <div class="col col-7" data-label="Status">${value.approval?"Approved":"Not Approved"}</div>
+  <div class="col col-8">
+    <button class="btn_accept" value=${value.id}>Accept</button>
+  </div>
+  <div class="col col-9">
+    <button class="btn_remove" value=${value.id}>Remove</button>
+  </div>
+</li>
+  `;
 
-<div class="box_two">
-            
-<label class="text_two"> Year:
-    <input type="text" class="text_two" value=${value.year} />
-    </label>
+  return div;
+};
 
-    <label class="text_two"> Year:
-    <input type="text" class="text_two" value=${value.week} />
-    </label>
-        
-        <br/>
-        <input type="text" class="text_two" value="Slot-Timing: " />
-        <br/>
-        <label class="text_two"> Start-Time:
-        <input type="text" class="text_two" value=${value.slotResponse.start} />
-        </label>
-        <label class="text_two"> End-Time:
-        <input type="text" class="text_two" value=${value.slotResponse.end} />
-        </label>
-        <label class="text_two"> Capacity:
-        <input type="text" class="text_two" value=${value.slotResponse.capacity} />
-        </label>
-        <label class="text_two"> WeekDay:
-        <input type="text" class="text_two" value=${value.slotResponse.weekday} />
-        </label>
-    
 
-<div class="btn_grp">
-    <button class="btn_accept">Accept</button>
-    <button class="btn_remove">Remove</button>
-</div>
-</div>
-    </div>`
-  
-    
-  
-    return div;
-  };
-  
 
-$(document).ready(function () {
-    $.ajax({
-        url: "http://localhost:8050/schedule/display",
-        type: "GET",
-        success: function (result) {
-          console.log(result);
-          $.each(result, function (key, value) {
-            console.log(value);
-            // $(".add_doctor_personal").append("Name= " + value.name + "Speciality= " + value.speciality.name);
-            $("#schedule_menu").append(constructScheduleMenu(value));
-          });
-        },
-        error: function (error) {
-          console.log(error);
-        },
+  $(document).ready(function () {
+
+    const cookie = document.cookie;
+  const token = cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="))
+    .split("=")[1];
+  console.log(token);
+
+  $.ajax({
+    url: "http://localhost:8050/schedule/display",
+    type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (result) {
+      console.log(result);
+      $.each(result, function (key, value) {
+        console.log(value);
+        if(!value.approval){
+        $(".responsive-table").append(constructScheduleMenu(value));
+        }
       });
+    },
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        var errorObj;
+        if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+
+        if (errorObj) alert(errorObj.errorMessage);
+        else alert("Some Error Occurred");
+      }
+    },
+  });
+    
+    $(".responsive-table").on("click","button.btn_accept",function(e) {
+      console.log("clicked")
+      console.log(this)
+      e.preventDefault();
+      $.ajax({
+        type: "PUT",
+        url: `http://localhost:8050/schedule/${this.value}/approve`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        success: function(result) {
+          alert('Schedule Approved...')
+          window.location.href = 'ApproveSchedule';
+        },
+        error: function(xhr, status, errorThrown) {
+          if (xhr.status == 403) {
+            window.location.href = "Auth";
+          } else {
+            var errorObj;
+            if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+    
+            if (errorObj) alert(errorObj.errorMessage);
+            else alert("Some Error Occurred");
+          }
+        }
+      });
+    });
+
+    $(".responsive-table").on("click","button.btn_remove",function(e) {
+      console.log("clicked")
+      console.log(this)
+      e.preventDefault();
+      $.ajax({
+        type: "DELETE",
+        url: `http://localhost:8050/schedule/${this.value}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        success: function(result) {
+          alert('Schedule Rejected...')
+          window.location.href = 'ApproveSchedule';
+        },
+        error: function(xhr, status, errorThrown) {
+          if (xhr.status == 403) {
+            window.location.href = "Auth";
+          } else {
+            var errorObj;
+            if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+    
+            if (errorObj) alert(errorObj.errorMessage);
+            else alert("Some Error Occurred");
+          }
+        }
+      });
+    });
   
   });

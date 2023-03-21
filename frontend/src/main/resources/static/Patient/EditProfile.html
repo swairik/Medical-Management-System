@@ -18,21 +18,22 @@
 
     <div class="pedit">
       
-      <form class = "pedit-form" id="patient-form">
+      <form class = "pedit-form">
         <h2>Enter Your Details</h2>
             <label>Name : </label><br>
-            <input type="text" name="pname" required><br>
+            <input type="text" name="pname" id="pname" required><br>
             <label>Age : </label><br> 
-            <input type="text" name="page" required><br>
+            <input type="text" name="page" id="page" required><br>
             <label>Gender : </label><br>  
-            <select name="pgender">
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="others">Others</option>
+            <select name="pgender" id="pgender">
+              <option value="F">Female</option>
+              <option value="M">Male</option>
             </select><br> 
             <label>Contact No. : </label><br>   
-            <input type="text" name="pphone" required><br><br> 
-            <button id="edited" type="submit" style="background-color: #0a9c11" onClick="location.href='PatientProfile'">Save</button>   
+            <input type="text" name="pphone" id="pphone" required><br><br> 
+            <label>Email : </label><br>   
+            <input type="text" name="pemail" id="pemail" required disabled><br><br> 
+            <button id="edited" type="submit" style="background-color: #0a9c11">Save</button>   
       </form>
     </div>
     <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>

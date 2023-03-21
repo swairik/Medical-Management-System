@@ -7,6 +7,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ import com.mms.demo.service.PatientService;
 import com.mms.demo.service.PrescriptionService;
 import com.mms.demo.service.ScheduleService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/prescription")
 public class PrescriptionController {
@@ -170,9 +172,21 @@ public class PrescriptionController {
                                         "Logged in user is not permitted to create another user's prescription",
                                         "PROFILE_EDIT_NOT_ALLOWED");
                 }
+                // if apt id already there throw exception
+
+                List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
+                Prescription alreadyCreatedPrescription = prescriptions.stream()
+                                .filter((p) -> p.getAppointment().getId() == prescriptionRequest.getAppointmentId())
+                                .findFirst().orElse(null);
+
+                if (alreadyCreatedPrescription != null) {
+                        throw new CustomException("Prescription with given appointment id already created",
+                                        "APPOINTMENT_ALREADY_CREATED");
+                }
 
                 Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
                 Prescription createdPrescription = prescriptionService.createPrescription(prescription);
+
                 Appointment appointment = appointmentService.getAppointmentById(prescription.getAppointment().getId())
                                 .orElseThrow(() -> new CustomException("Appointment with given id not found",
                                                 "APPOINTMENT_NOT_FOUND"));

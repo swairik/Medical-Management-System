@@ -121,14 +121,101 @@ public class POIReportServiceTest {
 
     @Test
     @Order(2)
+    @DisplayName("Test generation on an empty field")
+    void testEmptyGen() {
+        assertThat(reportService.generateReports(LocalDateTime.now(), LocalDateTime.now().plusDays(1))).isEmpty();
+    }
+
+    @Test
+    @Order(3)
     @DisplayName("Testing create on a single report")
-    void testCreateReport() {
+    void testCreateReportOne() {
         LocalDateTime temporalTarget = LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.DAYS);
         
         // create patients
         for (int i = 0; i < 1000; i++) {
+            Patient temp = Patient.builder()
+                                .email(genAlnum(14) + "@xyz.com")
+                                .name(genAlnum(10) + genAlnum(10))
+                                .phone(genAlnum(10))
+                                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
+                                .build();
+            
+            patientService.createPatient(temp);
+        }
+
+        // create doctors and specialities
+        for (int i = 0; i < 10; i++) {
+            Speciality speciality = Speciality.builder().name(genAlnum(7)).build();
+            specialityService.createSpeciality(speciality);
+        }
+
+        List<Speciality> specialityList = specialityService.getAllSpecialities();
+        for (int i = 0; i < 100; i++) {
+            Random rand = new Random();
+            Doctor temp = Doctor.builder().age(25)
+                                .email(genAlnum(14) + "@xyz.com")
+                                .gender("M")
+                                .name(genAlnum(10) + genAlnum(10))
+                                .phone(genAlnum(10))
+                                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
+                                .speciality(specialityList.get(rand.nextInt(specialityList.size())))
+                                .build();
+            
+            doctorService.createDoctor(temp);
+        }
+
+        // create slots, schedules, and appointments
+        List<Doctor> doctorList = doctorService.getAllDoctors();
+        List<Patient> patientList = patientService.getAllPatients();
+        for (   ListIterator doctors = doctorList.listIterator(), patients = patientList.listIterator();
+                doctors.hasNext() && patients.hasNext();
+            ) {
+            
+            Doctor doctor = (Doctor)doctors.next();
+            LocalTime incrementalStart = temporalTarget.toLocalTime()
+                                                .withHour(9)
+                                                .withMinute(0)
+                                                .withSecond(0)
+                                                .withNano(0);
+            for (int i = 0; i < 10 && patients.hasNext(); i++) {
+                Patient patient = (Patient)patients.next();
+                Slot slot = Slot.builder().start(incrementalStart)
+                                .end(incrementalStart.plusMinutes(30))
+                                .weekday(temporalTarget.getDayOfWeek())
+                                .build();
+                slotService.createSlot(slot);
+
+                Schedule schedule = Schedule.builder().doctor(doctor)
+                                        .slot(slot)
+                                        .weekDate(temporalTarget.toLocalDate())
+                                        .build();
+                scheduleService.createSchedule(schedule);
+                
+                Appointment appointment = Appointment.builder()
+                                            .patient(patient)
+                                            .slot(slot)
+                                            .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
+                                            .build();
+                appointmentService.createAppointment(appointment);
+
+                incrementalStart = incrementalStart.plusMinutes(30);
+            }
+        }
+
+        reportService.forceRunReportGenerator(temporalTarget);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Testing create on a single report")
+    void testCreateReportTwo() {
+        LocalDateTime temporalTarget = LocalDateTime.now().minusDays(2).truncatedTo(ChronoUnit.DAYS);
+        
+        // create patients
+        for (int i = 0; i < 1000; i++) {
             Patient temp = Patient.builder().age(25)
-                                .email(genAlnum(10) + "@xyz.com")
+                                .email(genAlnum(14) + "@xyz.com")
                                 .gender("M")
                                 .name(genAlnum(10) + genAlnum(10))
                                 .phone(genAlnum(10))
@@ -148,7 +235,7 @@ public class POIReportServiceTest {
         for (int i = 0; i < 100; i++) {
             Random rand = new Random();
             Doctor temp = Doctor.builder().age(25)
-                                .email(genAlnum(7) + "@xyz.com")
+                                .email(genAlnum(14) + "@xyz.com")
                                 .gender("M")
                                 .name(genAlnum(10) + genAlnum(10))
                                 .phone(genAlnum(10))
@@ -199,7 +286,7 @@ public class POIReportServiceTest {
 
         reportService.forceRunReportGenerator(temporalTarget);
         
-        Optional<byte[]> reportByteArray = reportService.generateReports(temporalTarget, temporalTarget.plusDays(1).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
+        Optional<byte[]> reportByteArray = reportService.generateReports(temporalTarget, temporalTarget.plusDays(3).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
         assertThat(reportByteArray).isNotEmpty();
 
         try (OutputStream fileOut = new FileOutputStream("workbook.zip")) {

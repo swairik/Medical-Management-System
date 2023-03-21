@@ -4,23 +4,31 @@
     <title>Admin</title>
 
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../css/AdminDashboardStyle.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/AdminDashboardStyle.css"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css"
+    />
     <script>
       $(function () {
         $("#load_content").load("AdminNavbar");
       });
     </script>
     <script src="../js/SignOut.js"></script>
+    <script src="../js/Report.js"></script>
   </head>
 
   <body>
     <div id="load_content"></div>
 
-     <!-- <h2 id="tag">"We Care 4 Your Well Being"</h2> -->
+    <!-- <h2 id="tag">"We Care 4 Your Well Being"</h2> -->
     <h1 class="admin_heading">Admin Dashboard</h1>
       <div class="row">
         <div class="column left" >
@@ -60,28 +68,29 @@
         <div id="AppointmentCounts">Patient Counts</div>
         <div id="ActiveDoctors">Active Doctors</div>
       </div>
+    </div>
+    <div class="counts">
+      <h2></h2>
+    </div>
     <div id="GenerateReport" class="modal">
       <h2>Report</h2>
-      <form>
-        <table>
+      <table>
         <tr>
-        <td>
-        <label for="StartDate">Start Date:</label><br><br>
-        <input type="date" id="start" name="start">
-      </td>
-      <td>
-        <label for="EndDate">End Date:</label><br><br>
-        <input type="date" id="end" name="end">
-      </td>
-      <td>
-        <input type="submit" value="Download">
-      </td>
-      </tr>
+          <td>
+            <label for="StartDate">Start Date:</label><br /><br />
+            <input type="date" id="start_date_report" name="start" />
+          </td>
+          <td>
+            <label for="EndDate">End Date:</label><br /><br />
+            <input type="date" id="end_date_report" name="end" />
+          </td>
+          <td>
+            <input type="submit" value="Download" id="download_report" />
+          </td>
+        </tr>
       </table>
-      </form>
-      <a href="#" rel="modal:close"> </a>
+      <!-- <a href="#" rel="modal:close"> </a> -->
     </div>
     <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
   </body>
 </html>
-

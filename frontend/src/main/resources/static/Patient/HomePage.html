@@ -15,8 +15,8 @@
         $("#load_content").load("PatientNavbar");
       });
     </script>
-    <script src="../js/Patient.js">
-    </script>
+    <script src="../js/Patient.js"></script>
+    <script src="../js/PatientViewPrescription.js"></script>
   </head>
   <body>
     
@@ -56,10 +56,15 @@
       <div class="service-child">
         <p class="quote">Eat the best, leave the rest!</p>
         <p class="service">View Prescription</p>
-        <a href="#popup" rel="modal:open"><img src="images/image 14.png" alt="click here"/></a>
+        <a href="#popup" rel="modal:open"
+          ><img src="images/image 14.png" alt="click here"
+        /></a>
       </div>
     </div>
 
+    <div class="specialities">
+      <h2>KEY SPECIALITIES</h2>
+    </div>
 
    <div class="specialities">
         <h2>KEY SPECIALITIES</h2>
@@ -82,37 +87,24 @@
     
    <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
 
-        <div id="docList" class="modal">
-          <h2>Doctor's Name</h2>
-          <ul>
-            <li><a href="BookAppointment">doc 1</a></li>
-            <li><a href="BookAppointment">doc 2</a></li>
-          </ul>
-          <a id="close" href="#" rel="modal:close">Go Back</a>
-        </div>
+    <div id="docList" class="modal">
+      <h2>Doctor's Name</h2>
+      <div id="doctor_list"></div>
 
-        <div id="popup" class="modal">
-          <h2>E-PRESCRIPTION</h2>
-          <div id="Prescription" class="content">
-            <table>
-              <th>Name</th>
-              <th>Doctor</th>
-              <th>Speciality</th>
-              <th>Date</th>
-              <th></th>
-              <tr>
-                <td id="prescription_name"></td>
-                <td id="prescription_doctor"></td>
-                <td id="prescription_speciality"></td>
-                <td id="prescription_date"></td>
-                <td id="prescription_download"><button style="background-color: #4CAF50">Download</button></td>
-  
-              </tr>
-            </table>
-          </div>
-          <a href="#" rel="modal:close"> </a>
-        </div>
+      <a id="close" href="Patient">Go Back</a>
+    </div>
 
-    </body>
-    </html>
-  
+    <div id="popup" class="modal">
+      <h2>E-PRESCRIPTION</h2>
+      <div id="Prescription" class="content">
+        <table class="prescription-table">
+          <th>Doctor Name</th>
+          <th>Speciality</th>
+          <th>Date</th>
+          <th></th>
+        </table>
+      </div>
+      <a href="#" rel="modal:close"> </a>
+    </div>
+  </body>
+</html>

@@ -16,10 +16,10 @@ import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Token;
+import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AuthenticationRequest;
 import com.mms.demo.model.AuthenticationResponse;
 import com.mms.demo.model.EmailDetails;
-import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.PasswordRequest;
 import com.mms.demo.model.RegisterRequest;
 import com.mms.demo.model.RegisterResponse;
@@ -147,11 +147,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 .subject(subject)
                                 .msgBody(msgBody)
                                 .build();
-                String response = emailService.sendSimpleMail(emailDetails);
-                if (response.equals("Error")) {
-                        throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
-                }
-                return response;
+                emailService.sendSimpleMail(emailDetails);
+                // if (response.equals("Error")) {
+                // throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
+                // }
+                return "Email has been sent";
         }
 
         public String updatePassword(PasswordRequest passwordRequest) {

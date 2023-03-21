@@ -1,40 +1,39 @@
 package com.mms.demo.serviceImpl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.mms.demo.entity.*;
-import com.mms.demo.repository.*;
-import com.mms.demo.service.*;
+import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Doctor;
+import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Report;
+import com.mms.demo.entity.Schedule;
+import com.mms.demo.repository.AppointmentRepository;
+import com.mms.demo.repository.DoctorRepository;
+import com.mms.demo.repository.PatientRepository;
+import com.mms.demo.repository.ReportRepository;
+import com.mms.demo.repository.ScheduleRepository;
+import com.mms.demo.service.ReportService;
 
 @Service
 public class ReportServiceImpl implements ReportService{
@@ -133,10 +132,12 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Optional<byte[]> generateReports(LocalDateTime from, LocalDateTime to) {
-        List<Report> reports = getAllReportsByStampBetween(from, to);
+        List<Report> reports = getAllReportsByStampBetween(from, to).stream().filter(r -> r.getContents() != null).collect(Collectors.toList());
         if (reports.isEmpty()) {
             return Optional.empty();
         }
+
+
 
         byte[] reportsZipByteArray = null;
         try {
@@ -155,6 +156,14 @@ public class ReportServiceImpl implements ReportService{
     public Optional<byte[]> generateScheduleReportForDoctor(LocalDateTime from, LocalDateTime to, Doctor doctor) {
         // TODO Auto-generated method stub
         return Optional.empty();
+    }
+
+    private String extractNullableValue(Optional<Object> optional) {
+        if (optional.isEmpty()) {
+            return "";
+        }
+
+        return optional.get().toString();
     }
 
     @Override
@@ -177,10 +186,10 @@ public class ReportServiceImpl implements ReportService{
             XSSFRow currentPatient = patientsSheet.createRow(patientsSheet.getLastRowNum() + 1);
             currentPatient.createCell(0).setCellValue(patient.getId());
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getName());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getGender());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getAge());
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getGender())));
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getAge())));
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getEmail());
-            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(patient.getPhone());
+            currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(patient.getPhone())));
         }
 
         // Append list of all new doctors
@@ -196,10 +205,10 @@ public class ReportServiceImpl implements ReportService{
             XSSFRow currentDoctor = doctorsSheet.createRow(doctorsSheet.getLastRowNum() + 1);
             currentDoctor.createCell(0).setCellValue(doctor.getId());
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getName());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getGender());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getAge());
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getGender())));
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getAge())));
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getEmail());
-            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getPhone());
+            currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(extractNullableValue(Optional.ofNullable(doctor.getPhone())));
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getSpeciality().getName());
         }
 
@@ -258,11 +267,8 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Scheduled(cron = "${report.gen.interval}")
-    public void generateAndClean() {
-        forceRunReportGenerator(LocalDateTime.now().minusDays(1));
-
-        // TODO: Clean old slots
-        // TODO: Clean old schedules
-        // TODO: Clean old tokens
+    @Async
+    public void reportGenerationScheduler() {
+        forceRunReportGenerator(LocalDateTime.now().minusDays(1));        
     }
 }

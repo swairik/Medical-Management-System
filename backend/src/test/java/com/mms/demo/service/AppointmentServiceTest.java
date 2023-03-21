@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Random;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -32,6 +33,20 @@ public class AppointmentServiceTest {
 
     @Autowired
     SlotService slotImpl;
+
+    private String genAlnum(int targetStringLength) {
+        int leftLimit = 48;
+        int rightLimit = 122; 
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+        
+        return generatedString;
+    }
 
     static final Patient patient = Patient.builder().age(25).email("temp@temp.com").gender("M").name("Jerry").phone("XYZ").build();
     static final Slot slot = Slot.builder().start(LocalTime.of(0, 0, 0)).end(LocalTime.of(0, 0, 1)).weekday(DayOfWeek.MONDAY).capacity(5).build();
@@ -82,7 +97,7 @@ public class AppointmentServiceTest {
 
     @Order(6)
     @Test
-    @DisplayName("Testing updating an aoopintment")
+    @DisplayName("Testing updating an appointment")
     void testUpdateAppointment() {
         Patient tempPatient = patient.toBuilder().name("Tom").build();
         assertThat(patientImpl.createPatient(tempPatient)).isEqualTo(tempPatient).isNotEqualTo(patient);
@@ -102,4 +117,6 @@ public class AppointmentServiceTest {
         impl.deleteAppointment(appt.getId());
         assertThat(impl.getAppointmentById(appt.getId())).isEmpty();
     }
+
+
 }

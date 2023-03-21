@@ -337,7 +337,7 @@ public class ScheduleController {
                                 .weekDate(LocalDate.parse("1999-01-01"))
                                 .approval(scheduleRequest.getApproval())
                                 .build();
-                schedule.setWeek(week);
+                schedule.setWeek(week - 1);
                 schedule.setYear(year);
 
                 return schedule;
