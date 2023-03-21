@@ -2,7 +2,7 @@ const constructSpecialityMenu = (value) => {
   var content = `<div class="grid">
   <div class="card">
     <div class="card-inner">
-        <img src="images/image4.png" alt="Avatar" style="width:120px;height:120px;">
+    <img src="../images/3763028.jpg" alt="Avatar" style="width:250px;height:250px;">
         <div class="name"><a href="#docList" rel="modal:open" value=${value.id} id="show_doctor">${value.name}</a></div>
     </div>
   </div>

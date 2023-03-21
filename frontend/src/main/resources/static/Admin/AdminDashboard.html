@@ -23,6 +23,8 @@
     </script>
     <script src="../js/SignOut.js"></script>
     <script src="../js/Report.js"></script>
+    <script src="../js/AdminAnalytics.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
   <body>
@@ -57,20 +59,22 @@
           <h2>OVERVIEW</h2>
           <div class="graph graph1">
             <h4>Doctors present in each speciality</h4>
+            <canvas id="doctor_speciality"></canvas>
           </div>
           <div class="graph graph2">
             <h4>Appointments booked for each speciality</h4>
+            <canvas id="patient_speciality"></canvas>
           </div>
         </div>
       </div>
       <div class="counts">
         <h3>TODAY</h3>
-        <div id="AppointmentCounts">Patient Counts</div>
-        <div id="ActiveDoctors">Active Doctors</div>
+        <div id="AppointmentCounts">Patient Counts :</div>
+        <div id="ACounts"></div>
+        <div id="ActiveDoctors">Active Doctors :</div>
+        <div id="ADoctors"></div>
       </div>
     </div>
-    <div class="counts">
-      <h2></h2>
     </div>
     <div id="GenerateReport" class="modal">
       <h2>Report</h2>
