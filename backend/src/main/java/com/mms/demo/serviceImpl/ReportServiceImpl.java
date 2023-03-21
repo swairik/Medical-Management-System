@@ -170,6 +170,7 @@ public class ReportServiceImpl implements ReportService{
     public void forceRunReportGenerator(LocalDateTime when) {
         XSSFWorkbook workbook = new XSSFWorkbook();
         final LocalDateTime temporalTarget = when.truncatedTo(ChronoUnit.DAYS);
+        System.out.println("Started generating report for " + temporalTarget);
         XSSFRow titlesRow = null;
         ArrayList<String> titles = null;
         
@@ -264,6 +265,7 @@ public class ReportServiceImpl implements ReportService{
         }
         Report newReport = Report.builder().contents(workbookByteArray).stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS)).build();
         reportRepository.save(newReport);
+        System.out.println("Saved report for " + temporalTarget.truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Scheduled(cron = "${report.gen.interval}")
