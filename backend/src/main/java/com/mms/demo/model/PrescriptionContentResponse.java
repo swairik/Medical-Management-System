@@ -14,12 +14,10 @@ public class PrescriptionContentResponse {
     String test;
     String diagnosis;
 
-    public static PrescriptionContentResponse createResponseFromPrescriptionContent(String[] contents) {
+    public static PrescriptionContentResponse createResponseFromPrescriptionContent(
+                    String[] contents) {
         PrescriptionContentResponse response = PrescriptionContentResponse.builder()
-                .medication(contents[0])
-                .diagnosis(contents[1])
-                .test(contents[2])
-                .build();
+                        .medication(contents[0]).diagnosis(contents[1]).test(contents[2]).build();
         return response;
     }
 }

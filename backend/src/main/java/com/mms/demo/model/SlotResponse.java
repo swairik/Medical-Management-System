@@ -21,12 +21,9 @@ public class SlotResponse {
     private LocalTime end;
 
     public static SlotResponse createResponseFromSlot(Slot slot) {
-        SlotResponse slotResponse = SlotResponse.builder()
-                .id(slot.getId())
-                .weekday(slot.getWeekday())
-                .start(slot.getStart())
-                .end(slot.getEnd())
-                .build();
+        SlotResponse slotResponse =
+                        SlotResponse.builder().id(slot.getId()).weekday(slot.getWeekday())
+                                        .start(slot.getStart()).end(slot.getEnd()).build();
         return slotResponse;
     }
 

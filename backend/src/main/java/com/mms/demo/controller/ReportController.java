@@ -29,93 +29,93 @@ import com.mms.demo.service.ReportService;
 @RequestMapping("/report")
 class ReportController {
 
-        @Autowired
-        DoctorService doctorService;
+    @Autowired
+    DoctorService doctorService;
 
-        @Autowired
-        PatientService patientService;
+    @Autowired
+    PatientService patientService;
 
-        @Autowired
-        ReportService reportService;
-        
-        @GetMapping("/display/generateReport")
-        public ResponseEntity<Resource> generateReport(@RequestParam String from, @RequestParam String to) {
-                // reportService.forceRunReportGenerator(LocalDateTime.now());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime start, end;
-                try {
-                        start = LocalDateTime.parse(from, formatter).truncatedTo(ChronoUnit.DAYS);
-                        end = LocalDateTime.parse(to, formatter).truncatedTo(ChronoUnit.DAYS);
-                        System.out.println("Fetching reports between " + start + " and " + end);
+    @Autowired
+    ReportService reportService;
 
-                } catch (Exception e) {
-                        throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
-                }
-                
-                for (LocalDateTime iter = start.truncatedTo(ChronoUnit.DAYS); iter.isAfter(end) != true; iter = iter.plusDays(1)) {
-                        if (reportService.getReportByStamp(start).isEmpty()) {
-                                reportService.forceRunReportGenerator(start);
-                                System.out.println("Force generated report for " + start);
-                        } else {
+    @GetMapping("/display/generateReport")
+    public ResponseEntity<Resource> generateReport(@RequestParam String from,
+                    @RequestParam String to) {
+        // reportService.forceRunReportGenerator(LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime start, end;
+        try {
+            start = LocalDateTime.parse(from, formatter).truncatedTo(ChronoUnit.DAYS);
+            end = LocalDateTime.parse(to, formatter).truncatedTo(ChronoUnit.DAYS);
+            System.out.println("Fetching reports between " + start + " and " + end);
 
-                        }
-                }
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
+        }
 
-                byte[] reports = reportService.generateReports(start, end).orElseThrow(
-                                () -> new CustomException("Error while generating report", "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
-                ByteArrayResource response = new ByteArrayResource(reports);
+        for (LocalDateTime iter = start.truncatedTo(ChronoUnit.DAYS); iter
+                        .isAfter(end) != true; iter = iter.plusDays(1)) {
+            if (reportService.getReportByStamp(start).isEmpty()) {
+                reportService.forceRunReportGenerator(start);
+                System.out.println("Force generated report for " + start);
+            } else {
 
-                String filename = String.format("Report_%s_%s.zip", start.toString(), end.toString());
-                // return ResponseEntity.ok()
-                //                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                //                 .contentLength(response.contentLength())
-                //                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                //                                 ContentDisposition.attachment()
-                //                                                 .filename(filename)
-                //                                                 .build().toString())
-                //                 .body(response);
+            }
+        }
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-                headers.add(HttpHeaders.CONTENT_ENCODING, "binary");
-                System.out.println("Writing " + reports.length + " bytes, specified " + response.contentLength());
-                
-                return ResponseEntity.ok()
-                        .headers(headers)
-                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        byte[] reports = reportService.generateReports(start, end)
+                        .orElseThrow(() -> new CustomException("Error while generating report",
+                                        "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
+        ByteArrayResource response = new ByteArrayResource(reports);
+
+        String filename = String.format("Report_%s_%s.zip", start.toString(), end.toString());
+        // return ResponseEntity.ok()
+        // .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        // .contentLength(response.contentLength())
+        // .header(HttpHeaders.CONTENT_DISPOSITION,
+        // ContentDisposition.attachment()
+        // .filename(filename)
+        // .build().toString())
+        // .body(response);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        headers.add(HttpHeaders.CONTENT_ENCODING, "binary");
+        System.out.println("Writing " + reports.length + " bytes, specified "
+                        + response.contentLength());
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .contentLength(response.contentLength()).body(response);
+    }
+
+    @GetMapping("/display/generateDoctorReport/{id}")
+    public ResponseEntity<Resource> generateDoctorReport(@PathVariable Long id,
+                    @RequestParam String from, @RequestParam String to) {
+        Doctor doctor = doctorService.getDoctortById(id)
+                        .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                        "DOCTOR_NOT_FOUND"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime start, end;
+        try {
+            start = LocalDateTime.parse(from, formatter);
+            end = LocalDateTime.parse(to, formatter);
+
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
+        }
+
+        byte[] reports = reportService.generateScheduleReportForDoctor(start, end, doctor)
+                        .orElseThrow(() -> new CustomException("Error while generating report",
+                                        "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
+        ByteArrayResource response = new ByteArrayResource(reports);
+        String filename =
+                        String.format("Report_Doctor_%s_%s.zip", start.toString(), end.toString());
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
                         .contentLength(response.contentLength())
+                        .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                                        .filename(filename).build().toString())
                         .body(response);
-        }
-
-        @GetMapping("/display/generateDoctorReport/{id}")
-        public ResponseEntity<Resource> generateDoctorReport(@PathVariable Long id, @RequestParam String from,
-                        @RequestParam String to) {
-                Doctor doctor = doctorService.getDoctortById(id).orElseThrow(
-                                () -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND"));
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime start, end;
-                try {
-                        start = LocalDateTime.parse(from, formatter);
-                        end = LocalDateTime.parse(to, formatter);
-
-                } catch (Exception e) {
-                        throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
-                }
-
-                byte[] reports = reportService.generateScheduleReportForDoctor(start, end, doctor).orElseThrow(
-                                () -> new CustomException("Error while generating report",
-                                                "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
-                ByteArrayResource response = new ByteArrayResource(reports);
-                String filename = String.format("Report_Doctor_%s_%s.zip", start.toString(), end.toString());
-                return ResponseEntity.ok()
-                                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                                .contentLength(response.contentLength())
-                                .header(HttpHeaders.CONTENT_DISPOSITION,
-                                                ContentDisposition.attachment()
-                                                                .filename(filename)
-                                                                .build().toString())
-                                .body(response);
-        }
+    }
 
 }

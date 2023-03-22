@@ -36,13 +36,9 @@ public class PatientRequest {
     private String email;
 
     public static Patient createPatientFromRequest(PatientRequest patientRequest) {
-        Patient patient = Patient.builder()
-                .name(patientRequest.getName())
-                .gender(patientRequest.getGender())
-                .age(patientRequest.getAge())
-                .phone(patientRequest.getPhone())
-                .email(patientRequest.getEmail())
-                .build();
+        Patient patient = Patient.builder().name(patientRequest.getName())
+                        .gender(patientRequest.getGender()).age(patientRequest.getAge())
+                        .phone(patientRequest.getPhone()).email(patientRequest.getEmail()).build();
         return patient;
     }
 

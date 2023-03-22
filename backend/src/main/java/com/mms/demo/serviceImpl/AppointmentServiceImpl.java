@@ -42,12 +42,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start, LocalDateTime end) {
+    public List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start,
+                    LocalDateTime end) {
         List<Appointment> patientAppointments = repository.findAllByPatient(patient);
-        return patientAppointments.stream()
-                .filter(a -> a.getSlot().getStart().isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime()) &&
-                        a.getSlot().getEnd().isBefore(end.truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
-                .collect(Collectors.toList());
+        return patientAppointments.stream().filter(a -> a.getSlot().getStart()
+                        .isAfter(start.truncatedTo(ChronoUnit.SECONDS).toLocalTime())
+                        && a.getSlot().getEnd().isBefore(
+                                        end.truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
+                        .collect(Collectors.toList());
     }
 
     @Override

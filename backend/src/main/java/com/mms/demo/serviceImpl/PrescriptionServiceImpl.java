@@ -34,9 +34,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start, LocalDateTime end) {
+    public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start,
+                    LocalDateTime end) {
         return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES),
-                end.truncatedTo(ChronoUnit.MINUTES));
+                        end.truncatedTo(ChronoUnit.MINUTES));
     }
 
     @Override

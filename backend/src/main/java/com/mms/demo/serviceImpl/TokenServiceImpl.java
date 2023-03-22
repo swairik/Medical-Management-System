@@ -88,5 +88,5 @@ public class TokenServiceImpl implements TokenService {
     public void tokenCleanerScheduler() {
         repository.deleteAllByExpirationStampBefore(LocalDateTime.now());
     }
-    
+
 }

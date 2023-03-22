@@ -8,10 +8,14 @@ import com.mms.demo.entity.Speciality;
 
 public interface DoctorService {
     List<Doctor> getAllDoctors();
+
     Optional<Doctor> getDoctortById(Long id);
+
     List<Doctor> getDoctorBySpeciality(Speciality speciality);
 
     Doctor createDoctor(Doctor doctor);
+
     Doctor updateDoctor(Long id, Doctor doctor);
+
     void deleteDoctor(Long id);
 }

@@ -9,5 +9,6 @@ import com.mms.demo.entity.Report;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findAllByStamp(LocalDateTime stamp);
+
     List<Report> findAllByStampBetween(LocalDateTime start, LocalDateTime end);
 }

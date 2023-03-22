@@ -50,7 +50,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start, LocalDate end) {
+    public List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start,
+                    LocalDate end) {
         return repository.findAllByDoctorAndWeekDateBetween(doctor, start, end);
     }
 
@@ -70,6 +71,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return repository.save(schedule);
     }
 
-    
-    
+
+
 }

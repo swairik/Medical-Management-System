@@ -57,7 +57,7 @@ public class AnalyticsController {
         Map<String, Integer> specialitySet = new HashMap<>();
         specialities.stream().forEach((s) -> specialitySet.put(s.getName(), 0));
         doctors.stream().forEach((d) -> specialitySet.put(d.getSpeciality().getName(),
-                specialitySet.get(d.getSpeciality().getName()) + 1));
+                        specialitySet.get(d.getSpeciality().getName()) + 1));
         System.out.println(specialitySet);
         return new ResponseEntity<>(specialitySet, HttpStatus.OK);
     }
@@ -70,8 +70,9 @@ public class AnalyticsController {
         Map<String, Integer> specialitySet = new HashMap<>();
         specialities.stream().forEach((s) -> specialitySet.put(s.getName(), 0));
         appointments.stream().forEach((a) -> {
-            Schedule schedule = schedules.stream().filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
-                    .orElse(null);
+            Schedule schedule = schedules.stream()
+                            .filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
+                            .orElse(null);
             if (schedule != null) {
                 String specialityName = schedule.getDoctor().getSpeciality().getName();
                 specialitySet.put(specialityName, specialitySet.get(specialityName) + 1);
@@ -85,19 +86,22 @@ public class AnalyticsController {
         List<Appointment> appointments = appointmentService.getAllAppointments();
         List<Schedule> schedules = scheduleService.getAllSchedules();
         List<Appointment> todayAppointments = appointments.stream().filter((a) -> {
-            Schedule schedule = schedules.stream().filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
-                    .orElse(null);
+            Schedule schedule = schedules.stream()
+                            .filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
+                            .orElse(null);
             if (schedule == null) {
                 return false;
             }
-            LocalDate dateOfAppointment = schedule.getWeekDate().plusDays(a.getSlot().getWeekday().getValue());
+            LocalDate dateOfAppointment =
+                            schedule.getWeekDate().plusDays(a.getSlot().getWeekday().getValue());
             return dateOfAppointment.equals(LocalDate.now());
 
         }).collect(Collectors.toList());
         Set<Doctor> doctors = new HashSet<>();
         todayAppointments.stream().forEach((a) -> {
-            Schedule schedule = schedules.stream().filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
-                    .orElse(null);
+            Schedule schedule = schedules.stream()
+                            .filter((s) -> s.getSlot().getId() == a.getSlot().getId()).findFirst()
+                            .orElse(null);
             if (schedule != null) {
                 doctors.add(schedule.getDoctor());
             }

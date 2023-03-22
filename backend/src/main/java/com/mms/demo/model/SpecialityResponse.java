@@ -16,10 +16,8 @@ public class SpecialityResponse {
     private String name;
 
     public static SpecialityResponse createResponseFromSpeciality(Speciality speciality) {
-        SpecialityResponse specialityResponse = SpecialityResponse.builder()
-                .id(speciality.getId())
-                .name(speciality.getName())
-                .build();
+        SpecialityResponse specialityResponse = SpecialityResponse.builder().id(speciality.getId())
+                        .name(speciality.getName()).build();
         return specialityResponse;
     }
 }

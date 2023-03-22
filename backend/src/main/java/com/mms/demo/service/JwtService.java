@@ -19,7 +19,7 @@ public interface JwtService {
 
     public Date extractExpiration(String token);
 
-    
+
     public boolean isTokenValid(String token, UserDetails userDetails);
 
 }

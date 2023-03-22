@@ -17,19 +17,4 @@ public class AppointmentResponse {
     private ScheduleResponse scheduleResponse;
     private Boolean attended;
 
-    // public static AppointmentResponse createResponseFromAppointment(Appointment
-    // appointment) {
-    // PatientResponse patientResponse =
-    // PatientResponse.createResponseFromPatient(appointment.getPatient());
-    // SlotResponse slotResponse =
-    // SlotResponse.createResponseFromSlot(appointment.getSlot());
-    // AppointmentResponse appointmentResponse = AppointmentResponse.builder()
-    // .id(appointment.getId())
-    // .patientResponse(patientResponse)
-    // .slotResponse(slotResponse)
-    // .attended(appointment.getAttended())
-    // .build();
-    // return appointmentResponse;
-    // }
-
 }

@@ -41,24 +41,27 @@ public class PatientController {
     CredentialService credentialService;
 
     @GetMapping("/display")
-    public ResponseEntity<List<PatientResponse>> showAllPatients(@AuthenticationPrincipal Credential user) {
-        // System.out.println(user);
+    public ResponseEntity<List<PatientResponse>> showAllPatients(
+                    @AuthenticationPrincipal Credential user) {
+
         List<PatientResponse> response = new ArrayList<>();
         List<Patient> patients = patientService.getAllPatients();
         response = patients.stream().map((p) -> PatientResponse.createResponseFromPatient(p))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/display/{id}")
     public ResponseEntity<PatientResponse> showPatientById(@PathVariable Long id,
-            @AuthenticationPrincipal Credential user) {
+                    @AuthenticationPrincipal Credential user) {
         Patient patient = patientService.getPatientById(id)
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
+                        .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                        "PATIENT_NOT_FOUND"));
 
         if (checkPermissions(user, patient.getEmail()) == false) {
-            throw new Custom403Exception("Logged in user is not permitted to view another user's profile",
-                    "PROFILE_DISPLAY_NOT_ALLOWED");
+            throw new Custom403Exception(
+                            "Logged in user is not permitted to view another user's profile",
+                            "PROFILE_DISPLAY_NOT_ALLOWED");
 
         }
 
@@ -66,35 +69,20 @@ public class PatientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // @PostMapping("/")
-    // public ResponseEntity<PatientResponse> createPatient(@Valid @RequestBody
-    // PatientRequest patientRequest) {
-    // List<Patient> patients = patientService.getAllPatients();
-    // Patient patientAlreadyCreated = patients.stream().filter((p) ->
-    // p.getEmail().equals(patientRequest.getEmail()))
-    // .findFirst().orElse(null);
-    // if (patientAlreadyCreated != null) {
-    // throw new CustomException("Patient with email id already exists",
-    // "PATIENT_ALREADY_CREATED");
-    // }
-    // Patient patient = PatientRequest.createPatientFromRequest(patientRequest);
-    // Patient createdPatient = patientService.createPatient(patient);
-    // PatientResponse patientResponse =
-    // PatientResponse.createResponseFromPatient(createdPatient);
-    // return new ResponseEntity<>(patientResponse, HttpStatus.CREATED);
-    // }
-
     @PutMapping("/{id}")
     public ResponseEntity<PatientResponse> updatePatient(@PathVariable Long id,
-            @Valid @RequestBody PatientRequest patientRequest, @AuthenticationPrincipal Credential user) {
+                    @Valid @RequestBody PatientRequest patientRequest,
+                    @AuthenticationPrincipal Credential user) {
 
         // Check if patient exists or not
         Patient patient = patientService.getPatientById(id)
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
+                        .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                        "PATIENT_NOT_FOUND"));
 
         if (checkPermissions(user, patient.getEmail()) == false) {
-            throw new Custom403Exception("Logged in user is not permitted to edit another user's profile",
-                    "PROFILE_DISPLAY_NOT_ALLOWED");
+            throw new Custom403Exception(
+                            "Logged in user is not permitted to edit another user's profile",
+                            "PROFILE_DISPLAY_NOT_ALLOWED");
 
         }
         Patient updatePatient = PatientRequest.createPatientFromRequest(patientRequest);
@@ -106,9 +94,11 @@ public class PatientController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         Patient patient = patientService.getPatientById(id)
-                .orElseThrow(() -> new CustomException("Patient with given id not found", "PATIENT_NOT_FOUND"));
+                        .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                        "PATIENT_NOT_FOUND"));
         Credential credential = credentialService.getCredentialsByEmail(patient.getEmail())
-                .orElseThrow(() -> new CustomException("Patient credentials not found", "CREDENTIAL_NOT_FOUND"));
+                        .orElseThrow(() -> new CustomException("Patient credentials not found",
+                                        "CREDENTIAL_NOT_FOUND"));
         credentialService.deleteCredentials(credential.getId());
         patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.OK);

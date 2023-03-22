@@ -56,5 +56,5 @@ public class SlotServiceImpl implements SlotService {
         return repository.save(slot);
     }
 
-    
+
 }

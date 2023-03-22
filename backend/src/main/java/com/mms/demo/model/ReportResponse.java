@@ -20,11 +20,8 @@ public class ReportResponse {
 
     public static ReportResponse createResponseFromReport(Report report) {
 
-        ReportResponse reportResponse = ReportResponse.builder()
-                .id(report.getId())
-                .stamp(report.getStamp())
-                .contents(report.getContents())
-                .build();
+        ReportResponse reportResponse = ReportResponse.builder().id(report.getId())
+                        .stamp(report.getStamp()).contents(report.getContents()).build();
 
         return reportResponse;
     }

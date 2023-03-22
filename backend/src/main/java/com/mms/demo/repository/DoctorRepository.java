@@ -11,6 +11,7 @@ import com.mms.demo.entity.Speciality;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findAllBySpeciality(Speciality speciality);
+
     Optional<Doctor> findByEmail(String email);
 
     List<Doctor> findAllByStampBetween(LocalDateTime start, LocalDateTime end);

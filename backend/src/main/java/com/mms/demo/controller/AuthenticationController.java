@@ -29,12 +29,15 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return new ResponseEntity<>(authenticationService.register(registerRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(authenticationService.register(registerRequest),
+                        HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return new ResponseEntity<>(authenticationService.authenticate(authenticationRequest), HttpStatus.OK);
+    public ResponseEntity<AuthenticationResponse> login(
+                    @RequestBody AuthenticationRequest authenticationRequest) {
+        return new ResponseEntity<>(authenticationService.authenticate(authenticationRequest),
+                        HttpStatus.OK);
 
     }
 
@@ -45,7 +48,8 @@ public class AuthenticationController {
 
     @PostMapping("/updatePassword")
     public ResponseEntity<String> updatePassword(@RequestBody PasswordRequest passwordRequest) {
-        return new ResponseEntity<>(authenticationService.updatePassword(passwordRequest), HttpStatus.OK);
+        return new ResponseEntity<>(authenticationService.updatePassword(passwordRequest),
+                        HttpStatus.OK);
     }
 
 }

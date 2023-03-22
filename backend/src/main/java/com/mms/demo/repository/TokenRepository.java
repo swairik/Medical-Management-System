@@ -11,10 +11,11 @@ import org.springframework.data.repository.query.Param;
 
 import com.mms.demo.entity.Token;
 
-public interface TokenRepository extends JpaRepository<Token, Long>{
+public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findByIdentifier(String identifier);
 
     @Modifying
     @Query("DELETE t from TOKEN t where t.expirationStamp <= :referenceTimeStamp")
-    void deleteAllByExpirationStampBefore(@Param("referenceTimeStamp") LocalDateTime referenceTimeStamp);
+    void deleteAllByExpirationStampBefore(
+                    @Param("referenceTimeStamp") LocalDateTime referenceTimeStamp);
 }
