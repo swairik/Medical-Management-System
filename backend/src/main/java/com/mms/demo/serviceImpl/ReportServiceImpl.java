@@ -9,12 +9,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import org.apache.poi.ss.usermodel.CellCopyPolicy;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -157,8 +159,46 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Optional<byte[]> generateScheduleReportForDoctor(LocalDateTime from, LocalDateTime to,
                     Doctor doctor) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+        from = from.truncatedTo(ChronoUnit.DAYS);
+        to = to.truncatedTo(ChronoUnit.DAYS);
+
+        List<Report> reports = getAllReportsByStampBetween(from, to).stream()
+                        .filter(r -> r.getContents() != null).collect(Collectors.toList());
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        for (Report report : reports) {
+            XSSFWorkbook reportWorkbook = null;
+            try {
+                reportWorkbook = ByteArrayToXSSFWorkbook(report.getContents());
+            } catch (IOException e) {
+                continue;
+            }
+
+            XSSFSheet sheet = reportWorkbook.getSheet(Long.toString(doctor.getId()));
+            if (sheet == null) {
+                continue;
+            }
+
+            XSSFSheet doctorSheetForDay =
+                            workbook.createSheet(report.getStamp().toLocalDate().toString());
+
+            ArrayList<XSSFRow> rowList = new ArrayList<>();
+            for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
+                rowList.add(sheet.getRow(i));
+            }
+
+            doctorSheetForDay.copyRows(rowList, 0, new CellCopyPolicy());
+        }
+
+        byte[] doctorWorkbookByteArray = null;
+        try {
+            doctorWorkbookByteArray = XSSFWorkbooktoByteArray(workbook);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return Optional.ofNullable(doctorWorkbookByteArray);
+
     }
 
     private String extractNullableValue(Optional<Object> optional) {

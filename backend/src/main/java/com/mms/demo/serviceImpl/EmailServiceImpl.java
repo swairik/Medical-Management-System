@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.exception.CustomException;
@@ -18,6 +19,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
+
+    @Value("${email.reminder.delay}")
+    private Long minimumReminderDelay;
 
     @Override
     @Async
@@ -35,6 +39,12 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             throw new CustomException("Error while sending mail", "EMAIL_NOT_SENT");
         }
+    }
+
+    @Scheduled(cron = "${email.reminder.interval}")
+    @Async
+    void emailReminderScheduler() {
+
     }
 
 }
