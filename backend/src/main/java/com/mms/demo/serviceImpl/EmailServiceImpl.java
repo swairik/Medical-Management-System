@@ -41,9 +41,11 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Override
     @Scheduled(cron = "${email.reminder.interval}")
     @Async
-    void emailReminderScheduler() {
+    public void emailReminderScheduler() {
+
 
     }
 

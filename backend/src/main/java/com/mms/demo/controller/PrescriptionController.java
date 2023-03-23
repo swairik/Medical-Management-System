@@ -64,21 +64,23 @@ public class PrescriptionController {
 
     @GetMapping("/display/{id}")
     public ResponseEntity<PrescriptionResponse> showPrescriptionById(@PathVariable Long id) {
-        Prescription prescription = prescriptionService.getPrescriptionById(id)
-                        .orElseThrow(() -> new CustomException(
-                                        "Prescription with given id not found",
-                                        "PRESCRIPTION_NOT_FOUND"));
+        // Prescription prescription = prescriptionService.getPrescriptionById(id)
+        // .orElseThrow(() -> new CustomException(
+        // "Prescription with given id not found",
+        // "PRESCRIPTION_NOT_FOUND"));
 
-        Appointment appointment =
-                        appointmentService.getAppointmentById(prescription.getAppointment().getId())
-                                        .orElseThrow(() -> new CustomException(
-                                                        "Appointment with given id not found",
-                                                        "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
-        PrescriptionResponse response = PrescriptionResponse
-                        .createResponseFromPrescription(prescription, appointmentResponse);
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(prescription.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // PrescriptionResponse response = PrescriptionResponse
+        // .createResponseFromPrescription(prescription, appointmentResponse);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return null;
     }
 
     @GetMapping("/display/stamp/{stamp}")
@@ -87,18 +89,20 @@ public class PrescriptionController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(stamp, formatter);
 
-        List<Prescription> prescriptions = prescriptionService.getPrescriptionsByStamp(dateTime);
-        List<PrescriptionResponse> response = prescriptions.stream().map((p) -> {
-            Appointment appointment =
-                            appointmentService.getAppointmentById(p.getAppointment().getId())
-                                            .orElseThrow(() -> new CustomException(
-                                                            "Appointment with given id not found",
-                                                            "APPOINTMENT_NOT_FOUND"));
-            AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // List<Prescription> prescriptions = prescriptionService.getPrescriptionsByStamp(dateTime);
+        // List<PrescriptionResponse> response = prescriptions.stream().map((p) -> {
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(p.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
 
-            return PrescriptionResponse.createResponseFromPrescription(p, appointmentResponse);
-        }).collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // return PrescriptionResponse.createResponseFromPrescription(p, appointmentResponse);
+        // }).collect(Collectors.toList());
+        // return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return null;
     }
 
     @GetMapping("/display/stampBetween")
@@ -112,45 +116,50 @@ public class PrescriptionController {
         } catch (Exception e) {
             throw new CustomException("Wrong format of timestamp", "WRONG_FORMAT");
         }
-        List<Prescription> prescriptions =
-                        prescriptionService.getAllPrescriptionsByStampBetween(startTime, endTime);
-        List<PrescriptionResponse> response = prescriptions.stream().map((p) -> {
-            Appointment appointment =
-                            appointmentService.getAppointmentById(p.getAppointment().getId())
-                                            .orElseThrow(() -> new CustomException(
-                                                            "Appointment with given id not found",
-                                                            "APPOINTMENT_NOT_FOUND"));
-            AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // List<Prescription> prescriptions =
+        // prescriptionService.getAllPrescriptionsByStampBetween(startTime, endTime);
+        // List<PrescriptionResponse> response = prescriptions.stream().map((p) -> {
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(p.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
 
-            return PrescriptionResponse.createResponseFromPrescription(p, appointmentResponse);
-        }).collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // return PrescriptionResponse.createResponseFromPrescription(p, appointmentResponse);
+        // }).collect(Collectors.toList());
+        // return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return null;
     }
 
     @GetMapping("/display/{did}/{pid}/{aptid}")
     public ResponseEntity<PrescriptionResponse> showPrescriptionByDoctorPatientAppointment(
                     @PathVariable Long did, @PathVariable Long pid, @PathVariable Long aptid) {
         List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
-        Prescription prescription = prescriptions.stream()
-                        .filter((p) -> p.getDoctor().getId() == did && p.getPatient().getId() == pid
-                                        && p.getAppointment().getId().equals(aptid))
-                        .findFirst().orElse(null);
-        if (prescription == null) {
-            throw new CustomException(
-                            "Prescription with given combination of doctor id, patient id & appointment id not found",
-                            "PRESCRIPTION_NOT_FOUND");
-        }
+        // Prescription prescription = prescriptions.stream()
+        // .filter((p) -> p.getDoctor().getId() == did && p.getPatient().getId() == pid
+        // && p.getAppointment().getId().equals(aptid))
+        // .findFirst().orElse(null);
+        // if (prescription == null) {
+        // throw new CustomException(
+        // "Prescription with given combination of doctor id, patient id & appointment id not
+        // found",
+        // "PRESCRIPTION_NOT_FOUND");
+        // }
 
-        Appointment appointment =
-                        appointmentService.getAppointmentById(prescription.getAppointment().getId())
-                                        .orElseThrow(() -> new CustomException(
-                                                        "Appointment with given id not found",
-                                                        "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(prescription.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
 
-        PrescriptionResponse response = PrescriptionResponse
-                        .createResponseFromPrescription(prescription, appointmentResponse);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // PrescriptionResponse response = PrescriptionResponse
+        // .createResponseFromPrescription(prescription, appointmentResponse);
+        // return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return null;
     }
 
     @PostMapping("/")
@@ -169,29 +178,31 @@ public class PrescriptionController {
         }
         // if apt id already there throw exception
 
-        List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
-        Prescription alreadyCreatedPrescription = prescriptions.stream().filter(
-                        (p) -> p.getAppointment().getId() == prescriptionRequest.getAppointmentId())
-                        .findFirst().orElse(null);
+        // List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
+        // Prescription alreadyCreatedPrescription = prescriptions.stream().filter(
+        // (p) -> p.getAppointment().getId() == prescriptionRequest.getAppointmentId())
+        // .findFirst().orElse(null);
 
-        if (alreadyCreatedPrescription != null) {
-            throw new CustomException("Prescription with given appointment id already created",
-                            "APPOINTMENT_ALREADY_CREATED");
-        }
+        // if (alreadyCreatedPrescription != null) {
+        // throw new CustomException("Prescription with given appointment id already created",
+        // "APPOINTMENT_ALREADY_CREATED");
+        // }
 
-        Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
-        Prescription createdPrescription = prescriptionService.createPrescription(prescription);
+        // Prescription prescription = createPrescriptionFromRequest(prescriptionRequest);
+        // Prescription createdPrescription = prescriptionService.createPrescription(prescription);
 
-        Appointment appointment =
-                        appointmentService.getAppointmentById(prescription.getAppointment().getId())
-                                        .orElseThrow(() -> new CustomException(
-                                                        "Appointment with given id not found",
-                                                        "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(prescription.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
 
-        PrescriptionResponse response = PrescriptionResponse
-                        .createResponseFromPrescription(createdPrescription, appointmentResponse);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        // PrescriptionResponse response = PrescriptionResponse
+        // .createResponseFromPrescription(createdPrescription, appointmentResponse);
+        // return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        return null;
     }
 
     @PutMapping("/{id}")
@@ -214,16 +225,18 @@ public class PrescriptionController {
                                         "Prescription with given id not found",
                                         "PRESCRIPTION_NOT_FOUND"));
 
-        Appointment appointment =
-                        appointmentService.getAppointmentById(prescription.getAppointment().getId())
-                                        .orElseThrow(() -> new CustomException(
-                                                        "Appointment with given id not found",
-                                                        "APPOINTMENT_NOT_FOUND"));
-        AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
+        // Appointment appointment =
+        // appointmentService.getAppointmentById(prescription.getAppointment().getId())
+        // .orElseThrow(() -> new CustomException(
+        // "Appointment with given id not found",
+        // "APPOINTMENT_NOT_FOUND"));
+        // AppointmentResponse appointmentResponse = createResponseFromAppointment(appointment);
 
-        PrescriptionResponse response = PrescriptionResponse
-                        .createResponseFromPrescription(updatedPrescription, appointmentResponse);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // PrescriptionResponse response = PrescriptionResponse
+        // .createResponseFromPrescription(updatedPrescription, appointmentResponse);
+        // return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return null;
     }
 
     @DeleteMapping("/{id}")
@@ -254,9 +267,11 @@ public class PrescriptionController {
 
         byte[] contents = Base64.getEncoder().encode(contentsRequest.getBytes());
 
-        Prescription prescription = Prescription.builder().doctor(doctor).patient(patient)
-                        .appointment(appointment).contents(contents).build();
-        return prescription;
+        // Prescription prescription = Prescription.builder().doctor(doctor).patient(patient)
+        // .appointment(appointment).contents(contents).build();
+        // return prescription;
+
+        return null;
     }
 
     public AppointmentResponse createResponseFromAppointment(Appointment appointment) {

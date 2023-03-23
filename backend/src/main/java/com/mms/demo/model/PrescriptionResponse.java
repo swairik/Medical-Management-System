@@ -27,15 +27,17 @@ public class PrescriptionResponse {
         String[] contentsResponse =
                         new String(Base64.getDecoder().decode(prescription.getContents()))
                                         .split(delimiter);
-        PrescriptionResponse prescriptionResponse = PrescriptionResponse.builder()
-                        .id(prescription.getId())
-                        .doctorResponse(DoctorResponse
-                                        .createResponseFromDoctor(prescription.getDoctor()))
-                        .appointmentResponse(aptResponse).stamp(prescription.getStamp())
-                        .contents(PrescriptionContentResponse
-                                        .createResponseFromPrescriptionContent(contentsResponse))
-                        .build();
-        return prescriptionResponse;
+        // PrescriptionResponse prescriptionResponse = PrescriptionResponse.builder()
+        // .id(prescription.getId())
+        // .doctorResponse(DoctorResponse
+        // .createResponseFromDoctor(prescription.getDoctor()))
+        // .appointmentResponse(aptResponse).stamp(prescription.getStamp())
+        // .contents(PrescriptionContentResponse
+        // .createResponseFromPrescriptionContent(contentsResponse))
+        // .build();
+        // return prescriptionResponse;
+
+        return null;
     }
 
 }

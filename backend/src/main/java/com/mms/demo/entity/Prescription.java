@@ -50,38 +50,38 @@ public class Prescription {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /**
-     * A reference to the prescribing doctor.
-     */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
-    private Doctor doctor;
+    // /**
+    // * A reference to the prescribing doctor.
+    // */
+    // @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    // @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
+    // private Doctor doctor;
 
-    /**
-     * A reference to the patient that owns the prescription.
-     */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "patient_id", nullable = false)
-    private Patient patient;
+    // /**
+    // * A reference to the patient that owns the prescription.
+    // */
+    // @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    // @JoinColumn(referencedColumnName = "patient_id", nullable = false)
+    // private Patient patient;
 
-    /**
-     * A reference to the appointment during which the prescription was created.
-     */
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "appointment_id", nullable = false)
-    private Appointment appointment;
+    // /**
+    // * A reference to the appointment during which the prescription was created.
+    // */
+    // @OneToOne(fetch = FetchType.EAGER, optional = false)
+    // @JoinColumn(referencedColumnName = "appointment_id", nullable = false)
+    // private Appointment appointment;
 
-    /**
-     * A timestamp marking the creation of the prescription.
-     */
-    @Column(name = "prescription_timestamp")
-    @Builder.Default
-    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    // /**
+    // * A timestamp marking the creation of the prescription.
+    // */
+    // @Column(name = "prescription_timestamp")
+    // @Builder.Default
+    // private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     /**
      * The raw contents of the prescription.
      */
     @Lob
-    @Column(name = "prescription_contents")
+    @Column(name = "prescription_contents", length = 100000)
     private byte[] contents;
 }

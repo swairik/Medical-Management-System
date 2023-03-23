@@ -14,4 +14,6 @@ public interface EmailService {
      * @param emailDetails encapsulates all relevant details regarding the email
      */
     public void sendSimpleMail(EmailDetails emailDetails);
+
+    void emailReminderScheduler();
 }
