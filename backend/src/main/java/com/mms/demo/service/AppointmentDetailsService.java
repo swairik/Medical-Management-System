@@ -12,6 +12,8 @@ public interface AppointmentDetailsService {
 
     List<AppointmentDetails> getAllByPatient(Patient patient);
 
+    List<AppointmentDetails> getAllByDoctor(Doctor doctor);
+
     List<AppointmentDetails> getAllByPatientAndDoctor(Patient patient, Doctor doctor);
 
     Optional<AppointmentDetails> getByPatientAndStamp(Patient patient, LocalDateTime stamp);

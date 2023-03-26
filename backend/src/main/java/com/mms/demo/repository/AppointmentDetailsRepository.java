@@ -15,4 +15,6 @@ public interface AppointmentDetailsRepository extends JpaRepository<AppointmentD
 
     Optional<AppointmentDetails> findByPatientAndStamp(Patient patient, LocalDateTime stamp);
 
+    List<AppointmentDetails> findAllByDoctor(Doctor doctor);
+
 }

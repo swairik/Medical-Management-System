@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
@@ -43,6 +44,13 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
         }
 
         return repository.findAllByPatient(patient);
+    }
+
+    public List<AppointmentDetails> getAllByDoctor(Doctor doctor) {
+        if(doctor == null) {
+            return null;
+        }
+        return repository.findAllByDoctor(doctor);
     }
 
     @Override

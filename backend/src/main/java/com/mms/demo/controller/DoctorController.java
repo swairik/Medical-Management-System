@@ -26,10 +26,12 @@ import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.DoctorRequest;
 import com.mms.demo.model.DoctorResponse;
+import com.mms.demo.model.EmailDetails;
 import com.mms.demo.model.RegisterDoctorRequest;
 import com.mms.demo.model.RegisterDoctorResponse;
 import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.DoctorService;
+import com.mms.demo.service.EmailService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
 import com.mms.demo.service.SpecialityService;
@@ -57,6 +59,9 @@ public class DoctorController {
 
     @Autowired
     CredentialService credentialService;
+
+    @Autowired
+    EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -127,6 +132,22 @@ public class DoctorController {
                         .phone(doctorRequest.getPhone()).speciality(speciality).build();
 
         Doctor createdDoctor = doctorService.createDoctor(doctor);
+
+        String subject = "Account has been created";
+
+        String msgBody = "This email id has been registered as a doctor in Care4u.\n" +
+                            "Following are the user details : \n" +
+                            "Name : " + doctor.getName() + "\n" + 
+                            "Email : " + doctor.getEmail() + "\n" + 
+                            "Gender : " + (doctor.getGender() == "M" ? "Male" : "Female") + "\n" +
+                            "Age : " + doctor.getAge() + "\n" +
+                            "Phone : " + doctor.getPhone() + "\n" +
+                            "Speciality : " + doctor.getSpeciality().getName();
+
+        EmailDetails emailDetails = EmailDetails.builder().recipient(doctor.getEmail()).subject(subject)
+                        .msgBody(msgBody).build();
+        emailService.sendSimpleMail(emailDetails);
+
         RegisterDoctorResponse doctorResponse =
                         RegisterDoctorResponse.createResponseFromDoctor(createdDoctor);
         doctorResponse.setPassword(password);

@@ -1,5 +1,9 @@
 package com.mms.demo.model;
 
+import java.util.Base64;
+
+import com.mms.demo.entity.Prescription;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,14 +14,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PrescriptionContentResponse {
+    Long id;
     String medication;
     String test;
     String diagnosis;
 
     public static PrescriptionContentResponse createResponseFromPrescriptionContent(
-                    String[] contents) {
+                    Prescription prescription) {
+        String delimiter = ":,-";
+        String[] contents =
+                        new String(Base64.getDecoder().decode(prescription.getContents()))
+                                        .split(delimiter);
         PrescriptionContentResponse response = PrescriptionContentResponse.builder()
-                        .medication(contents[0]).diagnosis(contents[1]).test(contents[2]).build();
+        .id(prescription.getId())
+        .build();
+        if(contents.length >= 1) 
+                        response.setMedication(contents[0]);
+        if(contents.length >= 2) 
+                        response.setDiagnosis(contents[1]);
+        if(contents.length >= 3) 
+                        response.setTest(contents[2]);
         return response;
     }
 }

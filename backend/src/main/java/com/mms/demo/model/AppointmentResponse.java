@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import com.mms.demo.entity.Appointment;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +13,8 @@ public class AppointmentResponse {
     private Long id;
     private PatientResponse patientResponse;
     private ScheduleResponse scheduleResponse;
+    // private PrescriptionContentResponse prescriptionContentResponse;
+    // private FeedbackResponse feedbackResponse;
     private Boolean attended;
 
 }
