@@ -220,6 +220,8 @@ margin: 5px;
 #docList li a{
   text-decoration: none;
   padding: 6px;
+  background-color: none;
+  border: none;
 }
 #docList ul, #docList li{
   margin-top: 10px;
@@ -340,7 +342,6 @@ img {
   height: auto;
 }
 
-/* Presentational styles  for this demo */
 
 .card-inner {
   margin: 20px;
