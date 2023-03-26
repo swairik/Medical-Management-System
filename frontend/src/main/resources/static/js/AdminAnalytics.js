@@ -16,8 +16,8 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
-        $("#ACounts").html(result.Appointments);
-        $("#ADoctors").html(result.Doctors);
+        $("#Appointments_today").html(result.Appointments);
+        $("#Doctors_today").html(result.Doctors);
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

@@ -127,6 +127,10 @@ footer a{
 
 .right {
   width: 68%;
+  text-align: center;
+}
+.right h2 {
+  color: #E15E55;
 }
 
 .row:after {
@@ -138,7 +142,11 @@ footer a{
   background-color: #ffffffc3;
   margin: 0% 2% 2% 2%;
   border-radius: 8px;
-  padding: 1% 2% 3% 2%;
+  padding: 1% 2% 2% 2%;
+  float: left;
+  width: 29%;
+  text-align: center;
+  color: #004798;
 }
 
 .graph1,.graph2{
@@ -152,11 +160,10 @@ footer a{
 .graph1{
   border-right:2px dashed #727275 ;
 }
-#AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
-  float: left;
-  width: 25%;
+.range_of_days {
+  margin-bottom: 2%;
 }
-#ACounts, #ADoctors{
+.counts h2{
   font-size: 32px;
   color: #E15E55;
 }
@@ -208,9 +215,10 @@ footer a{
     border: none;
     border-bottom:2px dashed #727275 ;}
 
-  #AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
+  .counts{
     float: none;
-    width: 100%;
-    padding: 5%;
+    width: 90%;
+    padding: 2.5%;
+    margin: 5%;
   }
 }
