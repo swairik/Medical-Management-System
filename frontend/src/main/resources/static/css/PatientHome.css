@@ -188,17 +188,20 @@ border-radius: 8px;
 border-color: #ffffff;
 margin: 5px;
 }
-.modal table {
+/* .modal table {
   background-color: #fff;
-}
+} */
 
 .modal button#show_slot {
   color: black
 }
 
-.modal td,th{
-  padding: 15px;
+.modal th{
+  padding: 12px;
   font-weight: bold;
+}
+.modal td{
+  padding: 12px;
 }
 #close{
   background-color: #ff0000;
