@@ -46,6 +46,8 @@ const constructDoctorMenu = (value) => {
 
 $(document).ready(function () {
   const cookie = document.cookie;
+
+  if(cookie=='') window.location.href = "Auth";
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))

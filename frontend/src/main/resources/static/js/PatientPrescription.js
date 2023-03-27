@@ -10,6 +10,8 @@ $(document).ready(function () {
 
   console.log(appointment_id);
   const cookie = document.cookie;
+  if(cookie=='') window.location.href = "Auth";
+  
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
