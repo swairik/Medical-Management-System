@@ -34,9 +34,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start, LocalDateTime end) {
-        return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES),
-                end.truncatedTo(ChronoUnit.MINUTES));
+    public List<Prescription> getAllPrescriptionsByStampBetween(LocalDateTime start,
+                    LocalDateTime end) {
+        // return repository.findAllByStampBetween(start.truncatedTo(ChronoUnit.MINUTES),
+        // end.truncatedTo(ChronoUnit.MINUTES));
+
+        return null;
     }
 
     @Override
@@ -46,7 +49,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public List<Prescription> getPrescriptionsByStamp(LocalDateTime stamp) {
-        return repository.findAllByStamp(stamp.truncatedTo(ChronoUnit.SECONDS));
+        // return repository.findAllByStamp(stamp.truncatedTo(ChronoUnit.SECONDS));
+        return null;
     }
 
     @Override
@@ -58,9 +62,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
         Prescription prescription = temp.get();
         prescription.setContents(update.getContents());
-        prescription.setDoctor(update.getDoctor());
-        prescription.setPatient(update.getPatient());
-        prescription.setStamp(LocalDateTime.now());
+        // prescription.setDoctor(update.getDoctor());
+        // prescription.setPatient(update.getPatient());
+        // prescription.setStamp(LocalDateTime.now());
 
         return Optional.of(repository.save(prescription));
     }

@@ -23,8 +23,8 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> credentialService.getCredentialsByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with given email not found"));
+        return username -> credentialService.getCredentialsByEmail(username).orElseThrow(
+                        () -> new UsernameNotFoundException("User with given email not found"));
 
     }
 
@@ -37,7 +37,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+                    throws Exception {
         return config.getAuthenticationManager();
     }
 

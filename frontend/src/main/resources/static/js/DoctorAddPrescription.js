@@ -15,6 +15,8 @@ $(document).ready(function () {
     .find((row) => row.startsWith("authToken="))
     .split("=")[1];
 
+    console.log(token)
+
   $("#prescription_form").on("submit", function (e) {
     e.preventDefault(); // Prevent default form submission
 
@@ -50,7 +52,7 @@ $(document).ready(function () {
       error: function (xhr, status, error) {
         // Handle error response
         if (xhr.status == 403) {
-          window.location.href = "Auth";
+          // window.location.href = "Auth";
         } else {
           var errorObj;
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);

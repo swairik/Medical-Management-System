@@ -22,16 +22,12 @@ public class RegisterDoctorResponse {
     private SpecialityResponse speciality;
 
     public static RegisterDoctorResponse createResponseFromDoctor(Doctor doctor) {
-        SpecialityResponse specialityResponse = SpecialityResponse.createResponseFromSpeciality(doctor.getSpeciality());
-        RegisterDoctorResponse doctorResponse = RegisterDoctorResponse.builder()
-                .id(doctor.getId())
-                .name(doctor.getName())
-                .age(doctor.getAge())
-                .email(doctor.getEmail())
-                .gender(doctor.getGender())
-                .phone(doctor.getPhone())
-                .speciality(specialityResponse)
-                .build();
+        SpecialityResponse specialityResponse =
+                        SpecialityResponse.createResponseFromSpeciality(doctor.getSpeciality());
+        RegisterDoctorResponse doctorResponse = RegisterDoctorResponse.builder().id(doctor.getId())
+                        .name(doctor.getName()).age(doctor.getAge()).email(doctor.getEmail())
+                        .gender(doctor.getGender()).phone(doctor.getPhone())
+                        .speciality(specialityResponse).build();
         return doctorResponse;
     }
 }

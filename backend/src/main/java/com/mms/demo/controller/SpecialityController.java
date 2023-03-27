@@ -34,46 +34,49 @@ public class SpecialityController {
     @GetMapping("/display")
     public ResponseEntity<List<SpecialityResponse>> displayAllSpecialities() {
         List<Speciality> specialities = specialityService.getAllSpecialities();
-        List<SpecialityResponse> response = specialities
-                .stream()
-                .map((s) -> SpecialityResponse.createResponseFromSpeciality(s))
-                .collect(Collectors.toList());
+        List<SpecialityResponse> response = specialities.stream()
+                        .map((s) -> SpecialityResponse.createResponseFromSpeciality(s))
+                        .collect(Collectors.toList());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/display/{id}")
     public ResponseEntity<SpecialityResponse> getSpecialityById(@PathVariable Long id) {
         Speciality speciality = specialityService.getSpecialityById(id)
-                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND"));
+                        .orElseThrow(() -> new CustomException("Speciality with given id not found",
+                                        "SPECIALITY_NOT_FOUND"));
         SpecialityResponse response = SpecialityResponse.createResponseFromSpeciality(speciality);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<SpecialityResponse> createSpeciality(
-            @Valid @RequestBody SpecialityRequest specialityRequest) {
+                    @Valid @RequestBody SpecialityRequest specialityRequest) {
 
         List<Speciality> specialities = specialityService.getAllSpecialities();
         Speciality alreadyCreatedSpeciality = specialities.stream()
-                .filter((s) -> s.getName().equals(specialityRequest.getName()))
-                .findFirst().orElse(null);
+                        .filter((s) -> s.getName().equals(specialityRequest.getName())).findFirst()
+                        .orElse(null);
 
         if (alreadyCreatedSpeciality != null) {
-            throw new CustomException("Speciality with given name already created", "SPECIALITY_ALREADY_EXISTS");
+            throw new CustomException("Speciality with given name already created",
+                            "SPECIALITY_ALREADY_EXISTS");
         }
 
         Speciality speciality = SpecialityRequest.createSpecialityFromRequest(specialityRequest);
         Speciality createdSpeciality = specialityService.createSpeciality(speciality);
-        SpecialityResponse response = SpecialityResponse.createResponseFromSpeciality(createdSpeciality);
+        SpecialityResponse response =
+                        SpecialityResponse.createResponseFromSpeciality(createdSpeciality);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<SpecialityResponse> udpateSpeciality(@PathVariable Long id,
-            @Valid @RequestBody SpecialityRequest specialityRequest) {
+                    @Valid @RequestBody SpecialityRequest specialityRequest) {
         Speciality speciality = SpecialityRequest.createSpecialityFromRequest(specialityRequest);
         Speciality updatedSpeciality = specialityService.updateSpeciality(id, speciality);
-        SpecialityResponse response = SpecialityResponse.createResponseFromSpeciality(updatedSpeciality);
+        SpecialityResponse response =
+                        SpecialityResponse.createResponseFromSpeciality(updatedSpeciality);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

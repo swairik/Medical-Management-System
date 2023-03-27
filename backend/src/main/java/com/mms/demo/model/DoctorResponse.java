@@ -21,16 +21,12 @@ public class DoctorResponse {
     private SpecialityResponse speciality;
 
     public static DoctorResponse createResponseFromDoctor(Doctor doctor) {
-        SpecialityResponse specialityResponse = SpecialityResponse.createResponseFromSpeciality(doctor.getSpeciality());
-        DoctorResponse doctorResponse = DoctorResponse.builder()
-                .id(doctor.getId())
-                .name(doctor.getName())
-                .age(doctor.getAge())
-                .email(doctor.getEmail())
-                .gender(doctor.getGender())
-                .phone(doctor.getPhone())
-                .speciality(specialityResponse)
-                .build();
+        SpecialityResponse specialityResponse =
+                        SpecialityResponse.createResponseFromSpeciality(doctor.getSpeciality());
+        DoctorResponse doctorResponse = DoctorResponse.builder().id(doctor.getId())
+                        .name(doctor.getName()).age(doctor.getAge()).email(doctor.getEmail())
+                        .gender(doctor.getGender()).phone(doctor.getPhone())
+                        .speciality(specialityResponse).build();
         return doctorResponse;
     }
 }

@@ -22,17 +22,16 @@ public class ScheduleResponse {
 
     public static ScheduleResponse createResponseFromSchedule(Schedule schedule) {
 
-        DoctorResponse doctorResponse = DoctorResponse.createResponseFromDoctor(schedule.getDoctor());
+        DoctorResponse doctorResponse =
+                        DoctorResponse.createResponseFromDoctor(schedule.getDoctor());
 
         SlotResponse slotResponse = SlotResponse.createResponseFromSlot(schedule.getSlot());
 
-        ScheduleResponse scheduleResponse = ScheduleResponse.builder()
-                .id(schedule.getId())
-                .doctorResponse(doctorResponse)
-                .slotResponse(slotResponse)
-                .weekDate(schedule.getWeekDate().plusDays(slotResponse.getWeekday().getValue()))
-                .approval(schedule.getApproval())
-                .build();
+        ScheduleResponse scheduleResponse = ScheduleResponse.builder().id(schedule.getId())
+                        .doctorResponse(doctorResponse).slotResponse(slotResponse)
+                        .weekDate(schedule.getWeekDate()
+                                        .plusDays(slotResponse.getWeekday().getValue()))
+                        .approval(schedule.getApproval()).build();
 
         return scheduleResponse;
     }

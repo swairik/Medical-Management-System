@@ -89,9 +89,26 @@ $(document).ready(function () {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      responseType: "arraybuffer",
       success: function (result) {
         alert("Downloading..")
-        console.log(result);
+        
+        // Create a new Blob object from the response data
+        var blob = new Blob([result], { type: "application/octet-stream" });
+        var url = URL.createObjectURL(blob);
+        
+        // Create a new hidden a tag with the download URL
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "Report.zip";
+        a.style.display = "none";
+        
+        // Append the a tag to the body and simulate a click on it to start the download
+        document.body.appendChild(a);
+        a.click();
+        
+        // Remove the a tag from the body after the download is complete
+        document.body.removeChild(a);
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

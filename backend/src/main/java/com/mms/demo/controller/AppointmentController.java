@@ -1,12 +1,8 @@
 package com.mms.demo.controller;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -26,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
+import com.mms.demo.entity.Feedback;
 import com.mms.demo.entity.Credential;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Prescription;
 import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Slot;
@@ -36,13 +35,15 @@ import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentRequest;
 import com.mms.demo.model.AppointmentResponse;
-import com.mms.demo.model.DoctorResponse;
 import com.mms.demo.model.PatientResponse;
+import com.mms.demo.model.PrescriptionContentResponse;
 import com.mms.demo.model.ScheduleResponse;
-import com.mms.demo.model.SlotResponse;
+import com.mms.demo.service.AppointmentDetailsService;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
+import com.mms.demo.service.FeedbackService;
 import com.mms.demo.service.PatientService;
+import com.mms.demo.service.PrescriptionService;
 import com.mms.demo.service.ScheduleService;
 import com.mms.demo.service.SlotService;
 
@@ -68,19 +69,28 @@ public class AppointmentController {
         @Autowired
         ScheduleService scheduleService;
 
+        @Autowired
+        PrescriptionService prescriptionService;
+
+        @Autowired
+        AppointmentDetailsService appointmentDetailsService;
+
+        @Autowired
+        FeedbackService feedbackService;
+
         @GetMapping("/display")
         public ResponseEntity<List<AppointmentResponse>> displayAllAppointments() {
                 List<Appointment> appointments = appointmentService.getAllAppointments();
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @GetMapping("/display/{id}")
         public ResponseEntity<AppointmentResponse> displayAppointmentById(@PathVariable Long id) {
                 Appointment appointment = appointmentService.getAppointmentById(id)
-                                .orElseThrow(() -> new CustomException("Appointment with given id not found",
+                                .orElseThrow(() -> new CustomException(
+                                                "Appointment with given id not found",
                                                 "APPOINTMENT_NOT_FOUND"));
                 AppointmentResponse response = createResponseFromAppointment(appointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -94,8 +104,7 @@ public class AppointmentController {
                                                 "PATIENT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAppointmentsByPatient(patient);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -107,14 +116,13 @@ public class AppointmentController {
                                                 "SLOT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAppointmentsBySlot(slot);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @GetMapping("/display/doctor/{id}/upcoming")
-        public ResponseEntity<List<AppointmentResponse>> showUpcomingAppointmentsByDoctor(@PathVariable Long id,
-                        @RequestParam String stamp) {
+        public ResponseEntity<List<AppointmentResponse>> showUpcomingAppointmentsByDoctor(
+                        @PathVariable Long id, @RequestParam String stamp) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime dateTime;
                 try {
@@ -135,54 +143,26 @@ public class AppointmentController {
                                                         && s.getDoctor().getId() == id)
                                         .collect(Collectors.toList());
 
-                        if (filteredSchedules.size() == 0) {
-                                throw new CustomException("Invalid schedule id", "SCHEDULE_NOT_FOUND");
+                        // if (filteredSchedules.size() == 0) {
+                        // throw new CustomException("Invalid schedule id", "SCHEDULE_NOT_FOUND");
+                        // }
+
+                        // Slot slot = slotService.getSlotById(a.getSlot().getId())
+                        // .orElseThrow(() -> new CustomException("Slot with given id not found",
+                        // "SLOT_NOT_FOUND"));
+                        Slot slot = slotService.getSlotById(a.getSlot().getId())
+                                        .orElse(null);
+                        if (slot == null || filteredSchedules.size() == 0) {
+                                return false;
                         }
-
-                        Slot slot = slotService.getSlotById(a.getSlot().getId()).orElseThrow(
-                                        () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
-
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
-                                        .plusDays(slot.getWeekday().getValue())
-                                        .atTime(slot.getStart());
+                                        .plusDays(slot.getWeekday().getValue()).atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(dateTime);
                 }).collect(Collectors.toList());
 
-                // slots for a doctor scheduled between
-                // appointments after a specific date (now)
-                // LocalDateTime temporalTargetStart = LocalDateTime.now();
-                // LocalDateTime temporalTargetEnd =
-                // LocalDateTime.now().withMonth(12).withDayOfMonth(31);
-                // List<Schedule> schedulesUpcoming =
-                // scheduleService.getSchedulesByDoctorAndWeekDay(doctor,
-                // temporalTargetStart.toLocalDate(), temporalTargetEnd.toLocalDate());
-
-                // List<Appointment> appointments = appointmentService.getAllAppointments();
-                // List<Appointment> validAppointments = appointments.stream().filter((a) ->
-                // a.getId() != 0)
-                // .collect(Collectors.toList());
-
-                // Set<Slot> validSlots = new HashSet<>();
-                // for (Schedule sched : schedulesUpcoming) {
-                // validSlots.add(sched.getSlot());
-                // }
-
-                // List<Appointment> validAppointments = new ArrayList<Appointment>();
-                // for (Slot slot : validSlots) {
-                // validAppointments.addAll(appointmentService.getAppointmentsBySlot(slot).stream()
-                // .filter(a -> a.getSlot().getStart()
-                // .isAfter(temporalTargetStart
-                // .truncatedTo(ChronoUnit.SECONDS).toLocalTime())
-                // &&
-                // a.getSlot().getEnd().isBefore(temporalTargetEnd
-                // .truncatedTo(ChronoUnit.SECONDS).toLocalTime()))
-                // .collect(Collectors.toList()));
-                // }
-
                 List<AppointmentResponse> response = filteredAppointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -212,20 +192,19 @@ public class AppointmentController {
                                 throw new CustomException("Invalid slot id", "SCHEDULE_NOT_FOUND");
                         }
 
-                        Slot slot = slotService.getSlotById(a.getSlot().getId()).orElseThrow(
-                                        () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+                        Slot slot = slotService.getSlotById(a.getSlot().getId())
+                                        .orElseThrow(() -> new CustomException("Slot with given id not found",
+                                                        "SLOT_NOT_FOUND"));
 
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
-                                        .plusDays(slot.getWeekday().getValue())
-                                        .atTime(slot.getStart());
+                                        .plusDays(slot.getWeekday().getValue()).atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(dateTime);
 
                 }).collect(Collectors.toList());
 
                 List<AppointmentResponse> response = upcomingAppointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -245,14 +224,13 @@ public class AppointmentController {
                                                 "PATIENT_NOT_FOUND"));
                 List<Appointment> appointments = appointmentService.getAllByPatientBetween(patient, startTime, endTime);
                 List<AppointmentResponse> response = appointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         @GetMapping("/display/doctor/{id}/between")
-        public ResponseEntity<List<AppointmentResponse>> showAllDoctorAppointmentBetween(@PathVariable Long id,
-                        @RequestParam String start, @RequestParam String end) {
+        public ResponseEntity<List<AppointmentResponse>> showAllDoctorAppointmentBetween(
+                        @PathVariable Long id, @RequestParam String start, @RequestParam String end) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime startTime, endTime;
                 try {
@@ -269,15 +247,21 @@ public class AppointmentController {
                                         .collect(Collectors.toList());
 
                         if (filteredSchedules.size() == 0) {
-                                throw new CustomException("Invalid slot id", "SCHEDULE_NOT_FOUND");
+                                // throw new CustomException("Invalid slot id", "SCHEDULE_NOT_FOUND");
+                                return false;
                         }
 
-                        Slot slot = slotService.getSlotById(a.getSlot().getId()).orElseThrow(
-                                        () -> new CustomException("Slot with given id not found", "SLOT_NOT_FOUND"));
+                        // Slot slot = slotService.getSlotById(a.getSlot().getId())
+                        // .orElseThrow(() -> new CustomException("Slot with given id not found",
+                        // "SLOT_NOT_FOUND"));
+                        Slot slot = slotService.getSlotById(a.getSlot().getId())
+                                        .orElse(null);
+                        if (slot == null) {
+                                return false;
+                        }
 
                         LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
-                                        .plusDays(slot.getWeekday().getValue())
-                                        .atTime(slot.getStart());
+                                        .plusDays(slot.getWeekday().getValue()).atTime(slot.getStart());
 
                         return appointmentDateTime.isAfter(startTime) && appointmentDateTime.isBefore(endTime);
                 }).collect(Collectors.toList());
@@ -286,8 +270,7 @@ public class AppointmentController {
                                         "NO_APPOINTMENT_FOUND");
                 }
                 List<AppointmentResponse> response = filteredAppointments.stream()
-                                .map((a) -> createResponseFromAppointment(a))
-                                .collect(Collectors.toList());
+                                .map((a) -> createResponseFromAppointment(a)).collect(Collectors.toList());
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
@@ -305,9 +288,11 @@ public class AppointmentController {
 
                 if (user.getRole().equals(Role.PATIENT)) {
                         Patient patient = patientService.getPatientById(appointmentRequest.getPatientId())
-                                        .orElseThrow(() -> new CustomException("Patient with given id not found",
+                                        .orElseThrow(() -> new CustomException(
+                                                        "Patient with given id not found",
                                                         "PATIENT_NOT_FOUND"));
-                        if (patient.getGender() == null || patient.getAge() == null || patient.getPhone() == null) {
+                        if (patient.getGender() == null || patient.getAge() == null
+                                        || patient.getPhone() == null) {
                                 throw new CustomException("Patient with given id has incomplete details",
                                                 "PATIENT_DETAILS_INCOMPLETE");
                         }
@@ -321,7 +306,8 @@ public class AppointmentController {
                                 .findFirst().orElse(null);
 
                 if (alreadyCreatedAppointment != null) {
-                        throw new CustomException("Appointment with given patient id and slot id already created",
+                        throw new CustomException(
+                                        "Appointment with given patient id and slot id already created",
                                         "APPOINTMENT_ALREADY_CREATED");
                 }
 
@@ -334,6 +320,12 @@ public class AppointmentController {
                 slot.setCapacity(slot.getCapacity() - 1);
                 slotService.updateSlot(slot.getId(), slot);
 
+                List<Schedule> schedule = scheduleService.getSchedulesBySlot(slot);
+                if (schedule.size() == 0) {
+                        throw new CustomException("Error while searching for schedule", "SCHEDULE_NOT_FOUND");
+                }
+
+
                 AppointmentResponse response = createResponseFromAppointment(createdAppointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);
         }
@@ -343,7 +335,8 @@ public class AppointmentController {
                         @Valid @RequestBody AppointmentRequest appointmentRequest,
                         @AuthenticationPrincipal Credential user) {
                 Appointment appointment = appointmentService.getAppointmentById(id)
-                                .orElseThrow(() -> new CustomException("Appointment with given id not found",
+                                .orElseThrow(() -> new CustomException(
+                                                "Appointment with given id not found",
                                                 "APPOINTMENT_NOT_FOUND"));
 
                 if (checkPermissions(user, appointment.getPatient().getEmail()) == false) {
@@ -359,7 +352,16 @@ public class AppointmentController {
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteAppointment(@PathVariable Long id, @AuthenticationPrincipal Credential user) {
+        public ResponseEntity<Void> deleteAppointment(@PathVariable Long id, @RequestParam String stamp,
+                        @AuthenticationPrincipal Credential user) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime dateTime;
+                try {
+                        dateTime = LocalDateTime.parse(stamp, formatter);
+                } catch (Exception e) {
+                        throw new CustomException("Wrong format of stamp", "WRONG_FORMAT");
+                }
+
                 Appointment appointment = appointmentService.getAppointmentById(id)
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
@@ -371,9 +373,27 @@ public class AppointmentController {
 
                 }
 
+                List<Schedule> schedules = scheduleService.getSchedulesBySlot(appointment.getSlot());
+                List<Schedule> filteredSchedules = schedules.stream()
+                                .filter((s) -> s.getSlot().getId() == appointment.getSlot().getId())
+                                .collect(Collectors.toList());
+
+                Slot slot = slotService.getSlotById(appointment.getSlot().getId())
+                                .orElse(null);
+                if (filteredSchedules.size() == 0 || slot == null) {
+                        throw new CustomException("No corresponding slot or schedule found",
+                                        "SLOT_OR_SCHEDULE_NOT_FOUND");
+                }
+                LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
+                                .plusDays(slot.getWeekday().getValue()).atTime(slot.getStart());
+
+                if (dateTime.plusHours(2).isAfter(appointmentDateTime) == false) {
+                        throw new CustomException("Appointment start time is less than 2 hours",
+                                        "APPOINTMENT_NOT_DELETED");
+                }
+
                 appointmentService.deleteAppointment(id);
 
-                Slot slot = appointment.getSlot();
                 Integer maxCapacity = (int) slot.getStart().until(slot.getEnd(), ChronoUnit.MINUTES) / 30;
                 slot.setCapacity(Integer.min(slot.getCapacity() + 1, maxCapacity));
                 slotService.updateSlot(slot.getId(), slot);
@@ -384,21 +404,17 @@ public class AppointmentController {
         public AppointmentResponse createResponseFromAppointment(Appointment appointment) {
                 PatientResponse patientResponse = PatientResponse.createResponseFromPatient(appointment.getPatient());
                 List<Schedule> schedules = scheduleService.getAllSchedules();
-                List<Schedule> filteredSchedules = schedules.stream()
-                                .filter((s) -> {
-                                        return s.getSlot().getId() == appointment.getSlot().getId();
-                                })
-                                .collect(Collectors.toList());
+                List<Schedule> filteredSchedules = schedules.stream().filter((s) -> {
+                        return s.getSlot().getId() == appointment.getSlot().getId();
+                }).collect(Collectors.toList());
                 if (filteredSchedules.size() == 0) {
                         throw new CustomException("Schedule does not exist", "SCHEDULE_NOT_FOUND");
                 }
                 ScheduleResponse scheduleResponse = ScheduleResponse
                                 .createResponseFromSchedule(filteredSchedules.get(0));
                 AppointmentResponse appointmentResponse = AppointmentResponse.builder()
-                                .id(appointment.getId())
-                                .patientResponse(patientResponse)
-                                .scheduleResponse(scheduleResponse)
-                                .attended(appointment.getAttended())
+                                .id(appointment.getId()).patientResponse(patientResponse)
+                                .scheduleResponse(scheduleResponse).attended(appointment.getAttended())
                                 .build();
                 return appointmentResponse;
         }
@@ -413,10 +429,7 @@ public class AppointmentController {
                 if (slot.getCapacity() == 0) {
                         throw new CustomException("Slot has already been booked", "SLOT_ALREADY_BOOKED");
                 }
-                Appointment appointment = Appointment.builder()
-                                .patient(patient)
-                                .slot(slot)
-                                .build();
+                Appointment appointment = Appointment.builder().patient(patient).slot(slot).build();
                 return appointment;
         }
 

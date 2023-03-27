@@ -15,7 +15,7 @@ import com.mms.demo.service.DoctorService;
 public class DoctorServiceImpl implements DoctorService {
     @Autowired
     private DoctorRepository repository;
-    
+
     @Override
     public List<Doctor> getAllDoctors() {
         return repository.findAll();
@@ -35,7 +35,7 @@ public class DoctorServiceImpl implements DoctorService {
     public Doctor createDoctor(Doctor doctor) {
         return repository.save(doctor);
     }
-    
+
     @Override
     public Doctor updateDoctor(Long id, Doctor doctorUpdates) {
         Optional<Doctor> temp = repository.findById(id);
@@ -53,7 +53,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         return repository.save(doctor);
     }
-    
+
     @Override
     public void deleteDoctor(Long id) {
         repository.deleteById(id);

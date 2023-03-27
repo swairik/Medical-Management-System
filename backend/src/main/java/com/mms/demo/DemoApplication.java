@@ -21,14 +21,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class DemoApplication {
 
-	@Autowired
-	PasswordEncoder encoder;
+    @Autowired
+    PasswordEncoder encoder;
 
-	@Autowired
+    @Autowired
     ReportService reportService;
 
-	@Autowired
-	CredentialService credentialService;
+    @Autowired
+    CredentialService credentialService;
 
     @Autowired
     DoctorService doctorService;
@@ -48,39 +48,36 @@ public class DemoApplication {
     @Autowired
     AppointmentService appointmentService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
-	private String genAlnum(int targetStringLength) {
+    private String genAlnum(int targetStringLength) {
         int leftLimit = 48;
-        int rightLimit = 122; 
+        int rightLimit = 122;
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-            .limit(targetStringLength)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-        
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(targetStringLength).collect(StringBuilder::new,
+                                        StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
+
         return generatedString;
     }
 
-	private void populateEntitiesFor(LocalDateTime temporalTarget, Integer entityScale) {
-		temporalTarget = temporalTarget.truncatedTo(ChronoUnit.DAYS);
-        
+    private void populateEntitiesFor(LocalDateTime temporalTarget, Integer entityScale) {
+        temporalTarget = temporalTarget.truncatedTo(ChronoUnit.DAYS);
+
         // create patients
         for (int i = 0; i < entityScale; i++) {
-            Patient temp = Patient.builder().age(25)
-                                .email(genAlnum(14) + "@xyz.com")
-                                .gender("M")
-                                .name(genAlnum(10) + genAlnum(10))
-                                .phone(genAlnum(10))
-                                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
-                                .build();
-            
+            Patient temp = Patient.builder().age(25).email(genAlnum(14) + "@xyz.com").gender("M")
+                            .name(genAlnum(10) + genAlnum(10)).phone(genAlnum(10))
+                            .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS)).build();
+
             patientService.createPatient(temp);
-            credentialService.createCredentials(Credential.builder().email(temp.getEmail()).password(encoder.encode("password")).role(Role.PATIENT).build());
+            credentialService.createCredentials(Credential.builder().email(temp.getEmail())
+                            .password(encoder.encode("password")).role(Role.PATIENT).build());
         }
 
         // create doctors and specialities
@@ -92,51 +89,40 @@ public class DemoApplication {
         List<Speciality> specialityList = specialityService.getAllSpecialities();
         for (int i = 0; i < entityScale / 10; i++) {
             Random rand = new Random();
-            Doctor temp = Doctor.builder().age(25)
-                                .email(genAlnum(14) + "@xyz.com")
-                                .gender("M")
-                                .name(genAlnum(10) + genAlnum(10))
-                                .phone(genAlnum(10))
-                                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
-                                .speciality(specialityList.get(rand.nextInt(specialityList.size())))
-                                .build();
-            
+            Doctor temp = Doctor.builder().age(25).email(genAlnum(14) + "@xyz.com").gender("M")
+                            .name(genAlnum(10) + genAlnum(10)).phone(genAlnum(10))
+                            .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
+                            .speciality(specialityList.get(rand.nextInt(specialityList.size())))
+                            .build();
+
             doctorService.createDoctor(temp);
-            credentialService.createCredentials(Credential.builder().email(temp.getEmail()).password(encoder.encode("password")).role(Role.DOCTOR).build());
+            credentialService.createCredentials(Credential.builder().email(temp.getEmail())
+                            .password(encoder.encode("password")).role(Role.DOCTOR).build());
         }
 
         // create slots, schedules, and appointments
         List<Doctor> doctorList = doctorService.getAllDoctors();
         List<Patient> patientList = patientService.getAllPatients();
-        for (   ListIterator doctors = doctorList.listIterator(), patients = patientList.listIterator();
-                doctors.hasNext() && patients.hasNext();
-            ) {
-            
-            Doctor doctor = (Doctor)doctors.next();
-            LocalTime incrementalStart = temporalTarget.toLocalTime()
-                                                .withHour(9)
-                                                .withMinute(0)
-                                                .withSecond(0)
-                                                .withNano(0);
+        for (ListIterator doctors = doctorList.listIterator(),
+                        patients = patientList.listIterator(); doctors.hasNext()
+                                        && patients.hasNext();) {
+
+            Doctor doctor = (Doctor) doctors.next();
+            LocalTime incrementalStart = temporalTarget.toLocalTime().withHour(9).withMinute(0)
+                            .withSecond(0).withNano(0);
             for (int i = 0; i < entityScale / 10 && patients.hasNext(); i++) {
-                Patient patient = (Patient)patients.next();
+                Patient patient = (Patient) patients.next();
                 Slot slot = Slot.builder().start(incrementalStart)
                                 .end(incrementalStart.plusMinutes(30))
-                                .weekday(temporalTarget.getDayOfWeek())
-                                .build();
+                                .weekday(temporalTarget.getDayOfWeek()).build();
                 slotService.createSlot(slot);
 
-                Schedule schedule = Schedule.builder().doctor(doctor)
-                                        .slot(slot)
-                                        .weekDate(temporalTarget.toLocalDate())
-                                        .build();
+                Schedule schedule = Schedule.builder().doctor(doctor).slot(slot)
+                                .weekDate(temporalTarget.toLocalDate()).build();
                 scheduleService.createSchedule(schedule);
-                
-                Appointment appointment = Appointment.builder()
-                                            .patient(patient)
-                                            .slot(slot)
-                                            .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS))
-                                            .build();
+
+                Appointment appointment = Appointment.builder().patient(patient).slot(slot)
+                                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS)).build();
                 appointmentService.createAppointment(appointment);
 
                 incrementalStart = incrementalStart.plusMinutes(30);
@@ -144,15 +130,15 @@ public class DemoApplication {
         }
 
         reportService.forceRunReportGenerator(temporalTarget);
-        
-	}
+
+    }
 
     // @PostConstruct
-	// private void populateDemoDatabase() {
-	// 	credentialService.createCredentials(Credential.builder().email("admin@admin.com").role(Role.ADMIN).password(encoder.encode("admin")).build());
-	// 	populateEntitiesFor(LocalDateTime.now().minusDays(3), 100);
-	// 	// populateEntitiesFor(LocalDateTime.now().minusDays(2), 200);
-	// 	// populateEntitiesFor(LocalDateTime.now().minusDays(1), 200);
-	// }
+    // private void populateDemoDatabase() {
+    // credentialService.createCredentials(Credential.builder().email("admin@admin.com").role(Role.ADMIN).password(encoder.encode("admin")).build());
+    // populateEntitiesFor(LocalDateTime.now().minusDays(3), 100);
+    // // populateEntitiesFor(LocalDateTime.now().minusDays(2), 200);
+    // // populateEntitiesFor(LocalDateTime.now().minusDays(1), 200);
+    // }
 
 }

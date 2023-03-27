@@ -38,151 +38,146 @@ import lombok.var;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-        private final PatientService patientService;
+    private final PatientService patientService;
 
-        private final DoctorService doctorService;
+    private final DoctorService doctorService;
 
-        private final CredentialService credentialService;
+    private final CredentialService credentialService;
 
-        private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-        private final JwtService jwtService;
+    private final JwtService jwtService;
 
-        private final TokenService tokenService;
+    private final TokenService tokenService;
 
-        private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-        @Autowired
-        private EmailService emailService;
+    private final EmailService emailService;
 
-        @Override
-        public RegisterResponse register(RegisterRequest registerRequest) {
-                Credential alreadyCreatedCredential = credentialService
-                                .getCredentialsByEmail(registerRequest.getEmail()).orElse(null);
+    @Override
+    public RegisterResponse register(RegisterRequest registerRequest) {
+        Credential alreadyCreatedCredential = credentialService
+                .getCredentialsByEmail(registerRequest.getEmail()).orElse(null);
 
-                if (alreadyCreatedCredential != null) {
-                        throw new CustomException("User with email already exists", "USER_ALREADY_CREATED");
-                }
+        if (alreadyCreatedCredential != null) {
+            throw new CustomException("User with email already exists", "USER_ALREADY_CREATED");
+        }
 
-                var credentials = Credential.builder()
-                                .email(registerRequest.getEmail())
-                                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                                .role(registerRequest.getRole())
-                                .build();
+        var credentials = Credential.builder().email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .role(registerRequest.getRole()).build();
 
-                credentialService.createCredentials(credentials);
+        credentialService.createCredentials(credentials);
 
-                if (registerRequest.getRole() == Role.PATIENT) {
-                        var patient = Patient.builder()
-                                        .name(registerRequest.getName())
-                                        .email(registerRequest.getEmail())
-                                        .build();
+        if (registerRequest.getRole() == Role.PATIENT) {
+            var patient = Patient.builder().name(registerRequest.getName())
+                    .email(registerRequest.getEmail()).build();
 
-                        patientService.createPatient(patient);
-                }
+            patientService.createPatient(patient);
 
-                return RegisterResponse.builder()
-                                .message("User succesfully created")
-                                .build();
+            String subject = "Account has been created";
+
+            String msgBody = "This email id has been registered as a patient in Care4u.\n" +
+                    "Following are the user details : \n" +
+                    "Name : " + patient.getName() + "\n" +
+                    "Email : " + patient.getEmail() + "\n" +
+                    "Gender : " + (patient.getGender() == null ? "-" : patient.getGender() == "M" ? "Male" : "Female") + "\n" +
+                    "Age : " + (patient.getAge() == null ? "-" : patient.getAge()) + "\n" +
+                    "Phone : " + (patient.getPhone() == null ? "-" : patient.getPhone());
+
+            EmailDetails emailDetails = EmailDetails.builder().recipient(patient.getEmail()).subject(subject)
+                    .msgBody(msgBody).build();
+            emailService.sendSimpleMail(emailDetails);
 
         }
 
-        @Override
-        public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-                authenticationManager.authenticate(
-                                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
-                                                authenticationRequest.getPassword()));
-                var user = credentialService.getCredentialsByEmail(authenticationRequest.getEmail())
-                                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
-                var jwtToken = jwtService.generateToken(user);
+        return RegisterResponse.builder().message("User succesfully created").build();
 
-                // TODO : Fix issue for multiple login for same user - revoke their old token
-                // access
-                Date expirationDateStamp = jwtService.extractExpiration(jwtToken);
-                LocalDateTime expirationStamp = expirationDateStamp.toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime();
+    }
 
-                Token token = Token.builder()
-                                .identifier(jwtToken)
-                                .expirationStamp(expirationStamp)
-                                .build();
-                tokenService.createToken(token);
+    @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+        var user = credentialService.getCredentialsByEmail(authenticationRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
+        var jwtToken = jwtService.generateToken(user);
 
-                AuthenticationResponse response = AuthenticationResponse.builder()
-                                .token(jwtToken)
-                                .role(user.getRole())
-                                .build();
+        // TODO : Fix issue for multiple login for same user - revoke their old token
+        // access
+        Date expirationDateStamp = jwtService.extractExpiration(jwtToken);
+        LocalDateTime expirationStamp = expirationDateStamp.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-                if (user.getRole().equals(Role.PATIENT)) {
-                        Patient patient = patientService.getAllPatients().stream()
-                                        .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst().orElse(null);
-                        if (patient != null)
-                                response.setId(patient.getId());
+        Token token = Token.builder().identifier(jwtToken).expirationStamp(expirationStamp).build();
+        tokenService.createToken(token);
 
-                } else if (user.getRole().equals(Role.DOCTOR)) {
-                        Doctor doctor = doctorService.getAllDoctors().stream()
-                                        .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst().orElse(null);
-                        if (doctor != null)
-                                response.setId(doctor.getId());
-                }
+        AuthenticationResponse response = AuthenticationResponse.builder().token(jwtToken)
+                .role(user.getRole()).build();
 
-                return response;
+        if (user.getRole().equals(Role.PATIENT)) {
+            Patient patient = patientService.getAllPatients().stream()
+                    .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
+                    .orElse(null);
+            if (patient != null)
+                response.setId(patient.getId());
+
+        } else if (user.getRole().equals(Role.DOCTOR)) {
+            Doctor doctor = doctorService.getAllDoctors().stream()
+                    .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
+                    .orElse(null);
+            if (doctor != null)
+                response.setId(doctor.getId());
         }
 
-        @Override
-        public String forgotPassword(String email) {
-                var user = credentialService.getCredentialsByEmail(email)
-                                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
+        return response;
+    }
 
-                String token = jwtService.generateToken(user);
+    @Override
+    public String forgotPassword(String email) {
+        var user = credentialService.getCredentialsByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
 
-                String subject = "Reset your Password";
+        String token = jwtService.generateToken(user);
 
-                String msgBody = "To reset your password click on the link : \n" +
-                                "http://localhost:8080/UpdatePassword?token=" + token + "&email=" + email;
+        String subject = "Reset your Password";
 
-                EmailDetails emailDetails = EmailDetails.builder()
-                                .recipient(email)
-                                .subject(subject)
-                                .msgBody(msgBody)
-                                .build();
-                emailService.sendSimpleMail(emailDetails);
-                // if (response.equals("Error")) {
-                // throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
-                // }
-                return "Email has been sent";
+        String msgBody = "To reset your password click on the link : \n"
+                + "http://localhost:8080/UpdatePassword?token=" + token + "&email=" + email;
+
+        EmailDetails emailDetails = EmailDetails.builder().recipient(email).subject(subject)
+                .msgBody(msgBody).build();
+        emailService.sendSimpleMail(emailDetails);
+        // if (response.equals("Error")) {
+        // throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
+        // }
+        return "Email has been sent";
+    }
+
+    public String updatePassword(PasswordRequest passwordRequest) {
+        var user = credentialService.getCredentialsByEmail(passwordRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
+        if (!passwordRequest.getPassword().equals(passwordRequest.getConfirmPassword())) {
+            throw new CustomException("Passwords do not match", "PASSWORD_NOT_MATCHED");
         }
 
-        public String updatePassword(PasswordRequest passwordRequest) {
-                var user = credentialService.getCredentialsByEmail(passwordRequest.getEmail())
-                                .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
-                if (!passwordRequest.getPassword().equals(passwordRequest.getConfirmPassword())) {
-                        throw new CustomException("Passwords do not match", "PASSWORD_NOT_MATCHED");
-                }
-
-                if (jwtService.isTokenValid(passwordRequest.getToken(), user) == false
-                                || jwtService.extractUsername(passwordRequest.getToken())
-                                                .equals(passwordRequest.getEmail()) == false) {
-                        throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN");
-                }
-                user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
-
-                Date expirationDateStamp = jwtService.extractExpiration(passwordRequest.getToken());
-                LocalDateTime expirationStamp = expirationDateStamp.toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime();
-
-                Token token = Token.builder()
-                                .identifier(passwordRequest.getToken())
-                                .type("RESET")
-                                .isRevoked(true)
-                                .expirationStamp(expirationStamp)
-                                .build();
-                tokenService.createToken(token);
-
-                credentialService.updateCredentials(user.getId(), user);
-
-                return "Password updated successfully";
+        if (jwtService.isTokenValid(passwordRequest.getToken(), user) == false
+                || jwtService.extractUsername(passwordRequest.getToken())
+                        .equals(passwordRequest.getEmail()) == false) {
+            throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN");
         }
+        user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
+
+        Date expirationDateStamp = jwtService.extractExpiration(passwordRequest.getToken());
+        LocalDateTime expirationStamp = expirationDateStamp.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        Token token = Token.builder().identifier(passwordRequest.getToken()).type("RESET")
+                .isRevoked(true).expirationStamp(expirationStamp).build();
+        tokenService.createToken(token);
+
+        credentialService.updateCredentials(user.getId(), user);
+
+        return "Password updated successfully";
+    }
 }
