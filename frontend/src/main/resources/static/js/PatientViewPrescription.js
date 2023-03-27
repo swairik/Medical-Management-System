@@ -27,6 +27,7 @@ $(document).ready(function () {
           <td id="prescription_doctor">${value.scheduleResponse.doctorResponse.name}</td>
           <td id="prescription_speciality">${value.scheduleResponse.doctorResponse.speciality.name}</td>
           <td id="prescription_date">${value.scheduleResponse.weekDate}</td>
+          <td id="prescription_status">Added/Not Added</td>
           <td id="prescription_view">
             <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.scheduleResponse.doctorResponse.id} patient_id=${value.patientResponse.id}>
             View</button>

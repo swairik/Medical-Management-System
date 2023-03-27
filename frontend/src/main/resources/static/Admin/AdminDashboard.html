@@ -37,7 +37,7 @@
           <div class="img_button">
             <img src="../images/consultation.png" width="50px"/>
             <button onclick="window.location.href='EditDoctor'">
-              Edit Doctors List
+              Add Doctors List
             </button>
           </div>
           <div class="img_button">
@@ -58,24 +58,58 @@
         <div class="column right" >
           <h2>OVERVIEW</h2>
           <div class="graph graph1">
-            <h4>Doctors present in each speciality</h4>
+            <h3>Doctors present in each speciality</h3>
             <canvas id="doctor_speciality"></canvas>
           </div>
           <div class="graph graph2">
-            <h4>Appointments booked for each speciality</h4>
+            <h3>Appointments booked for each speciality</h3>
             <canvas id="patient_speciality"></canvas>
           </div>
         </div>
       </div>
       <div class="counts">
-        <h3>TODAY</h3>
-        <div id="AppointmentCounts">Patient Counts :</div>
-        <div id="ACounts"></div>
-        <div id="ActiveDoctors">Active Doctors :</div>
-        <div id="ADoctors"></div>
+        <h3 class="range_of_days">TODAY</h3>
+      <table>
+        <tr>
+          <td>Appointment Counts</td>
+          <td>Active Doctors</td>
+        </tr>
+       <tr>
+          <td><h2 id="Appointments_today"></h2></td>
+          <td><h2 id="Doctors_today"></h2></td>
+        </tr>
+      </table>
       </div>
-    </div>
-    </div>
+
+      <div class="counts">
+        <h3 class="range_of_days">WEEKLY</h3>
+        <table>
+        <tr>
+          <td>Appointment Counts</td>
+          <td>Active Doctors</td>
+        </tr>
+       <tr>
+          <td><h2 id="Weekly_Appointments"></h2></td>
+          <td><h2 id="Weekly_Doctors"></h2></td>
+        </tr>
+      </table>
+      </div>
+
+      <div class="counts">
+        <h3 class="range_of_days">MONTHLY</h3>
+      <table>
+        <tr>
+          <td>Appointment Counts</td>
+          <td>Active Doctors</td>
+        </tr>
+       <tr>
+          <td><h2 id="Monthly_Appointments"></h2></td>
+          <td><h2 id="Monthly_Doctors"></h2></td>
+        </tr>
+      </table>
+      </div>
+      
+    
     <div id="GenerateReport" class="modal">
       <h2>Report</h2>
       <table>

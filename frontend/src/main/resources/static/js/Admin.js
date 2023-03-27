@@ -28,8 +28,6 @@ const constructDoctorMenu = (value) => {
         <td>CONTACT</td>
         <td>:</td>
         <td>${value.phone}</td>
-      </tr>
-      <tr>
         <td>EMAIL</td>
         <td>:</td>
         <td> ${value.email}</td>

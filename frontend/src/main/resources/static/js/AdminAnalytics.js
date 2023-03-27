@@ -16,8 +16,8 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
-        $("#ACounts").html(result.Appointments);
-        $("#ADoctors").html(result.Doctors);
+        $("#Appointments_today").html(result.Appointments);
+        $("#Doctors_today").html(result.Doctors);
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -53,10 +53,10 @@ $(document).ready(function () {
             labels: speciality,
             datasets: [{
               label: "Doctor Count By Speciality",
-              backgroundColor: "rgba(255,99,132,0.2)",
+              backgroundColor: "rgb(234, 172, 168,0.8)",
               borderColor: "rgba(255,99,132,1)",
               borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBackgroundColor: "rgb(234, 172, 168,0.5)",
               hoverBorderColor: "rgba(255,99,132,1)",
               data: doctor_count,
             }]
@@ -101,10 +101,10 @@ $(document).ready(function () {
             labels: speciality,
             datasets: [{
               label: "Patient Count By Speciality",
-              backgroundColor: "rgba(255,99,132,0.2)",
+              backgroundColor: "rgb(234, 172, 168,0.8)",
               borderColor: "rgba(255,99,132,1)",
               borderWidth: 1,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
+              hoverBackgroundColor: "rgb(234, 172, 168,0.5)",
               hoverBorderColor: "rgba(255,99,132,1)",
               data: patient_count,
             }]
