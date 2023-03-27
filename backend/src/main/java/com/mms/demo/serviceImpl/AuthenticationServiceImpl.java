@@ -81,9 +81,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     "Following are the user details : \n" +
                     "Name : " + patient.getName() + "\n" +
                     "Email : " + patient.getEmail() + "\n" +
-                    "Gender : " + (patient.getGender() == null ? "Gender not set" : patient.getGender() == "M" ? "Male" : "Female") + "\n" +
-                    "Age : " + patient.getAge() + "\n" +
-                    "Phone : " + patient.getPhone();
+                    "Gender : " + (patient.getGender() == null ? "-" : patient.getGender() == "M" ? "Male" : "Female") + "\n" +
+                    "Age : " + (patient.getAge() == null ? "-" : patient.getAge()) + "\n" +
+                    "Phone : " + (patient.getPhone() == null ? "-" : patient.getPhone());
 
             EmailDetails emailDetails = EmailDetails.builder().recipient(patient.getEmail()).subject(subject)
                     .msgBody(msgBody).build();

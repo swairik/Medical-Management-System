@@ -15,6 +15,6 @@ public class AppointmentDetailsRequest {
     @Builder.Default
     private PrescriptionContentRequest prescriptionContentRequest = null;
     @Builder.Default
-    private String feedbackRequest = "";
+    private String feedbackRequest = null;
     private String appointmentDateTime;
 }

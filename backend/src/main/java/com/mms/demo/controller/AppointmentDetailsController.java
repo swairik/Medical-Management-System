@@ -27,6 +27,7 @@ import com.mms.demo.entity.Prescription;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.AppointmentDetailsRequest;
 import com.mms.demo.model.AppointmentDetailsResponse;
+import com.mms.demo.model.PrescriptionContentResponse;
 import com.mms.demo.service.AppointmentDetailsService;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.DoctorService;
@@ -154,9 +155,16 @@ public class AppointmentDetailsController {
                 .contents(Base64.getEncoder().encode(prescriptionContent.getBytes()))
                 .build();
 
+        String feedbackContent;
+        if(appointmentDetailsRequest.getFeedbackRequest() == null) {
+            feedbackContent = "";
+        }
+        else {
+            feedbackContent = appointmentDetailsRequest.getFeedbackRequest();
+        }
         Feedback feedback = Feedback.builder()
                 .contents(Base64.getEncoder()
-                        .encode(appointmentDetailsRequest.getFeedbackRequest().getBytes()))
+                        .encode(feedbackContent.getBytes()))
                 .build();
 
         AppointmentDetails appointmentDetails = AppointmentDetails.builder()
@@ -173,8 +181,6 @@ public class AppointmentDetailsController {
 
         AppointmentDetailsResponse response = AppointmentDetailsResponse
                 .createResponseFromAppointmentDetails(createdAppointmentDetails);
-        // AppointmentDetailsResponse response = AppointmentDetailsResponse
-        //         .createResponseFromAppointmentDetails(appointmentDetails);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -189,6 +195,9 @@ public class AppointmentDetailsController {
             throw new CustomException("Wrong format of stamp", "WRONG_FORMAT");
         }
 
+        AppointmentDetails createdAppointmentDetails = appointmentDetailsService.getById(id).orElseThrow(
+                () -> new CustomException("Appointment Details with given id not found", "APPOINTMENT_NOT_FOUND"));
+
         Patient patient = patientService.getPatientById(appointmentDetailsRequest.getPatientId())
                 .orElseThrow(() -> new CustomException("Patient with given id not found",
                         "PATIENT_NOT_FOUND"));
@@ -197,16 +206,31 @@ public class AppointmentDetailsController {
                         "DOCTOR_NOT_FOUND"));
 
         String delimiter = ":,-";
-        String prescriptionContent = appointmentDetailsRequest.getPrescriptionContentRequest().getMedication()
-                + delimiter + appointmentDetailsRequest.getPrescriptionContentRequest().getDiagnosis() + delimiter
-                + appointmentDetailsRequest.getPrescriptionContentRequest().getTest();
+        String prescriptionContent;
+        if (appointmentDetailsRequest.getPrescriptionContentRequest() == null) {
+            PrescriptionContentResponse prescriptionData = PrescriptionContentResponse
+                    .createResponseFromPrescriptionContent(createdAppointmentDetails.getPrescription());
+            prescriptionContent = prescriptionData.getMedication() + delimiter + prescriptionData.getDiagnosis()
+                    + delimiter + prescriptionData.getTest();
+        } else {
+            prescriptionContent = appointmentDetailsRequest.getPrescriptionContentRequest().getMedication()
+                    + delimiter + appointmentDetailsRequest.getPrescriptionContentRequest().getDiagnosis() + delimiter
+                    + appointmentDetailsRequest.getPrescriptionContentRequest().getTest();
+        }
         Prescription prescription = Prescription.builder()
                 .contents(Base64.getEncoder().encode(prescriptionContent.getBytes()))
                 .build();
 
+        String feedbackContent;
+        if(appointmentDetailsRequest.getFeedbackRequest() == null) {
+            feedbackContent = new String(Base64.getDecoder().decode(createdAppointmentDetails.getFeedback().getContents()));
+        }
+        else {
+            feedbackContent = appointmentDetailsRequest.getFeedbackRequest();
+        }
         Feedback feedback = Feedback.builder()
                 .contents(Base64.getEncoder()
-                        .encode(appointmentDetailsRequest.getFeedbackRequest().getBytes()))
+                        .encode(feedbackContent.getBytes()))
                 .build();
 
         AppointmentDetails appointmentDetails = AppointmentDetails.builder()
