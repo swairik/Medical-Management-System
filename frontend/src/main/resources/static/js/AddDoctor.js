@@ -1,3 +1,9 @@
+var req_id;
+
+function add_value(data){
+  req_id = data;
+}
+
 $(document).ready(function () {
   const cookie = document.cookie;
   if(cookie=='') window.location.href = "Auth";
@@ -56,11 +62,13 @@ $(document).ready(function () {
     var speciality = {
       name: $('#otherInput').val(),
     };
-    var req_id;
+    
+    var req_id1;
     $.ajax({
       url: "http://localhost:8050/speciality/",
       type: "POST",
       dataType: "json",
+      async:false,
       contentType: "application/json",
       data: JSON.stringify(speciality),
       headers: {
@@ -68,8 +76,10 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
-        req_id=result.id;
-        console.log(req_id);
+        req_id1=result.id;
+        console.log(req_id1);
+        add_value(result.id);
+        
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

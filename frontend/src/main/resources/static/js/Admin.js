@@ -40,7 +40,7 @@ $(document).ready( function () {
             ],
             ordering: false,
         });
-     
+        $('#dis').show();
       
 
     },
