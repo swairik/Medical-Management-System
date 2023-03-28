@@ -68,6 +68,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public List<Appointment> getAllBetween(LocalDateTime start, LocalDateTime end) {
+        return repository.findAllBySlotBetween(start, end);
+    }
+
+    @Override
     public Appointment updateAppointment(Long id, Appointment appointmentUpdates) {
         Optional<Appointment> temp = getAppointmentById(id);
 

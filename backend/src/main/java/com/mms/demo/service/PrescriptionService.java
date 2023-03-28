@@ -49,7 +49,9 @@ public interface PrescriptionService {
      * gets all prescriptions
      * 
      * @return the list of all prescriptions
+     * @deprecated
      */
+    @Deprecated
     List<Prescription> getAllPrescriptions();
 
     /**
@@ -57,14 +59,18 @@ public interface PrescriptionService {
      * 
      * @param prescription the prescription
      * @return the prescription, if successful
+     * @deprecated
      */
+    @Deprecated
     Prescription createPrescription(Prescription prescription);
 
     /**
      * Deletes a prescription given its ID
      * 
      * @param id the id
+     * @deprecated
      */
+    @Deprecated
     void deletePrescription(Long id);
 
     /**

@@ -1,6 +1,7 @@
 package com.mms.demo.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 
 import jakarta.persistence.Column;
@@ -58,21 +59,9 @@ public class Schedule {
     @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    /**
-     * A reference to a Slot object. The object needs to be an existing, persistent entity.
-     * 
-     */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "slot_id", nullable = false)
-    private Slot slot;
+    private LocalDateTime start;
 
-    /**
-     * Stores a year and a number representing a week of that year. Schedules and slots are created
-     * on a week by week basis.
-     * 
-     */
-    @Column(name = "schedule_weekdate")
-    private LocalDate weekDate;
+    private LocalDateTime end;
 
     /**
      * A flag representing whether the schedule has been approved by the admin or not.
@@ -80,43 +69,5 @@ public class Schedule {
      */
     @Column(name = "schedule_approval", nullable = false)
     @Builder.Default
-    private Boolean approval = false;
-
-    /**
-     * Sets only the year stored in the weekDate.
-     * 
-     * @see #weekDate
-     * @param year a new year
-     */
-    public void setYear(Integer year) {
-        weekDate = weekDate.withYear(year);
-    }
-
-    /**
-     * Sets only the week stored in the weekDate.
-     * 
-     * @see #weekDate
-     * @param week a week of the year
-     */
-    public void setWeek(Integer week) {
-        weekDate = weekDate.withDayOfYear(1).plusWeeks(week);
-    }
-
-    /**
-     * Gets only the year stored in the weekDate.
-     * 
-     * @return the year
-     */
-    public Integer getYear() {
-        return weekDate.getYear();
-    }
-
-    /**
-     * Gets only the year stored in the weekDate.
-     * 
-     * @return the week
-     */
-    public Integer getWeek() {
-        return weekDate.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
-    }
+    private Boolean approvalStatus = false;
 }

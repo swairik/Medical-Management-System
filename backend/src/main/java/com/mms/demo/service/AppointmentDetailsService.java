@@ -8,17 +8,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentDetailsService {
+
     Optional<AppointmentDetails> getById(Long id);
 
+    @Deprecated
     List<AppointmentDetails> getAllByPatient(Patient patient);
 
+    @Deprecated
     List<AppointmentDetails> getAllByPatientAndDoctor(Patient patient, Doctor doctor);
 
+    @Deprecated
     Optional<AppointmentDetails> getByPatientAndStamp(Patient patient, LocalDateTime stamp);
 
+    @Deprecated
     Optional<AppointmentDetails> create(AppointmentDetails appointmentDetails);
 
-    Optional<AppointmentDetails> update(Long id, AppointmentDetails updates);
 
-    void deleteById(Long id);
+    Optional<AppointmentDetails> update(Long id, AppointmentDetails updates);
 }

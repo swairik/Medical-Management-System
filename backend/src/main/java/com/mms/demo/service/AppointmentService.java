@@ -1,11 +1,15 @@
 package com.mms.demo.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.AppointmentDetails;
+import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Slot;
 
 /**
@@ -43,7 +47,10 @@ public interface AppointmentService {
      *
      * @param slot the slot
      * @return the appointments by slot
+     * 
+     * @deprecated
      */
+    @Deprecated
     List<Appointment> getAppointmentsBySlot(Slot slot);
 
     /**
@@ -66,13 +73,26 @@ public interface AppointmentService {
      */
     List<Appointment> getAllByPatientAfter(Patient patient, LocalDateTime stamp);
 
+    List<Appointment> getAllByDoctor(Doctor doctor);
+
+    List<Appointment> getAllByDoctorBetween(Doctor doctor, LocalDateTime from, LocalDateTime to);
+
+    List<Appointment> getAllByDoctorAfter(Doctor doctor, LocalDateTime after);
+
+    List<Appointment> getAllBetween(LocalDateTime start, LocalDateTime end);
+
     /**
      * Creates the appointment.
      *
      * @param appointment the appointment
      * @return the appointment
+     * @deprecated
      */
+    @Deprecated
     Appointment createAppointment(Appointment appointment);
+
+    Appointment createAppointment(Appointment appointment, Schedule schedule,
+                    AppointmentDetails appointmentDetails);
 
     /**
      * Update appointment.

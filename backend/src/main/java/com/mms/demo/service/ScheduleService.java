@@ -30,6 +30,7 @@ public interface ScheduleService {
      */
     List<Schedule> getAllSchedules();
 
+
     /**
      * Gets the schedules by doctor.
      *
@@ -43,7 +44,9 @@ public interface ScheduleService {
      *
      * @param slot the slot
      * @return the schedules by slot
+     * @deprecated
      */
+    @Deprecated
     List<Schedule> getSchedulesBySlot(Slot slot);
 
     /**
@@ -53,7 +56,9 @@ public interface ScheduleService {
      * @param start the first day
      * @param end the last day
      * @return the list of qualifying schedule entries
+     * @deprecated
      */
+    @Deprecated
     List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start, LocalDate end);
 
     /**
