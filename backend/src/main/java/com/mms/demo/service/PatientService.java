@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mms.demo.entity.Patient;
+import com.mms.demo.transferobject.PatientDTO;
 
 
 /**
@@ -18,7 +19,7 @@ public interface PatientService {
      *
      * @return the list of all patients
      */
-    List<Patient> getAllPatients();
+    List<PatientDTO> getAll();
 
     /**
      * Gets the patient by id.
@@ -26,7 +27,7 @@ public interface PatientService {
      * @param id the id
      * @return the patient by id
      */
-    Optional<Patient> getPatientById(Long id);
+    Optional<PatientDTO> get(Long id);
 
     /**
      * Creates the patient.
@@ -34,7 +35,7 @@ public interface PatientService {
      * @param patient the patient
      * @return the patient
      */
-    Patient createPatient(Patient patient);
+    PatientDTO create(PatientDTO patient);
 
     /**
      * Update patient.
@@ -43,12 +44,12 @@ public interface PatientService {
      * @param patient the patient
      * @return the patient
      */
-    Patient updatePatient(Long id, Patient patient);
+    Optional<PatientDTO> update(Long id, PatientDTO patient);
 
     /**
      * Delete patient.
      *
      * @param id the id
      */
-    void deletePatient(Long id);
+    void delete(Long id);
 }

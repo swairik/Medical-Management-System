@@ -52,13 +52,12 @@ public class AppointmentDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "prescription_id", nullable = false)
-    private Prescription prescription;
-
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "feedback_id", nullable = false)
-    private Feedback feedback;
+    @Lob
+    @Column(name = "appointment_details_prescription", length = 100000)
+    private byte[] prescription;
+    @Lob
+    @Column(name = "appointment_details_feedback", length = 100000)
+    private byte[] feedback;
 
     @Column(name = "appointment_details_stamp")
     private LocalDateTime stamp;

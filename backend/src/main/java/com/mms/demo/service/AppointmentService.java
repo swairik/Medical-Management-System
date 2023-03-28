@@ -10,7 +10,11 @@ import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.entity.Slot;
+import com.mms.demo.transferobject.AppointmentDTO;
+import com.mms.demo.transferobject.AppointmentDetailsDTO;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.PatientDTO;
+import com.mms.demo.transferobject.ScheduleDTO;
 
 /**
  * The Interface AppointmentService defines all the interactions needed between a high level
@@ -25,14 +29,14 @@ public interface AppointmentService {
      * @param id the id
      * @return the appointment by id
      */
-    Optional<Appointment> getAppointmentById(Long id);
+    Optional<AppointmentDTO> get(Long id);
 
     /**
      * Gets all the appointments stored in the database.
      *
      * @return list of all appointments
      */
-    List<Appointment> getAllAppointments();
+    List<AppointmentDTO> getAll();
 
     /**
      * Gets the appointments by patient.
@@ -40,18 +44,8 @@ public interface AppointmentService {
      * @param patient the patient
      * @return the appointments by patient
      */
-    List<Appointment> getAppointmentsByPatient(Patient patient);
+    List<AppointmentDTO> getAllByPatient(Long patientID);
 
-    /**
-     * Gets the appointments by slot.
-     *
-     * @param slot the slot
-     * @return the appointments by slot
-     * 
-     * @deprecated
-     */
-    @Deprecated
-    List<Appointment> getAppointmentsBySlot(Slot slot);
 
     /**
      * Gets all the appointments of a patient scheduled inside a range of time.
@@ -61,7 +55,7 @@ public interface AppointmentService {
      * @param end the end of the range
      * @return tle list of all qualifying appointments
      */
-    List<Appointment> getAllByPatientBetween(Patient patient, LocalDateTime start,
+    List<AppointmentDTO> getAllByPatientBetween(Long patientID, LocalDateTime start,
                     LocalDateTime end);
 
     /**
@@ -71,42 +65,43 @@ public interface AppointmentService {
      * @param stamp the time stamp after which the appointments are valid for consideration
      * @return the list of all qualifying appointments
      */
-    List<Appointment> getAllByPatientAfter(Patient patient, LocalDateTime stamp);
+    List<AppointmentDTO> getAllByPatientAfter(Long patientID, LocalDateTime stamp);
 
-    List<Appointment> getAllByDoctor(Doctor doctor);
+    List<AppointmentDTO> getAllByDoctor(Long doctorID);
 
-    List<Appointment> getAllByDoctorBetween(Doctor doctor, LocalDateTime from, LocalDateTime to);
+    List<AppointmentDTO> getAllByDoctorBetween(Long doctorID, LocalDateTime from, LocalDateTime to);
 
-    List<Appointment> getAllByDoctorAfter(Doctor doctor, LocalDateTime after);
+    List<AppointmentDTO> getAllByDoctorAfter(Long doctorID, LocalDateTime after);
 
-    List<Appointment> getAllBetween(LocalDateTime start, LocalDateTime end);
+    List<AppointmentDTO> getAllByPatientAndDoctor(Long patientID, Long doctorID);
+
+    List<AppointmentDTO> getAllByPatientAndDoctorBetween(Long patientID, Long doctorID,
+                    LocalDateTime start, LocalDateTime end);
+
+    List<AppointmentDTO> getAllByPatientAndDoctorAfter(Long patientID, Long doctorID,
+                    LocalDateTime after);
+
 
     /**
      * Creates the appointment.
      *
      * @param appointment the appointment
      * @return the appointment
-     * @deprecated
      */
-    @Deprecated
-    Appointment createAppointment(Appointment appointment);
+    AppointmentDTO create(Long patientID, Long scheduleID,
+                    AppointmentDetailsDTO appointmentDetailsDTO) throws IllegalArgumentException;
 
-    Appointment createAppointment(Appointment appointment, Schedule schedule,
-                    AppointmentDetails appointmentDetails);
 
-    /**
-     * Update appointment.
-     *
-     * @param id the id
-     * @param appointmentUpdates the appointment updates
-     * @return the appointment
-     */
-    Appointment updateAppointment(Long id, Appointment appointmentUpdates);
+
+    Optional<AppointmentDTO> updateSchedule(Long id, Long scheduleID)
+                    throws IllegalArgumentException;
+
+    void markAsAttended(Long id);
 
     /**
      * Delete appointment.
      *
      * @param id the id
      */
-    void deleteAppointment(Long id);
+    void delete(Long id);
 }

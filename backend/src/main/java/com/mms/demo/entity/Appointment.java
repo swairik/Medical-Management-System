@@ -66,9 +66,8 @@ public class Appointment {
     @JoinColumn(nullable = false, referencedColumnName = "doctor_id")
     private Doctor doctor;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, referencedColumnName = "schedule_id")
-    private Schedule schedule;
+    @Column(name = "appointment_start", nullable = false)
+    private LocalDateTime start;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     private AppointmentDetails appointmentDetails;

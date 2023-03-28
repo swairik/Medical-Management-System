@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mms.demo.entity.Speciality;
+import com.mms.demo.transferobject.SpecialityDTO;
 
 /**
  * The Interface SpecialityService defines all the interactions needed between a high level
@@ -18,14 +19,14 @@ public interface SpecialityService {
      * @param id the id
      * @return the speciality by id
      */
-    Optional<Speciality> getSpecialityById(Long id);
+    Optional<SpecialityDTO> get(Long id);
 
     /**
      * Gets the all specialities.
      *
      * @return the list of all specialities
      */
-    List<Speciality> getAllSpecialities();
+    List<SpecialityDTO> getAll();
 
     /**
      * Creates the speciality.
@@ -33,14 +34,14 @@ public interface SpecialityService {
      * @param speciality the speciality
      * @return the speciality
      */
-    Speciality createSpeciality(Speciality speciality);
+    SpecialityDTO create(SpecialityDTO speciality);
 
     /**
      * Delete speciality.
      *
      * @param id the id
      */
-    void deleteSpeciality(Long id);
+    void delete(Long id);
 
     /**
      * Update speciality.
@@ -49,5 +50,5 @@ public interface SpecialityService {
      * @param specialityUpdates the speciality updates
      * @return the speciality
      */
-    Speciality updateSpeciality(long id, Speciality specialityUpdates);
+    SpecialityDTO update(long id, SpecialityDTO specialityUpdates);
 }

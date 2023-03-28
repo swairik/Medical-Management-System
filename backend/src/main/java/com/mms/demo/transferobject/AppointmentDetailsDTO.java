@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Builder
 public class AppointmentDetailsDTO {
-    private final @NonNull Long id;
+    private final Long id;
     private final @NonNull String prescription;
     private final @NonNull String feedback;
 }

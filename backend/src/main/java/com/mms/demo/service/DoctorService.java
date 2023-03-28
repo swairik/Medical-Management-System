@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Speciality;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.SpecialityDTO;
 
 /**
  * The Interface DoctorService defines all the interactions needed between a high level controller
@@ -18,7 +20,7 @@ public interface DoctorService {
      *
      * @return all the doctors
      */
-    List<Doctor> getAllDoctors();
+    List<DoctorDTO> getAll();
 
     /**
      * Gets the doctor by id.
@@ -26,7 +28,7 @@ public interface DoctorService {
      * @param id the id
      * @return the doctor by id
      */
-    Optional<Doctor> getDoctortById(Long id);
+    Optional<DoctorDTO> get(Long id);
 
     /**
      * Gets all doctors by a shared speciality.
@@ -34,7 +36,7 @@ public interface DoctorService {
      * @param speciality the speciality
      * @return the list of doctors by speciality
      */
-    List<Doctor> getDoctorBySpeciality(Speciality speciality);
+    List<DoctorDTO> getAllBySpeciality(Long specialityID);
 
     /**
      * Creates the doctor.
@@ -42,21 +44,30 @@ public interface DoctorService {
      * @param doctor the doctor
      * @return the doctor
      */
-    Doctor createDoctor(Doctor doctor);
+    DoctorDTO create(DoctorDTO doctorDTO);
 
     /**
-     * Update doctor.
+     * Update doctor details.
      *
      * @param id the id
      * @param doctor the doctor
      * @return the doctor
      */
-    Doctor updateDoctor(Long id, Doctor doctor);
+    Optional<DoctorDTO> update(Long id, DoctorDTO doctorUpdates);
+
+    /**
+     * Update doctor speciality.
+     *
+     * @param id the id
+     * @param doctor the doctor
+     * @return the doctor
+     */
+    Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID);
 
     /**
      * Delete doctor.
      *
      * @param id the id
      */
-    void deleteDoctor(Long id);
+    void delete(Long id);
 }

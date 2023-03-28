@@ -59,8 +59,10 @@ public class Schedule {
     @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
     private Doctor doctor;
 
+    @Column(name = "schedule_start", nullable = false)
     private LocalDateTime start;
 
+    @Column(name = "schedule_end", nullable = false)
     private LocalDateTime end;
 
     /**
@@ -70,4 +72,8 @@ public class Schedule {
     @Column(name = "schedule_approval", nullable = false)
     @Builder.Default
     private Boolean approvalStatus = false;
+
+    @Column(name = "schedule_booked", nullable = false)
+    @Builder.Default
+    private Boolean booked = false;
 }

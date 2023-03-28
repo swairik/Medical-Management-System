@@ -2,53 +2,68 @@ package com.mms.demo.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Patient;
+import com.mms.demo.mapper.PatientMapper;
 import com.mms.demo.repository.PatientRepository;
 import com.mms.demo.service.PatientService;
+import com.mms.demo.transferobject.PatientDTO;
 
 @Service
 public class PatientServiceImpl implements PatientService {
     @Autowired
     private PatientRepository repository;
 
+    @Autowired
+    private PatientMapper mapper;
+
     @Override
-    public List<Patient> getAllPatients() {
-        return repository.findAll();
+    public List<PatientDTO> getAll() {
+        return repository.findAll().stream().map(p -> mapper.entityToDto(p))
+                        .collect(Collectors.toList());
+
     }
 
     @Override
-    public Optional<Patient> getPatientById(Long id) {
-        return repository.findById(id);
+    public Optional<PatientDTO> get(Long id) {
+        Optional<Patient> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(mapper.entityToDto(fetchedContainer.get()));
     }
 
     @Override
-    public Patient createPatient(Patient patient) {
-        return repository.save(patient);
+    public PatientDTO create(PatientDTO patientDTO) {
+        Patient patient = mapper.dtoToEntity(patientDTO);
+        patient = repository.save(patient);
+
+        return mapper.entityToDto(patient);
     }
 
     @Override
-    public Patient updatePatient(Long id, Patient patientUpdates) {
-        Optional<Patient> temp = repository.findById(id);
-        if (temp.isEmpty()) {
-            return null;
+    public Optional<PatientDTO> update(Long id, PatientDTO patientUpdates) {
+        Optional<Patient> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
+            return Optional.empty();
         }
 
-        Patient patient = temp.get();
-        patient.setAge(patientUpdates.getAge());
-        patient.setEmail(patientUpdates.getEmail());
-        patient.setGender(patientUpdates.getGender());
-        patient.setName(patientUpdates.getName());
-        patient.setPhone(patientUpdates.getPhone());
+        Patient patient = fetchedContainer.get();
+        patient.setAge(patientUpdates.age());
+        patient.setEmail(patientUpdates.email());
+        patient.setGender(patientUpdates.gender());
+        patient.setName(patientUpdates.name());
+        patient.setPhone(patientUpdates.phone());
 
-        return repository.save(patient);
+        patient = repository.save(patient);
+        return Optional.of(mapper.entityToDto(patient));
     }
 
     @Override
-    public void deletePatient(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 

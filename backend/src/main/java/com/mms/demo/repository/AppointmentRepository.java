@@ -1,13 +1,14 @@
 package com.mms.demo.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
-import com.mms.demo.entity.Slot;
 
 /**
  * AppointmentRepository defines an interface to generate JPA defined queries to interact with the
@@ -25,16 +26,24 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
      */
     List<Appointment> findAllByPatient(Patient patient);
 
-    /**
-     * Find all appointments that correspond to the same slot.
-     * 
-     * @see Slot
-     * @param slot the slot
-     * @return the list of appointments that have the same slot
-     */
-    List<Appointment> findAllBySlot(Slot slot);
+    List<Appointment> findAllByPatientAndStartGreaterThanEqual(Patient patient,
+                    LocalDateTime start);
 
-    @Query("SELECT a FROM Appointment a, Schedule s WHERE a.slot = s.slot AND s.weekDate <= :end AND s.weekDate >= :start")
-    List<Appointment> findAllBySlotBetween(@Param("start") LocalDateTime start,
-                    @Param("end") LocalDateTime end);
+    List<Appointment> findAllByPatientAndStartBetween(Patient patient, LocalDateTime start,
+                    LocalDateTime end);
+
+    List<Appointment> findAllByDoctor(Doctor doctor);
+
+    List<Appointment> findAllByDoctorAndStartBetween(Doctor doctor, LocalDateTime start,
+                    LocalDateTime end);
+
+    List<Appointment> findAllByDoctorAndStartGreaterThanEqual(Doctor doctor, LocalDateTime start);
+
+    List<Appointment> findAllByPatientAndDoctor(Patient patient, Doctor doctor);
+
+    List<Appointment> findAllByPatientAndDoctorAndStartBetween(Patient patient, Doctor doctor,
+                    LocalDateTime start, LocalDateTime end);
+
+    List<Appointment> findAllByPatientAndDoctorAndStartGreaterThanEqual(Patient patient,
+                    Doctor doctor, LocalDateTime start);
 }

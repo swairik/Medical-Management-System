@@ -6,7 +6,8 @@ import java.util.Optional;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.entity.Slot;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.ScheduleDTO;
 
 /**
  * The Interface ScheduleService defines all the interactions needed between a high level controller
@@ -21,14 +22,14 @@ public interface ScheduleService {
      * @param id the id
      * @return the schedule by id
      */
-    Optional<Schedule> getScheduleById(Long id);
+    Optional<ScheduleDTO> get(Long id);
 
     /**
      * Gets all schedules.
      *
      * @return the list of all schedules
      */
-    List<Schedule> getAllSchedules();
+    List<ScheduleDTO> getAll();
 
 
     /**
@@ -37,17 +38,8 @@ public interface ScheduleService {
      * @param doctor the doctor
      * @return the schedules by doctor
      */
-    List<Schedule> getSchedulesByDoctor(Doctor doctor);
+    List<ScheduleDTO> getByDoctor(DoctorDTO doctor);
 
-    /**
-     * Gets the schedules by slot.
-     *
-     * @param slot the slot
-     * @return the schedules by slot
-     * @deprecated
-     */
-    @Deprecated
-    List<Schedule> getSchedulesBySlot(Slot slot);
 
     /**
      * Gets all schedules assigned to a doctor between given days.
@@ -56,10 +48,8 @@ public interface ScheduleService {
      * @param start the first day
      * @param end the last day
      * @return the list of qualifying schedule entries
-     * @deprecated
      */
-    @Deprecated
-    List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start, LocalDate end);
+    List<ScheduleDTO> getByDoctorBetween(DoctorDTO doctor, LocalDate start, LocalDate end);
 
     /**
      * Creates the schedule.
@@ -67,7 +57,7 @@ public interface ScheduleService {
      * @param schedule the schedule
      * @return the schedule
      */
-    Schedule createSchedule(Schedule schedule);
+    ScheduleDTO create(ScheduleDTO schedule);
 
     /**
      * Update schedule.
@@ -76,7 +66,7 @@ public interface ScheduleService {
      * @param schedule the schedule
      * @return the schedule
      */
-    Schedule updateSchedule(Long id, Schedule schedule);
+    Optional<ScheduleDTO> update(Long id, Schedule schedule);
 
     /**
      * Delete schedule.

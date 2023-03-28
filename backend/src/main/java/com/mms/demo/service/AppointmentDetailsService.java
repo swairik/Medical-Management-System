@@ -1,6 +1,7 @@
 package com.mms.demo.service;
 
 import com.mms.demo.entity.Patient;
+import com.mms.demo.transferobject.AppointmentDetailsDTO;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.AppointmentDetails;
 import java.time.LocalDateTime;
@@ -9,20 +10,8 @@ import java.util.Optional;
 
 public interface AppointmentDetailsService {
 
-    Optional<AppointmentDetails> getById(Long id);
-
-    @Deprecated
-    List<AppointmentDetails> getAllByPatient(Patient patient);
-
-    @Deprecated
-    List<AppointmentDetails> getAllByPatientAndDoctor(Patient patient, Doctor doctor);
-
-    @Deprecated
-    Optional<AppointmentDetails> getByPatientAndStamp(Patient patient, LocalDateTime stamp);
-
-    @Deprecated
-    Optional<AppointmentDetails> create(AppointmentDetails appointmentDetails);
+    Optional<AppointmentDetailsDTO> get(Long id);
 
 
-    Optional<AppointmentDetails> update(Long id, AppointmentDetails updates);
+    Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updates);
 }
