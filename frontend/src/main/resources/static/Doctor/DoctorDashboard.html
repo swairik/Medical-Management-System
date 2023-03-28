@@ -14,6 +14,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="../js/SignOut.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <script src="../js/DoctorReport.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   </head>
 
@@ -80,23 +81,21 @@
       </div>
       <div id="GenerateReportForDoctor" class="modal">
         <h2>Report</h2>
-        <form>
           <table>
           <tr>
           <td>
           <label for="StartDate">Start Date:</label><br><br>
-          <input type="date" id="start" name="start">
+          <input type="date" id="start_date_report" name="start">
         </td>
         <td>
           <label for="EndDate">End Date:</label><br><br>
-          <input type="date" id="end" name="end">
+          <input type="date" id="end_date_report" name="end">
         </td>
         <td>
-          <input type="submit" value="Download">
+          <input type="submit" value="Download" id="download_report">
         </td>
         </tr>
         </table>
-        </form>
         <a href="#" rel="modal:close"> </a>
       </div>
     <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>

@@ -386,7 +386,7 @@ public class AppointmentController {
                 LocalDateTime appointmentDateTime = filteredSchedules.get(0).getWeekDate()
                                 .plusDays(slot.getWeekday().getValue()).atTime(slot.getStart());
 
-                if (dateTime.plusHours(2).isAfter(appointmentDateTime) == false) {
+                if (dateTime.plusHours(2).isAfter(appointmentDateTime) == true) {
                         throw new CustomException("Appointment start time is less than 2 hours",
                                         "APPOINTMENT_NOT_DELETED");
                 }

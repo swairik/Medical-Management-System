@@ -64,14 +64,17 @@ $(document).ready(function () {
         // Handle successful response
         console.log(response);
         alert("Updated Successfully!");
-        // window.location.href = "PatientProfile";
+        window.location.href = "PatientProfile";
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
           window.location.href = "Auth";
         } else {
           var errorObj;
+        
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+
+          console.log(errorObj)
 
           if (errorObj) alert(errorObj.errorMessage);
           else alert("Some Error Occurred");

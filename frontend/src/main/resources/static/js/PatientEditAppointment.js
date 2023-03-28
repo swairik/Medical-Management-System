@@ -7,7 +7,7 @@ const constructAppointmentInfo = (result) => {
     <td data-label="Slot">${result.scheduleResponse.slotResponse.weekday}</td>
     <td data-label="Slot">${result.scheduleResponse.slotResponse.start}-${result.scheduleResponse.slotResponse.end}</td>
     <td data-label="">
-        <button class="cancel" value=${result.id}>Cancel</button>
+        <button class="cancel" value=${result.id} doctor_id=${result.scheduleResponse.doctorResponse.id}>Cancel</button>
     </td>
   </tr>
       `;
@@ -68,23 +68,41 @@ $(document).ready(function () {
   $("#patient_appointment").on("click", "button.cancel", function (e) {
     console.log("clicked");
     console.log(this);
+    console.log($(this).attr("doctor_id"))
+
+    var doctor_id=$(this).attr("doctor_id")
+
     e.preventDefault();
     $.ajax({
+      url: `http://localhost:8050/appointment/${this.value}?stamp=${(new Date())
+      .toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      })
+      .replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/, "$3/$1/$2 $4:$5:$6")}`,
       type: "DELETE",
-      url: `http://localhost:8050/appointment/${this.value}`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
       success: function (result) {
         console.log(result);
         alert("Appointment Cancelled");
-        window.location.href = "EditAppointment";
+        window.location.href = "BookAppointment?id=" + doctor_id;
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
           window.location.href = "Auth";
         } else {
-          alert("Some Error Occurred");
+          var errorObj;
+          if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+  
+          if (errorObj) alert(errorObj.errorMessage);
+          else alert("Some Error Occurred");
         }
       },
     });

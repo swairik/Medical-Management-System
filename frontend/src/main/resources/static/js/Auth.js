@@ -62,6 +62,7 @@ $(document).ready(function () {
         // window.location.href = 'EditDoctor';
         console.log(result);
         alert('Account Created')
+        window.location.href = 'Auth';
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
       error: function (xhr,status,errorThrown) {
