@@ -311,8 +311,6 @@ public class AppointmentController {
                                         "APPOINTMENT_ALREADY_CREATED");
                 }
 
-                Appointment createdAppointment = appointmentService.createAppointment(appointment);
-
                 Slot slot = slotService.getSlotById(appointmentRequest.getSlotId())
                                 .orElseThrow(() -> new CustomException("Slot with given id not found",
                                                 "SLOT_NOT_FOUND"));
@@ -325,6 +323,7 @@ public class AppointmentController {
                         throw new CustomException("Error while searching for schedule", "SCHEDULE_NOT_FOUND");
                 }
 
+                Appointment createdAppointment = appointmentService.createAppointment(appointment);
 
                 AppointmentResponse response = createResponseFromAppointment(createdAppointment);
                 return new ResponseEntity<>(response, HttpStatus.OK);

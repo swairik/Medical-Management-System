@@ -25,7 +25,7 @@ public class DoctorRequest {
     @Min(0)
     private Integer age;
 
-    @Size(min = 7, max = 14, message = "Phone number must be between 7-14 characters")
+    @Size(min = 10, max = 10, message = "Phone number must be 10 characters")
     @NotNull
     private String phone;
 
