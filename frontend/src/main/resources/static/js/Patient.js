@@ -1,18 +1,22 @@
 const constructSpecialityMenu = (value) => {
-  var content = `<div class="grid">
+  var content = `
   <div class="card">
     <div class="card-inner">
     <img src="../images/3763028.jpg" alt="Avatar" style="width:250px;height:250px;">
         <div class="name"><a href="#docList" rel="modal:open" value=${value.id} id="show_doctor">${value.name}</a></div>
     </div>
   </div>
-  </div>`;
+ `;
 
   return content;
 };
 
 $(document).ready(function () {
   const cookie = document.cookie;
+  console.log(cookie)
+
+  if(cookie=='') window.location.href = "Auth";
+
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
@@ -31,7 +35,7 @@ $(document).ready(function () {
       console.log(docList);
       $.each(result, function (key, value) {
         console.log(value);
-        $(".specialities").append(constructSpecialityMenu(value));
+        $(".grid").append(constructSpecialityMenu(value));
       });
     },
     error: function (xhr, status, errorThrown) {
@@ -43,7 +47,7 @@ $(document).ready(function () {
     },
   });
 
-  $(".specialities").on("click", "#show_doctor", function (e) {
+  $(".grid").on("click", "#show_doctor", function (e) {
     console.log("clicked");
 
     e.preventDefault();

@@ -188,17 +188,20 @@ border-radius: 8px;
 border-color: #ffffff;
 margin: 5px;
 }
-.modal table {
+/* .modal table {
   background-color: #fff;
-}
+} */
 
 .modal button#show_slot {
   color: black
 }
 
-.modal td,th{
-  padding: 15px;
+.modal th{
+  padding: 12px;
   font-weight: bold;
+}
+.modal td{
+  padding: 12px;
 }
 #close{
   background-color: #ff0000;
@@ -220,6 +223,8 @@ margin: 5px;
 #docList li a{
   text-decoration: none;
   padding: 6px;
+  background-color: none;
+  border: none;
 }
 #docList ul, #docList li{
   margin-top: 10px;
@@ -340,7 +345,6 @@ img {
   height: auto;
 }
 
-/* Presentational styles  for this demo */
 
 .card-inner {
   margin: 20px;
