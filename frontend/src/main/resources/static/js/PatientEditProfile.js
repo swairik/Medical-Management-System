@@ -64,7 +64,7 @@ $(document).ready(function () {
         // Handle successful response
         console.log(response);
         alert("Updated Successfully!");
-        // window.location.href = "PatientProfile";
+        window.location.href = "PatientProfile";
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

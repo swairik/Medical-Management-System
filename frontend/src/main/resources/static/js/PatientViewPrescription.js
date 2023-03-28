@@ -21,7 +21,14 @@ $(document).ready(function () {
     },
     success: function (result) {
       console.log(result);
-
+      $('#NA').replaceWith($('.prescription-table').show());
+      $(".prescription-table").append(
+        `<th>Doctor Name</th>
+        <th>Speciality</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th></th>`
+      );
       $.each(result, function (key, value) {
         console.log(value);
         $(".prescription-table").append(

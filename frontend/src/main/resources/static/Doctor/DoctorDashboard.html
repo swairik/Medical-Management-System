@@ -13,6 +13,7 @@
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="../js/SignOut.js"></script>
+    <script src="../js/ViewProfile.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   </head>
@@ -46,7 +47,7 @@
       </div>
     </div>
     
-    <h1 class="admin_heading">Hello Doctor</h1>
+    <h1 class="admin_heading">Hello <span id="doc_name"></span></h1>
       <div class="row">
         <div class="column left" >
           <div class="img_button">
@@ -77,6 +78,9 @@
             <h4>Patient Count</h4>
           </div>
         </div>
+      </div>
+      <div id="reminder">
+        Reminder
       </div>
       <div id="GenerateReportForDoctor" class="modal">
         <h2>Report</h2>

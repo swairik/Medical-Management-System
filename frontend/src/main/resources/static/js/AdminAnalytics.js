@@ -34,6 +34,30 @@ $(document).ready(function () {
       },
     });
 
+    // $.ajax({
+    //   url: "http://localhost:8050/analytics/display/appointment/doctor",
+    //   type: "GET",
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   success: function (result) {
+    //     console.log(result);
+    //     $("#weekly_Appointments").html(result.Appointments);
+    //     $("#weekly_Doctors").html(result.Doctors);
+    //   },
+    //   error: function (xhr, status, errorThrown) {
+    //     if (xhr.status == 403) {
+    //       window.location.href = "Auth";
+    //     } else {
+    //       var errorObj;
+    //       if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+  
+    //       if (errorObj) alert(errorObj.errorMessage);
+    //       else alert("Some Error Occurred");
+    //     }
+    //   },
+    // });
+
     $.ajax({
         url: "http://localhost:8050/analytics/display/specialityDoctorCount",
         type: "GET",
