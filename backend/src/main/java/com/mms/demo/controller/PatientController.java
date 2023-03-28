@@ -99,8 +99,9 @@ public class PatientController {
         Credential credential = credentialService.getCredentialsByEmail(patient.getEmail())
                         .orElseThrow(() -> new CustomException("Patient credentials not found",
                                         "CREDENTIAL_NOT_FOUND"));
-        credentialService.deleteCredentials(credential.getId());
-        patientService.deletePatient(id);
+        
+        // credentialService.deleteCredentials(credential.getId());
+        // patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

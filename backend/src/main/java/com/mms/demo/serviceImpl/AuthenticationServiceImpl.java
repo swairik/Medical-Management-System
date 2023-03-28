@@ -67,8 +67,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole()).build();
 
-        credentialService.createCredentials(credentials);
-
         if (registerRequest.getRole() == Role.PATIENT) {
             var patient = Patient.builder().name(registerRequest.getName())
                     .email(registerRequest.getEmail()).build();
@@ -88,8 +86,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             EmailDetails emailDetails = EmailDetails.builder().recipient(patient.getEmail()).subject(subject)
                     .msgBody(msgBody).build();
             emailService.sendSimpleMail(emailDetails);
-
         }
+
+        credentialService.createCredentials(credentials);
 
         return RegisterResponse.builder().message("User succesfully created").build();
 

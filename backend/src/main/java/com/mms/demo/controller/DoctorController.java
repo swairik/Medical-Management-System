@@ -137,13 +137,12 @@ public class DoctorController {
         var credentials = Credential.builder().email(doctorRequest.getEmail())
                 .password(passwordEncoder.encode(password)).role(Role.DOCTOR).build();
 
-        credentialService.createCredentials(credentials);
-
         var doctor = Doctor.builder().name(doctorRequest.getName()).age(doctorRequest.getAge())
                 .gender(doctorRequest.getGender()).email(doctorRequest.getEmail())
                 .phone(doctorRequest.getPhone()).speciality(speciality).build();
 
         Doctor createdDoctor = doctorService.createDoctor(doctor);
+        credentialService.createCredentials(credentials);
 
         String token = jwtService.generateToken(credentials);
 

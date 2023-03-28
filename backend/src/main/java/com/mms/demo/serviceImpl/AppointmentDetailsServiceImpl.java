@@ -46,6 +46,7 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
         return repository.findAllByPatient(patient);
     }
 
+    @Override
     public List<AppointmentDetails> getAllByDoctor(Doctor doctor) {
         if(doctor == null) {
             return null;
