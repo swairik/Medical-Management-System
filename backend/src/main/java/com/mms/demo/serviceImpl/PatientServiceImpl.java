@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Patient;
-import com.mms.demo.mapper.PatientMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
+
 import com.mms.demo.repository.PatientRepository;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.transferobject.PatientDTO;
@@ -20,13 +21,13 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     private PatientRepository repository;
 
-    // @Autowired
-    private final PatientMapper mapper;
+    @Autowired
+    private DataTransferObjectMapper<Patient, PatientDTO> mapper;
 
     @Override
     public List<PatientDTO> getAll() {
         return repository.findAll().stream().map(p -> mapper.entityToDto(p))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
 
     }
 

@@ -6,15 +6,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
-@Accessors(fluent = true)
-@Getter
+@Jacksonized
+@Value
 @Builder
+@Accessors(fluent = true)
 public class ReportDTO {
-    private final @NonNull Long id;
-    private final @NonNull String filename;
-    private final @NonNull byte[] contents;
-    private final @NonNull Integer contentLength;
+    Long id;
+    String filename;
+    byte[] contents;
+    Integer contentLength;
 }

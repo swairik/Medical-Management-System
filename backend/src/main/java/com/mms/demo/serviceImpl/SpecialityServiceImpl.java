@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Speciality;
-import com.mms.demo.mapper.SpecialityMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.SpecialityRepository;
 import com.mms.demo.service.SpecialityService;
 import com.mms.demo.transferobject.SpecialityDTO;
@@ -18,7 +18,7 @@ public class SpecialityServiceImpl implements SpecialityService {
     private SpecialityRepository repository;
 
     @Autowired
-    SpecialityMapper mapper;
+    DataTransferObjectMapper<Speciality, SpecialityDTO> mapper;
 
     @Override
     public SpecialityDTO create(SpecialityDTO specialityDTO) {
@@ -47,12 +47,12 @@ public class SpecialityServiceImpl implements SpecialityService {
     @Override
     public List<SpecialityDTO> getAll() {
         return repository.findAll().stream().map(s -> mapper.entityToDto(s))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
     }
 
     @Override
     public Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates)
-            throws IllegalArgumentException {
+                    throws IllegalArgumentException {
         Optional<Speciality> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced speciality does not exist");

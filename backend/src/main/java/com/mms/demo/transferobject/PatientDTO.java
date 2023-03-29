@@ -7,18 +7,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
-@Accessors(fluent = true)
-@Getter
+@Jacksonized
+@Value
 @Builder
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
+@Accessors(fluent = true)
 public class PatientDTO {
-    private final @NonNull Long id;
-    private final @NonNull String name;
-    private final String gender;
-    private final Integer age;
-    private final @NonNull String email;
-    private final String phone;
+    Long id;
+    String name;
+    String gender;
+    Integer age;
+    String email;
+    String phone;
 }

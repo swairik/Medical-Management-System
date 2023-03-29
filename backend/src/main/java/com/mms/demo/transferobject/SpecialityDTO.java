@@ -4,13 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
-@Accessors(fluent = true)
-@Getter
+@Jacksonized
+@Value
 @Builder
+@Accessors(fluent = true)
 public class SpecialityDTO {
-    private final @NonNull Long id;
-    private final @NonNull String name;
+    Long id;
+    String name;
 }

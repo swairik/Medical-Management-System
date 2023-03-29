@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.mms.demo.entity.Doctor;
 
 import com.mms.demo.entity.Speciality;
-import com.mms.demo.mapper.DoctorMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.SpecialityRepository;
 import com.mms.demo.service.DoctorService;
@@ -25,7 +25,7 @@ public class DoctorServiceImpl implements DoctorService {
     private SpecialityRepository specialityRepository;
 
     @Autowired
-    private DoctorMapper mapper;
+    private DataTransferObjectMapper<Doctor, DoctorDTO> mapper;
 
     @Override
     public List<DoctorDTO> getAll() {

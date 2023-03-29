@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.mapper.ScheduleMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.service.ScheduleService;
@@ -25,7 +25,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private DoctorRepository doctorRepository;
 
     @Autowired
-    private ScheduleMapper mapper;
+    private DataTransferObjectMapper<Schedule, ScheduleDTO> mapper;
 
     @Override
     public ScheduleDTO create(Long doctorID, LocalDateTime start) throws IllegalArgumentException {
@@ -50,7 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleDTO> getAll() {
         return repository.findAll().stream().map(s -> mapper.entityToDto(s))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -72,12 +72,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         Doctor doctor = fetchedContainer.get();
 
         return repository.findAllByDoctor(doctor).stream().map(s -> mapper.entityToDto(s))
-                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
     }
 
     @Override
     public List<ScheduleDTO> getByDoctorBetween(Long doctorID, LocalDateTime start,
-            LocalDateTime end) throws IllegalArgumentException {
+                    LocalDateTime end) throws IllegalArgumentException {
 
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
@@ -86,13 +86,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         Doctor doctor = fetchedContainer.get();
 
         return repository.findAllByDoctorAndStartBetween(doctor,
-                start.truncatedTo(ChronoUnit.SECONDS), end.truncatedTo(ChronoUnit.SECONDS))
-                .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+                        start.truncatedTo(ChronoUnit.SECONDS), end.truncatedTo(ChronoUnit.SECONDS))
+                        .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
     }
 
     @Override
     public Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleUpdates)
-            throws IllegalArgumentException {
+                    throws IllegalArgumentException {
         Optional<Schedule> fetchedContainer = repository.findById(id);
 
         if (fetchedContainer.isEmpty()) {

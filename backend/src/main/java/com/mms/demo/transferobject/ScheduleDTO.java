@@ -5,16 +5,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
-@Accessors(fluent = true)
-@Getter
+@Jacksonized
+@Value
 @Builder
+@Accessors(fluent = true)
 public class ScheduleDTO {
-    private final @NonNull Long id;
-    private final @NonNull DoctorDTO doctor;
-    private final @NonNull LocalDateTime start;
-    private final LocalDateTime end;
-    private final @NonNull Boolean approvalStatus;
+    Long id;
+    DoctorDTO doctor;
+    LocalDateTime start;
+    LocalDateTime end;
+    Boolean approvalStatus;
+    Boolean booked;
 }

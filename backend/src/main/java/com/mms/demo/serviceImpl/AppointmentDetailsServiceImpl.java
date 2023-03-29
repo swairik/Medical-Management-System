@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mms.demo.entity.AppointmentDetails;
 
-import com.mms.demo.mapper.AppointmentDetailsMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.AppointmentDetailsRepository;
 import com.mms.demo.service.AppointmentDetailsService;
 import com.mms.demo.transferobject.AppointmentDetailsDTO;
@@ -18,7 +18,7 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
     AppointmentDetailsRepository repository;
 
     @Autowired
-    AppointmentDetailsMapper mapper;
+    DataTransferObjectMapper<AppointmentDetails, AppointmentDetailsDTO> mapper;
 
     @Override
     public Optional<AppointmentDetailsDTO> get(Long id) {

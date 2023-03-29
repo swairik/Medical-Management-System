@@ -5,18 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
-@Accessors(fluent = true)
-@Getter
+@Jacksonized
+@Value
 @Builder
+@Accessors(fluent = true)
 public class DoctorDTO {
-    private final @NonNull Long id;
-    private final @NonNull String name;
-    private final String gender;
-    private final Integer age;
-    private final @NonNull String email;
-    private final @NonNull String phone;
-    private final @NonNull SpecialityDTO speciality;
+    Long id;
+    String name;
+    String gender;
+    Integer age;
+    String email;
+    String phone;
+    SpecialityDTO speciality;
 }

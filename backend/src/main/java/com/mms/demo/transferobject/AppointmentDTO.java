@@ -6,15 +6,19 @@ import io.micrometer.common.lang.NonNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
+@Jacksonized
+@Value
+@Builder
 @Accessors(fluent = true)
-@Getter
 public final class AppointmentDTO {
-    private final @NonNull Long id;
-    private final @NonNull PatientDTO patient;
-    private final @NonNull DoctorDTO doctor;
-    private final @NonNull LocalDateTime start;
-    private final @NonNull AppointmentDetailsDTO appointmentDetails;
+    Long id;
+    PatientDTO patient;
+    DoctorDTO doctor;
+    LocalDateTime start;
+    AppointmentDetailsDTO appointmentDetails;
+    Boolean attended;
 }

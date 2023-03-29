@@ -3,7 +3,6 @@ package com.mms.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.mms.demo.entity.Patient;
 import com.mms.demo.transferobject.PatientDTO;
 
 

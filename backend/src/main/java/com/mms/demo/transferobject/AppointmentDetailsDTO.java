@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.experimental.Accessors;
+import lombok.extern.jackson.Jacksonized;
 
-@RequiredArgsConstructor
+@Jacksonized
+@Value
+@Builder
 @Accessors(fluent = true)
-@Getter
 public class AppointmentDetailsDTO {
-    private final Long id;
-    private final @NonNull String prescription;
-    private final @NonNull String feedback;
+    Long id;
+    String prescription;
+    String feedback;
 }

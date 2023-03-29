@@ -12,10 +12,11 @@
 // import org.springframework.test.context.TestPropertySource;
 
 // import com.mms.demo.entity.Patient;
-
-
+// import com.mms.demo.mapper.PatientMapper;
+// import com.mms.demo.transferobject.PatientDTO;
 // import static org.assertj.core.api.Assertions.assertThat;
-
+// import java.util.ArrayList;
+// import java.util.Optional;
 // import java.util.Random;
 
 
@@ -24,67 +25,80 @@
 // @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 // public class PatientServiceTest {
 
-// @Autowired
-// PatientService impl;
-
-// static private String genAlnum(int targetStringLength) {
+// private String genAlnum(int targetStringLength) {
 // int leftLimit = 48;
 // int rightLimit = 122;
 // Random random = new Random();
 
 // String generatedString = random.ints(leftLimit, rightLimit + 1)
 // .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-// .limit(targetStringLength)
-// .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+// .limit(targetStringLength).collect(StringBuilder::new,
+// StringBuilder::appendCodePoint, StringBuilder::append)
 // .toString();
 
 // return generatedString;
 // }
 
-// static final Patient temp = Patient.builder().age(10).email(genAlnum(10) + "@xyz.com")
-// .gender("M").phone("1010101010").name("Jerry")
-// .build();
-
-// @Order(1)
-// @DisplayName("Testing create on a single patient")
-// @Test
-// void testCreatePatient() {
-// assertThat(impl.createPatient(temp)).isEqualTo(temp);
+// private PatientDTO generateRandomPatientDTO() {
+// Random rng = new Random();
+// return PatientDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
+// .name(genAlnum(14)).phone(genAlnum(10)).build();
 // }
 
-// @Order(2)
-// @DisplayName("Testing fetch on all patients")
+// @Autowired
+// PatientService patientService;
+// @Autowired
+// PatientMapper patientMapper;
+
 // @Test
-// void testGetAllPatients() {
-// impl.createPatient(temp);
-// assertThat(impl.getAllPatients()).isNotEmpty().contains(temp);
+// void testCreate() {
+// PatientDTO patientDTO = generateRandomPatientDTO();
+// Patient patient = patientMapper.dtoToEntity(patientDTO);
+
+// assertThat(patient.getName()).isEqualTo(patientDTO.name());
+
+// assertThat(patientDTO.id()).isNotNull();
 // }
 
-// @Order(3)
-// @DisplayName("Testing fetch on a single patient by id")
+
+
 // @Test
-// void testGetPatientById() {
-// impl.createPatient(temp);
-// assertThat(impl.getPatientById(temp.getId())).isNotEmpty().contains(temp);
+// void testGet() {
+// PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+// assertThat(patientService.get(patientDTO.id())).contains(patientDTO);
+// assertThat(patientService.get(patientDTO.id() - 1)).isNotSameAs(Optional.of(patientDTO));
+// assertThat(patientService.get(patientDTO.id() + 1)).isEmpty();
 // }
 
-// @Order(4)
-// @DisplayName("Testing update on a single patient by id")
 // @Test
-// void testUpdatePatient() {
-// impl.createPatient(temp);
-// Patient tempUpdate = temp.toBuilder().build();
-// tempUpdate.setName("Tom");
-// assertThat(impl.updatePatient(temp.getId(),
-// tempUpdate)).isNotNull().isEqualTo(tempUpdate).isNotEqualTo(temp);
+// void testDelete() {
+// PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+// patientService.delete(patientDTO.id());
+// assertThat(patientService.get(patientDTO.id())).isEmpty();
 // }
 
-// @Order(5)
-// @DisplayName("Testing delete on a single patient by id")
 // @Test
-// void testDeletePatient() {
-// impl.createPatient(temp);
-// impl.deletePatient(temp.getId());
-// assertThat(impl.getPatientById(temp.getId())).isEmpty();
+// void testGetAll() {
+// ArrayList<PatientDTO> patientDTOs = new ArrayList<>();
+// for (int i = 0; i < 5; i++) {
+// patientDTOs.add(patientService.create(generateRandomPatientDTO()));
+// }
+
+// ArrayList<PatientDTO> excludedPatientDTOs = new ArrayList<>();
+// for (int i = 0; i < 5; i++) {
+// excludedPatientDTOs.add(patientService.create(generateRandomPatientDTO()));
+// }
+
+// assertThat(patientService.getAll()).containsAll(patientDTOs);
+// assertThat(patientService.getAll()).doesNotContainAnyElementsOf(excludedPatientDTOs);
+// }
+
+// @Test
+// void testUpdate() {
+// PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+// PatientDTO updates = patientDTO.toBuilder().name(genAlnum(10)).build();
+
+// assertThat(patientService.update(patientDTO.id(), updates)).contains(updates);
+// assertThat(patientService.update(100L, updates)).isEmpty();
 // }
 // }

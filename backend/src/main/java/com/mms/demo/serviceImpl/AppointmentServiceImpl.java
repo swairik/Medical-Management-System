@@ -15,9 +15,7 @@ import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.mapper.AppointmentDetailsMapper;
-import com.mms.demo.mapper.AppointmentMapper;
-import com.mms.demo.mapper.ScheduleMapper;
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.AppointmentDetailsRepository;
 import com.mms.demo.repository.AppointmentRepository;
 import com.mms.demo.repository.DoctorRepository;
@@ -26,6 +24,7 @@ import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.service.AppointmentService;
 import com.mms.demo.transferobject.AppointmentDTO;
 import com.mms.demo.transferobject.AppointmentDetailsDTO;
+import com.mms.demo.transferobject.ScheduleDTO;
 
 
 @Service
@@ -46,13 +45,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     private DoctorRepository doctorRepository;
 
     @Autowired
-    private AppointmentMapper mapper;
+    private DataTransferObjectMapper<Appointment, AppointmentDTO> mapper;
 
     @Autowired
-    private ScheduleMapper scheduleMapper;
+    private DataTransferObjectMapper<Schedule, ScheduleDTO> scheduleMapper;
 
     @Autowired
-    private AppointmentDetailsMapper appointmentDetailsMapper;
+    private DataTransferObjectMapper<AppointmentDetails, AppointmentDetailsDTO> appointmentDetailsMapper;
 
     @Override
     public AppointmentDTO create(Long patientID, Long scheduleID,

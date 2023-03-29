@@ -32,7 +32,6 @@ import com.mms.demo.service.PatientService;
 import com.mms.demo.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +56,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
-        Credential alreadyCreatedCredential = credentialService
-                        .getByEmail(registerRequest.getEmail()).orElse(null);
+        Credential alreadyCreatedCredential =
+                        credentialService.getByEmail(registerRequest.getEmail()).orElse(null);
 
         if (alreadyCreatedCredential != null) {
             throw new CustomException("User with email already exists", "USER_ALREADY_CREATED");
@@ -103,17 +102,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (user.getRole().equals(Role.PATIENT)) {
             // Patient patient = patientService.getAllPatients().stream()
-            //                 .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
-            //                 .orElse(null);
+            // .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
+            // .orElse(null);
             // if (patient != null)
-            //     response.setId(patient.getId());
+            // response.setId(patient.getId());
 
         } else if (user.getRole().equals(Role.DOCTOR)) {
             // Doctor doctor = doctorService.getAllDoctors().stream()
-            //                 .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
-            //                 .orElse(null);
+            // .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
+            // .orElse(null);
             // if (doctor != null)
-            //     response.setId(doctor.getId());
+            // response.setId(doctor.getId());
         }
 
         return response;
