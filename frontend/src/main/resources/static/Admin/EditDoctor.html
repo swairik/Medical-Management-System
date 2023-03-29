@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Admin</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
     <link rel="stylesheet" type="text/css" href="../css/EditDoctorStyle.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/Admin.js"></script>
@@ -25,7 +26,22 @@
       </button>
     </div>
 
-    <div class="add_doctor_menu">
+    <div class="list_of_doc" id="dis" style="display:none;">
+      <table id="example" class="display" style="width:80%">
+        <thead>
+            <tr>
+                <th>NAME</th>
+                <th>AGE</th>
+                <th>GENDER</th>
+                <th>CONTACT</th>
+                <th>EMAIL ID</th>
+                <th>SPECIALITY</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
 
     <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer> 

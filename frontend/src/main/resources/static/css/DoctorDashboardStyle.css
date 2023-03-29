@@ -166,7 +166,13 @@ nav img {
   border-radius: 8px;
   color: #fbfbfc;
 }
-
+#reminder{
+  background-color: #ffffffc5;
+  margin: 2%;
+  border-radius: 8px;
+  padding: 2%;
+  height: fit-content;
+}
 @media only screen and (max-width: 770px) {
     .navbar{
     padding: 10px 10px;

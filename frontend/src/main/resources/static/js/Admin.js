@@ -1,50 +1,5 @@
-//var docList;
-//var docMenu = document.getElementById('add_doctor_menu');
-const constructDoctorMenu = (value) => {
-  var div1 = `<div class="container">
-  <img src="../images/AddDoctor.png" alt=" ">
-  <table>
-      <tr>
-        <td>NAME</td>
-        <td>:</td>
-        <td>${value.name} </td>
-        <td></td>
-      <td></td>
-      <td>
-      <button class="add_doctor_menu_btn_remove" value=${value.id}>
-        Remove
-    </button>
-    </td>
-      </tr>
-      <tr>
-        <td>AGE</td>
-        <td>:</td>
-        <td>${value.age}</td>
-        <td>GENDER</td>
-        <td>:</td>
-        <td>${value.gender}</td>
-      </tr>
-      <tr>
-        <td>CONTACT</td>
-        <td>:</td>
-        <td>${value.phone}</td>
-        <td>EMAIL</td>
-        <td>:</td>
-        <td> ${value.email}</td>
-      </tr>
-      <tr>
-        <td>SPECIALITY</td>
-        <td>:</td>
-        <td> ${value.speciality.name}</td>
-      </tr>
-    </table>
-</div>`;
-
-  return div1;
-};
-
-
-$(document).ready(function () {
+$(document).ready( function () {
+  $.getScript("https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js", function() {
   const cookie = document.cookie;
 
   if(cookie=='') window.location.href = "Auth";
@@ -54,6 +9,7 @@ $(document).ready(function () {
     .split("=")[1];
   console.log(token);
 
+  
   $.ajax({
     url: "http://localhost:8050/doctor/display",
     type: "GET",
@@ -61,13 +17,32 @@ $(document).ready(function () {
       Authorization: `Bearer ${token}`,
     },
     success: function (result) {
+      
       console.log(result);
       docList = result;
       console.log(docList);
-      $.each(result, function (key, value) {
-        console.log(value);
-        $(".add_doctor_menu").append(constructDoctorMenu(value));
-      });
+      
+      
+        $('#example').DataTable(
+          {
+            data: docList,
+            columns: [
+                { data: 'name' },
+                { data: 'age' },
+                { data: 'gender' },
+                { data: 'phone' },
+                { data: 'email' },
+                { data: 'speciality.name' },
+                { data: 'id',
+                  render: function(data, type, row) {
+                  return '<button type="button" class="add_doctor_menu_btn_remove" value='+data+'>Remove</button>';
+                }}
+            ],
+            ordering: false,
+        });
+        $('#dis').show();
+      
+
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
@@ -81,7 +56,8 @@ $(document).ready(function () {
       }
     },
   });
-  $(".add_doctor_menu").on("click","button.add_doctor_menu_btn_remove",function(e) {
+
+  $("#example").on("click","button.add_doctor_menu_btn_remove",function(e) {
     console.log("clicked")
     console.log(this)
     e.preventDefault();
@@ -108,7 +84,7 @@ $(document).ready(function () {
       }
     });
   });
-
+});
 });
 
 
