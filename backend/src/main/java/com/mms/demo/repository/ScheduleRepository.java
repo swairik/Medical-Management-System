@@ -34,5 +34,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      */
     Optional<Schedule> findByDoctorAndStart(Doctor doctor, LocalDateTime start);
 
-
+    List<Schedule> findAllByDoctorAndStartBetween(Doctor doctor, LocalDateTime start,
+                    LocalDateTime end);
 }

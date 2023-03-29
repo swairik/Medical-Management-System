@@ -281,46 +281,28 @@ public class ReportServiceImpl implements ReportService {
 
             titlesRow = currentDoctorMetaSheet
                             .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
-            titles = new ArrayList<>(Arrays.asList("Slot Begin", "Slot End", " Appointment ID",
+            titles = new ArrayList<>(Arrays.asList("Appointment Time", "Appointment ID",
                             "Patient ID", "Patient Name", "Scheduled On", "Attended"));
             for (int i = 0; i < titles.size(); i++) {
                 titlesRow.createCell(i).setCellValue(titles.get(i));
             }
 
-            List<Schedule> schedules = scheduleRepository.findAllByDoctorAndWeekDateBetween(doctor,
-                            temporalTarget.toLocalDate(), temporalTarget.toLocalDate());
-            for (Schedule schedule : schedules) {
-                if (schedule.getSlot().getWeekday() != temporalTarget.getDayOfWeek()) {
-                    continue;
-                }
-
-
-                // currentRow =
-                // currentDoctorMetaSheet.createRow(currentDoctorMetaSheet.getLastRowNum() + 1); //
-                // blank
-
-                List<Appointment> appointments =
-                                appointmentRepository.findAllBySlot(schedule.getSlot());
-                for (Appointment appointment : appointments) {
-                    currentRow = currentDoctorMetaSheet
-                                    .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
-                    currentRow.createCell(0).setCellValue(schedule.getSlot().getStart().toString());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(schedule.getSlot().getEnd().toString());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(appointment.getId());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(appointment.getPatient().getId());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(appointment.getPatient().getName());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(appointment.getStamp().toString());
-                    currentRow.createCell(currentRow.getLastCellNum())
-                                    .setCellValue(appointment.getAttended());
-                }
-                // currentRow =
-                // currentDoctorMetaSheet.createRow(currentDoctorMetaSheet.getLastRowNum() + 1); //
-                // blank
+            List<Appointment> appointments = appointmentRepository
+                            .findAllByDoctorAndStartBetween(doctor, temporalTarget, temporalTarget);
+            for (Appointment appointment : appointments) {
+                currentRow = currentDoctorMetaSheet
+                                .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
+                currentRow.createCell(0).setCellValue(appointment.getStart());
+                currentRow.createCell(currentRow.getLastCellNum())
+                                .setCellValue(appointment.getId());
+                currentRow.createCell(currentRow.getLastCellNum())
+                                .setCellValue(appointment.getPatient().getId());
+                currentRow.createCell(currentRow.getLastCellNum())
+                                .setCellValue(appointment.getPatient().getName());
+                currentRow.createCell(currentRow.getLastCellNum())
+                                .setCellValue(appointment.getStamp().toString());
+                currentRow.createCell(currentRow.getLastCellNum())
+                                .setCellValue(appointment.getAttended());
             }
         }
 

@@ -10,4 +10,8 @@ public interface AppointmentMapper {
     AppointmentDTO entityToDto(Appointment appointment);
 
     Appointment dtoToEntity(AppointmentDTO appointmentDTO);
+
+    default String map(byte[] value) {
+        return new String(value);
+    }
 }

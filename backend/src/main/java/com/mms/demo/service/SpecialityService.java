@@ -50,5 +50,5 @@ public interface SpecialityService {
      * @param specialityUpdates the speciality updates
      * @return the speciality
      */
-    SpecialityDTO update(long id, SpecialityDTO specialityUpdates);
+    SpecialityDTO update(Long id, SpecialityDTO specialityUpdates);
 }

@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 @Getter
-@Builder
 public class AppointmentDetailsDTO {
     private final Long id;
     private final @NonNull String prescription;

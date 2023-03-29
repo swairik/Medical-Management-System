@@ -1,6 +1,7 @@
 package com.mms.demo.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public interface ScheduleService {
      * @param doctor the doctor
      * @return the schedules by doctor
      */
-    List<ScheduleDTO> getByDoctor(DoctorDTO doctor);
+    List<ScheduleDTO> getByDoctor(Long doctorID) throws IllegalArgumentException;
 
 
     /**
@@ -49,7 +50,8 @@ public interface ScheduleService {
      * @param end the last day
      * @return the list of qualifying schedule entries
      */
-    List<ScheduleDTO> getByDoctorBetween(DoctorDTO doctor, LocalDate start, LocalDate end);
+    List<ScheduleDTO> getByDoctorBetween(Long doctorID, LocalDateTime start, LocalDateTime end)
+                    throws IllegalArgumentException;
 
     /**
      * Creates the schedule.
@@ -57,16 +59,17 @@ public interface ScheduleService {
      * @param schedule the schedule
      * @return the schedule
      */
-    ScheduleDTO create(ScheduleDTO schedule);
+    ScheduleDTO create(Long doctorID, LocalDateTime start) throws IllegalArgumentException;
 
     /**
-     * Update schedule.
+     * Update start and end, and approval status of a schedule.
      *
      * @param id the id
      * @param schedule the schedule
      * @return the schedule
      */
-    Optional<ScheduleDTO> update(Long id, Schedule schedule);
+    Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleUpdates)
+                    throws IllegalArgumentException;
 
     /**
      * Delete schedule.

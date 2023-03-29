@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 @Getter
-@Builder
 public final class AppointmentDTO {
     private final @NonNull Long id;
     private final @NonNull PatientDTO patient;
