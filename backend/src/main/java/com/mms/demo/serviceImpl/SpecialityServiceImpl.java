@@ -47,12 +47,12 @@ public class SpecialityServiceImpl implements SpecialityService {
     @Override
     public List<SpecialityDTO> getAll() {
         return repository.findAll().stream().map(s -> mapper.entityToDto(s))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates)
-                    throws IllegalArgumentException {
+            throws IllegalArgumentException {
         Optional<Speciality> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced speciality does not exist");
@@ -64,6 +64,5 @@ public class SpecialityServiceImpl implements SpecialityService {
 
         return Optional.of(mapper.entityToDto(speciality));
     }
-
 
 }

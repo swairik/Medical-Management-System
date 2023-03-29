@@ -12,18 +12,21 @@ import com.mms.demo.repository.PatientRepository;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.transferobject.PatientDTO;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
     @Autowired
     private PatientRepository repository;
 
-    @Autowired
-    private PatientMapper mapper;
+    // @Autowired
+    private final PatientMapper mapper;
 
     @Override
     public List<PatientDTO> getAll() {
         return repository.findAll().stream().map(p -> mapper.entityToDto(p))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
     }
 
@@ -53,7 +56,7 @@ public class PatientServiceImpl implements PatientService {
 
         Patient patient = fetchedContainer.get();
         patient.setAge(patientUpdates.age());
-        patient.setEmail(patientUpdates.email());
+        // patient.setEmail(patientUpdates.email());
         patient.setGender(patientUpdates.gender());
         patient.setName(patientUpdates.name());
         patient.setPhone(patientUpdates.phone());
@@ -66,6 +69,5 @@ public class PatientServiceImpl implements PatientService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
-
 
 }

@@ -3,11 +3,11 @@ package com.mms.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.mms.demo.entity.Speciality;
 import com.mms.demo.transferobject.SpecialityDTO;
 
 /**
- * The Interface SpecialityService defines all the interactions needed between a high level
+ * The Interface SpecialityService defines all the interactions needed between a
+ * high level
  * controller and the corresponding repository
  * 
  * @author Mananveer Singh
@@ -46,9 +46,9 @@ public interface SpecialityService {
     /**
      * Update speciality.
      *
-     * @param id the id
+     * @param id                the id
      * @param specialityUpdates the speciality updates
      * @return the speciality
      */
-    SpecialityDTO update(Long id, SpecialityDTO specialityUpdates);
+    Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates);
 }

@@ -74,7 +74,6 @@ public class ReportServiceImpl implements ReportService {
         return reportRepository.findAllByStamp(stamp.truncatedTo(ChronoUnit.SECONDS));
     }
 
-
     @Override
     public Report updateReport(Long id, Report reportUpdates) {
         Optional<Report> temp = getReportById(id);
@@ -113,14 +112,12 @@ public class ReportServiceImpl implements ReportService {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MMM-uuuu");
         final String fileExtension = ".xlsx";
         for (Report report : reports) {
-            final String reportName =
-                            "Report-" + report.getStamp().format(formatter) + fileExtension;
+            final String reportName = "Report-" + report.getStamp().format(formatter) + fileExtension;
             ZipEntry entry = new ZipEntry(reportName);
             entry.setSize(report.getContents().length);
             zipOutputStream.putNextEntry(entry);
             zipOutputStream.write(report.getContents());
         }
-
 
         zipOutputStream.closeEntry();
         zipOutputStream.close();
@@ -131,18 +128,16 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<Report> getAllReportsByStampBetween(LocalDateTime start, LocalDateTime end) {
         return reportRepository.findAllByStampBetween(start.truncatedTo(ChronoUnit.SECONDS),
-                        end.truncatedTo(ChronoUnit.SECONDS));
+                end.truncatedTo(ChronoUnit.SECONDS));
     }
 
     @Override
     public Optional<byte[]> generateReports(LocalDateTime from, LocalDateTime to) {
         List<Report> reports = getAllReportsByStampBetween(from, to).stream()
-                        .filter(r -> r.getContents() != null).collect(Collectors.toList());
+                .filter(r -> r.getContents() != null).collect(Collectors.toList());
         if (reports.isEmpty()) {
             return Optional.empty();
         }
-
-
 
         byte[] reportsZipByteArray = null;
         try {
@@ -154,16 +149,14 @@ public class ReportServiceImpl implements ReportService {
         return Optional.ofNullable(reportsZipByteArray);
     }
 
-
-
     @Override
     public Optional<byte[]> generateScheduleReportForDoctor(LocalDateTime from, LocalDateTime to,
-                    Doctor doctor) {
+            Doctor doctor) {
         from = from.truncatedTo(ChronoUnit.DAYS);
         to = to.truncatedTo(ChronoUnit.DAYS);
 
         List<Report> reports = getAllReportsByStampBetween(from, to).stream()
-                        .filter(r -> r.getContents() != null).collect(Collectors.toList());
+                .filter(r -> r.getContents() != null).collect(Collectors.toList());
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         for (Report report : reports) {
@@ -179,8 +172,7 @@ public class ReportServiceImpl implements ReportService {
                 continue;
             }
 
-            XSSFSheet doctorSheetForDay =
-                            workbook.createSheet(report.getStamp().toLocalDate().toString());
+            XSSFSheet doctorSheetForDay = workbook.createSheet(report.getStamp().toLocalDate().toString());
 
             ArrayList<XSSFRow> rowList = new ArrayList<>();
             for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
@@ -221,26 +213,26 @@ public class ReportServiceImpl implements ReportService {
         XSSFSheet patientsSheet = workbook.createSheet("New Patients");
         titlesRow = patientsSheet.createRow(0);
         titles = new ArrayList<>(
-                        Arrays.asList("ID", "Name", "Gender", "Age", "Email", "Phone Number"));
+                Arrays.asList("ID", "Name", "Gender", "Age", "Email", "Phone Number"));
         for (int i = 0; i < titles.size(); i++) {
             titlesRow.createCell(i).setCellValue(titles.get(i));
         }
 
         List<Patient> patients = patientRepository.findAllByStampBetween(temporalTarget,
-                        temporalTarget.plusDays(1).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
+                temporalTarget.plusDays(1).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
         for (Patient patient : patients) {
             XSSFRow currentPatient = patientsSheet.createRow(patientsSheet.getLastRowNum() + 1);
             currentPatient.createCell(0).setCellValue(patient.getId());
             currentPatient.createCell(currentPatient.getLastCellNum())
-                            .setCellValue(patient.getName());
+                    .setCellValue(patient.getName());
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(patient.getGender())));
+                    extractNullableValue(Optional.ofNullable(patient.getGender())));
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(patient.getAge())));
+                    extractNullableValue(Optional.ofNullable(patient.getAge())));
             currentPatient.createCell(currentPatient.getLastCellNum())
-                            .setCellValue(patient.getEmail());
+                    .setCellValue(patient.getEmail());
             currentPatient.createCell(currentPatient.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(patient.getPhone())));
+                    extractNullableValue(Optional.ofNullable(patient.getPhone())));
         }
 
         // Append list of all new doctors
@@ -252,24 +244,25 @@ public class ReportServiceImpl implements ReportService {
         }
 
         List<Doctor> doctors = doctorRepository.findAllByStampBetween(temporalTarget,
-                        temporalTarget.plusDays(1).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
+                temporalTarget.plusDays(1).minusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
         for (Doctor doctor : doctors) {
             XSSFRow currentDoctor = doctorsSheet.createRow(doctorsSheet.getLastRowNum() + 1);
             currentDoctor.createCell(0).setCellValue(doctor.getId());
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(doctor.getName());
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(doctor.getGender())));
+                    extractNullableValue(Optional.ofNullable(doctor.getGender())));
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(doctor.getAge())));
+                    extractNullableValue(Optional.ofNullable(doctor.getAge())));
             currentDoctor.createCell(currentDoctor.getLastCellNum())
-                            .setCellValue(doctor.getEmail());
+                    .setCellValue(doctor.getEmail());
             currentDoctor.createCell(currentDoctor.getLastCellNum()).setCellValue(
-                            extractNullableValue(Optional.ofNullable(doctor.getPhone())));
+                    extractNullableValue(Optional.ofNullable(doctor.getPhone())));
             currentDoctor.createCell(currentDoctor.getLastCellNum())
-                            .setCellValue(doctor.getSpeciality().getName());
+                    .setCellValue(doctor.getSpeciality().getName());
         }
 
-        // Create a sheet for each doctor and append their schedules, appointments, and patients
+        // Create a sheet for each doctor and append their schedules, appointments, and
+        // patients
         List<Doctor> allDoctors = doctorRepository.findAll();
         for (Doctor doctor : allDoctors) {
             XSSFSheet currentDoctorMetaSheet = workbook.createSheet(doctor.getId().toString());
@@ -280,29 +273,29 @@ public class ReportServiceImpl implements ReportService {
             currentDoctorMetaSheet.createRow(1);
 
             titlesRow = currentDoctorMetaSheet
-                            .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
+                    .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
             titles = new ArrayList<>(Arrays.asList("Appointment Time", "Appointment ID",
-                            "Patient ID", "Patient Name", "Scheduled On", "Attended"));
+                    "Patient ID", "Patient Name", "Scheduled On", "Attended"));
             for (int i = 0; i < titles.size(); i++) {
                 titlesRow.createCell(i).setCellValue(titles.get(i));
             }
 
             List<Appointment> appointments = appointmentRepository
-                            .findAllByDoctorAndStartBetween(doctor, temporalTarget, temporalTarget);
+                    .findAllByDoctorAndStartBetween(doctor, temporalTarget, temporalTarget);
             for (Appointment appointment : appointments) {
                 currentRow = currentDoctorMetaSheet
-                                .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
+                        .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
                 currentRow.createCell(0).setCellValue(appointment.getStart());
                 currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getId());
+                        .setCellValue(appointment.getId());
                 currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getPatient().getId());
+                        .setCellValue(appointment.getPatient().getId());
                 currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getPatient().getName());
+                        .setCellValue(appointment.getPatient().getName());
                 currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getStamp().toString());
+                        .setCellValue(appointment.getStamp().toString());
                 currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getAttended());
+                        .setCellValue(appointment.getAttended());
             }
         }
 
@@ -317,7 +310,7 @@ public class ReportServiceImpl implements ReportService {
             System.out.println(e);
         }
         Report newReport = Report.builder().contents(workbookByteArray)
-                        .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS)).build();
+                .stamp(temporalTarget.truncatedTo(ChronoUnit.SECONDS)).build();
         reportRepository.save(newReport);
         System.out.println("Saved report for " + temporalTarget.truncatedTo(ChronoUnit.SECONDS));
     }

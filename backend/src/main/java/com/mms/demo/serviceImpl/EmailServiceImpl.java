@@ -20,8 +20,8 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    private AppointmentService appointmentService;
+    // @Autowired
+    // private AppointmentService appointmentService;
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -51,7 +51,6 @@ public class EmailServiceImpl implements EmailService {
     @Scheduled(cron = "${email.reminder.interval}")
     @Async
     public void emailReminderScheduler() {
-
 
     }
 
