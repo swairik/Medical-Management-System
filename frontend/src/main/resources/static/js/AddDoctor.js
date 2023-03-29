@@ -1,8 +1,3 @@
-var req_id;
-
-function add_value(data) {
-  req_id = data;
-}
 
 $(document).ready(function () {
   const cookie = document.cookie;
@@ -25,24 +20,6 @@ $(document).ready(function () {
       $("#otherInput").hide();
     }
   });
-
-  // $('#add_speciality').click(function() {
-
-  //   console.log("clicked")
-  //   $("#otherInput").show()
-  //   // // get the value of the new option from the input field
-  //   // var newOptionValue = newOptionInput.val();
-
-  //   // // create a new option element and add it to the select
-  //   // var newOption = $('<option>', {
-  //   //   value: newOptionValue,
-  //   //   text: newOptionValue
-  //   // });
-  //   // selectElement.append(newOption);
-
-  //   // // clear the input field
-  //   // newOptionInput.val('');
-  // });
 
   $.ajax({
     url: "http://localhost:8050/speciality/display",
