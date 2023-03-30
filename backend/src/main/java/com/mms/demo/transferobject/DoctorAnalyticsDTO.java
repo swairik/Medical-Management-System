@@ -8,8 +8,8 @@ import lombok.extern.jackson.Jacksonized;
 @Value
 @Builder
 public class DoctorAnalyticsDTO {
-    Integer upcomingAppointments;
-    Integer patientCount;
-    Integer unfilledPrescriptions;
-    Integer fulfilledAppointmentsThisWeek;
+    Long upcomingAppointments;
+    Long patientCount;
+    Long unfilledPrescriptions;
+    Long fulfilledAppointmentsThisWeek;
 }

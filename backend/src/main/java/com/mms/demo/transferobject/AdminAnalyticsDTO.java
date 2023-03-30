@@ -9,14 +9,14 @@ import lombok.extern.jackson.Jacksonized;
 @Value
 @Builder
 public class AdminAnalyticsDTO {
-    Map<SpecialityDTO, Integer> specialityDoctorCount;
-    Map<SpecialityDTO, Integer> specialityPatientCount;
-    Integer appointmentsToday;
-    Integer appointmentsThisWeek;
-    Integer appointmentsThisMonth;
-    Integer activeDoctorsToday;
-    Integer activeDoctorsThisWeek;
-    Integer activeDoctorsThisMonth;
+    Map<SpecialityDTO, Long> specialityDoctorCount;
+    Map<SpecialityDTO, Long> specialityPatientCount;
+    Long appointmentsToday;
+    Long appointmentsThisWeek;
+    Long appointmentsThisMonth;
+    Long activeDoctorsToday;
+    Long activeDoctorsThisWeek;
+    Long activeDoctorsThisMonth;
 
 
 }

@@ -54,10 +54,13 @@ public class AppointmentDetails {
 
     @Lob
     @Column(name = "appointment_details_prescription", length = 100000)
-    private byte[] prescription;
+    @Builder.Default
+    private byte[] prescription = null;
+
     @Lob
     @Column(name = "appointment_details_feedback", length = 100000)
-    private byte[] feedback;
+    @Builder.Default
+    private byte[] feedback = null;
 
     @Column(name = "appointment_details_stamp")
     private LocalDateTime stamp;
