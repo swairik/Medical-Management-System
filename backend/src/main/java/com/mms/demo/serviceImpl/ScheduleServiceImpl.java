@@ -100,9 +100,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         Schedule schedule = fetchedContainer.get();
-        schedule.setApprovalStatus(scheduleUpdates.approvalStatus());
-        schedule.setStart(scheduleUpdates.start());
-        schedule.setEnd(scheduleUpdates.end());
+        schedule.setApprovalStatus(scheduleUpdates.getApprovalStatus());
+        schedule.setStart(scheduleUpdates.getStart());
+        schedule.setEnd(scheduleUpdates.getEnd());
 
         schedule = repository.save(schedule);
 

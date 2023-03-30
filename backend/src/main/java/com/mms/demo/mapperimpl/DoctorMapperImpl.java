@@ -39,10 +39,10 @@ public class DoctorMapperImpl implements DataTransferObjectMapper<Doctor, Doctor
             return null;
         }
 
-        Doctor.DoctorBuilder doctor = Doctor.builder().age(doctorDTO.age()).email(doctorDTO.email())
-                        .gender(doctorDTO.gender()).id(doctorDTO.id()).name(doctorDTO.name())
-                        .phone(doctorDTO.phone())
-                        .speciality(specialityMapper.dtoToEntity(doctorDTO.speciality()));
+        Doctor.DoctorBuilder doctor = Doctor.builder().age(doctorDTO.getAge())
+                        .email(doctorDTO.getEmail()).gender(doctorDTO.getGender())
+                        .id(doctorDTO.getId()).name(doctorDTO.getName()).phone(doctorDTO.getPhone())
+                        .speciality(specialityMapper.dtoToEntity(doctorDTO.getSpeciality()));
 
         return doctor.build();
     }

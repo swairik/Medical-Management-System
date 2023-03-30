@@ -28,8 +28,8 @@ public class SpecialityMapperImpl implements DataTransferObjectMapper<Speciality
             return null;
         }
 
-        Speciality.SpecialityBuilder speciality =
-                        Speciality.builder().id(specialityDTO.id()).name(specialityDTO.name());
+        Speciality.SpecialityBuilder speciality = Speciality.builder().id(specialityDTO.getId())
+                        .name(specialityDTO.getName());
 
         return speciality.build();
     }

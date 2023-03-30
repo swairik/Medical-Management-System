@@ -32,8 +32,8 @@ public class AppointmentDetailsMapperImpl
         }
 
         AppointmentDetails.AppointmentDetailsBuilder appointmentDetails = AppointmentDetails
-                        .builder().feedback(appointmentDetailsDTO.feedback().getBytes())
-                        .prescription(appointmentDetailsDTO.prescription().getBytes());
+                        .builder().feedback(appointmentDetailsDTO.getFeedback().getBytes())
+                        .prescription(appointmentDetailsDTO.getPrescription().getBytes());
 
         return appointmentDetails.build();
     }

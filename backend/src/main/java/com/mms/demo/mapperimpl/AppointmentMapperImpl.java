@@ -52,12 +52,12 @@ public class AppointmentMapperImpl
 
         Appointment.AppointmentBuilder appointment = Appointment.builder()
                         .appointmentDetails(appointmentDetailsMapper
-                                        .dtoToEntity(appointmentDTO.appointmentDetails()))
-                        .attended(appointmentDTO.attended())
-                        .doctor(doctorMapper.dtoToEntity(appointmentDTO.doctor()))
-                        .id(appointmentDTO.id())
-                        .patient(patientMapper.dtoToEntity(appointmentDTO.patient()))
-                        .start(appointmentDTO.start());
+                                        .dtoToEntity(appointmentDTO.getAppointmentDetails()))
+                        .attended(appointmentDTO.getAttended())
+                        .doctor(doctorMapper.dtoToEntity(appointmentDTO.getDoctor()))
+                        .id(appointmentDTO.getId())
+                        .patient(patientMapper.dtoToEntity(appointmentDTO.getPatient()))
+                        .start(appointmentDTO.getStart());
 
         return appointment.build();
     }

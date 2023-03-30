@@ -13,7 +13,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Value
 @Builder
-@Accessors(fluent = true)
 public final class AppointmentDTO {
     Long id;
     PatientDTO patient;

@@ -59,7 +59,7 @@ public class SpecialityServiceImpl implements SpecialityService {
         }
 
         Speciality speciality = fetchedContainer.get();
-        speciality.setName(specialityUpdates.name());
+        speciality.setName(specialityUpdates.getName());
         speciality = repository.save(speciality);
 
         return Optional.of(mapper.entityToDto(speciality));

@@ -71,11 +71,10 @@ public class DoctorServiceImpl implements DoctorService {
         }
 
         Doctor doctor = fetchedContainer.get();
-        doctor.setAge(doctorUpdates.age());
-        doctor.setEmail(doctorUpdates.email());
-        doctor.setGender(doctorUpdates.gender());
-        doctor.setName(doctorUpdates.name());
-        doctor.setPhone(doctorUpdates.phone());
+        doctor.setAge(doctorUpdates.getAge());
+        doctor.setGender(doctorUpdates.getGender());
+        doctor.setName(doctorUpdates.getName());
+        doctor.setPhone(doctorUpdates.getPhone());
 
         doctor = repository.save(doctor);
         return Optional.of(mapper.entityToDto(doctor));

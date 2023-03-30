@@ -11,7 +11,6 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Value
 @Builder
-@Accessors(fluent = true)
 public class SpecialityDTO {
     Long id;
     String name;

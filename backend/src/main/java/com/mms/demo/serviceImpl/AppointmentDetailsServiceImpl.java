@@ -41,8 +41,8 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
 
         AppointmentDetails appointmentDetails = fetchedContainer.get();
 
-        appointmentDetails.setFeedback(updates.feedback().getBytes());
-        appointmentDetails.setPrescription(updates.prescription().getBytes());
+        appointmentDetails.setFeedback(updates.getFeedback().getBytes());
+        appointmentDetails.setPrescription(updates.getPrescription().getBytes());
         appointmentDetails = repository.save(appointmentDetails);
 
         return Optional.of(mapper.entityToDto(appointmentDetails));

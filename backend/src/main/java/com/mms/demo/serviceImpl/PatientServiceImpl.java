@@ -56,11 +56,10 @@ public class PatientServiceImpl implements PatientService {
         }
 
         Patient patient = fetchedContainer.get();
-        patient.setAge(patientUpdates.age());
-        // patient.setEmail(patientUpdates.email());
-        patient.setGender(patientUpdates.gender());
-        patient.setName(patientUpdates.name());
-        patient.setPhone(patientUpdates.phone());
+        patient.setAge(patientUpdates.getAge());
+        patient.setGender(patientUpdates.getGender());
+        patient.setName(patientUpdates.getName());
+        patient.setPhone(patientUpdates.getPhone());
 
         patient = repository.save(patient);
         return Optional.of(mapper.entityToDto(patient));

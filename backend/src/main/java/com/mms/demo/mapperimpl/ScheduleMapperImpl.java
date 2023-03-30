@@ -38,10 +38,12 @@ public class ScheduleMapperImpl implements DataTransferObjectMapper<Schedule, Sc
             return null;
         }
 
-        Schedule.ScheduleBuilder schedule = Schedule.builder()
-                        .approvalStatus(scheduleDTO.approvalStatus()).booked(scheduleDTO.booked())
-                        .doctor(doctorMapper.dtoToEntity(scheduleDTO.doctor()))
-                        .end(scheduleDTO.end()).id(scheduleDTO.id()).start(scheduleDTO.start());
+        Schedule.ScheduleBuilder schedule =
+                        Schedule.builder().approvalStatus(scheduleDTO.getApprovalStatus())
+                                        .booked(scheduleDTO.getBooked())
+                                        .doctor(doctorMapper.dtoToEntity(scheduleDTO.getDoctor()))
+                                        .end(scheduleDTO.getEnd()).id(scheduleDTO.getId())
+                                        .start(scheduleDTO.getStart());
 
         return schedule.build();
     }

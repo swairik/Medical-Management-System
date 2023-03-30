@@ -33,9 +33,10 @@ public class PatientMapperImpl implements DataTransferObjectMapper<Patient, Pati
             return null;
         }
 
-        Patient.PatientBuilder patient = Patient.builder().age(patientDTO.age())
-                        .email(patientDTO.email()).gender(patientDTO.gender()).id(patientDTO.id())
-                        .name(patientDTO.name()).phone(patientDTO.phone());
+        Patient.PatientBuilder patient =
+                        Patient.builder().age(patientDTO.getAge()).email(patientDTO.getEmail())
+                                        .gender(patientDTO.getGender()).id(patientDTO.getId())
+                                        .name(patientDTO.getName()).phone(patientDTO.getPhone());
 
         return patient.build();
     }
