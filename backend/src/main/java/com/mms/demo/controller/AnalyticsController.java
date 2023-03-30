@@ -70,6 +70,7 @@ public class AnalyticsController {
 
     /*
      * shows the number of doctors in each speciality
+     * ADMIN
      */
     @ResponseBody
     @GetMapping("/display/specialityDoctorCount")
@@ -86,6 +87,7 @@ public class AnalyticsController {
 
     /*
      * shows the numbers of patient booked in each speciality
+     * ADMIN
      */
     @GetMapping("/display/patients/speciality")
     public ResponseEntity<Map<String, Integer>> specialityPatientCount() {
@@ -109,6 +111,7 @@ public class AnalyticsController {
     /*
      * shows the number of appointments today
      * shows the number of active doctors today
+     * ADMIN
      */
     @GetMapping("/display/appointment/doctor")
     public ResponseEntity<Map<String, Integer>> appointmentDoctorCount() {
@@ -142,8 +145,8 @@ public class AnalyticsController {
 
     /*
      * shows the number of upcoming appointments for a particular dr
-     * shows the total number of patients in all the upcoming appointments for a
-     * particular dr
+     * shows the total number of patients in all the upcoming appointments for a particular dr
+     * DOCTOR
      */
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<Map<String, Integer>> appointmentDoctorDetails(@PathVariable Long did) {
@@ -187,6 +190,7 @@ public class AnalyticsController {
     /*
      * shows the number of appointments in the current week
      * shows the number of doctors who have appointments in the current week
+     * ADMIN
      */
     @ResponseBody
     @GetMapping("/display/appointment/weekly")
@@ -232,6 +236,7 @@ public class AnalyticsController {
     /*
      * shows the number of appointments in the current month
      * shows the number of doctors who have appointments in the current month
+     * ADMIN
      */
     @GetMapping("/display/appointment/monthly")
     public ResponseEntity<Map<String, Integer>> appointmentMonthlyDetails(@RequestParam String stamp) {
@@ -276,6 +281,7 @@ public class AnalyticsController {
     /*
      * shows the number of unfilled prescriptions by doctor - assumes each doctor
      * has only 1 appointment at a specific time & date
+     * DOCTOR
      */
     @ResponseBody
     @GetMapping("/display/doctor/{id}/unfilledPrescription")
@@ -300,6 +306,10 @@ public class AnalyticsController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /*
+     * shows the number of appointments already seen in the current week
+     * DOCTOR
+    */
     @ResponseBody
     @GetMapping("/display/doctor/{id}/alreadySeenWeek")
     public ResponseEntity<Map<String, Integer>> doctorAlreadySeenThisWeek(@PathVariable Long id,
