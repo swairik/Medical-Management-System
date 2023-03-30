@@ -32,17 +32,26 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
 
 
     @Override
-    public Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updates) {
+    public Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updatesDto)
+                    throws IllegalArgumentException {
 
         Optional<AppointmentDetails> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
             return Optional.empty();
         }
 
+        AppointmentDetails updates;
+        try {
+            updates = mapper.dtoToEntity(updatesDto);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
+
         AppointmentDetails appointmentDetails = fetchedContainer.get();
 
-        appointmentDetails.setFeedback(updates.getFeedback().getBytes());
-        appointmentDetails.setPrescription(updates.getPrescription().getBytes());
+        appointmentDetails.setFeedback(updates.getFeedback());
+        appointmentDetails.setPrescription(updates.getPrescription());
         appointmentDetails = repository.save(appointmentDetails);
 
         return Optional.of(mapper.entityToDto(appointmentDetails));

@@ -36,7 +36,7 @@ public interface DoctorService {
      * @param speciality the speciality
      * @return the list of doctors by speciality
      */
-    List<DoctorDTO> getAllBySpeciality(Long specialityID);
+    List<DoctorDTO> getAllBySpeciality(Long specialityID) throws IllegalArgumentException;
 
     /**
      * Creates the doctor.
@@ -44,7 +44,7 @@ public interface DoctorService {
      * @param doctor the doctor
      * @return the doctor
      */
-    DoctorDTO create(DoctorDTO doctorDTO);
+    DoctorDTO create(DoctorDTO doctorDTO, Long specialityID) throws IllegalArgumentException;
 
     /**
      * Update doctor details.
@@ -53,7 +53,7 @@ public interface DoctorService {
      * @param doctor the doctor
      * @return the doctor
      */
-    Optional<DoctorDTO> update(Long id, DoctorDTO doctorUpdates);
+    Optional<DoctorDTO> update(Long id, DoctorDTO doctorUpdates) throws IllegalArgumentException;
 
     /**
      * Update doctor speciality.
@@ -62,7 +62,8 @@ public interface DoctorService {
      * @param doctor the doctor
      * @return the doctor
      */
-    Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID);
+    Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID)
+                    throws IllegalArgumentException;
 
     /**
      * Delete doctor.

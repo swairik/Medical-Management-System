@@ -34,16 +34,22 @@ public class DoctorMapperImpl implements DataTransferObjectMapper<Doctor, Doctor
     }
 
     @Override
-    public Doctor dtoToEntity(DoctorDTO doctorDTO) {
+    public Doctor dtoToEntity(DoctorDTO doctorDTO) throws IllegalArgumentException {
         if (doctorDTO == null) {
             return null;
         }
 
-        Doctor.DoctorBuilder doctor = Doctor.builder().age(doctorDTO.getAge())
-                        .email(doctorDTO.getEmail()).gender(doctorDTO.getGender())
-                        .id(doctorDTO.getId()).name(doctorDTO.getName()).phone(doctorDTO.getPhone())
-                        .speciality(specialityMapper.dtoToEntity(doctorDTO.getSpeciality()));
+        Doctor.DoctorBuilder doctor = Doctor.builder();
 
+        try {
+            doctor.age(doctorDTO.getAge()).email(doctorDTO.getEmail()).gender(doctorDTO.getGender())
+                            .id(doctorDTO.getId()).name(doctorDTO.getName())
+                            .phone(doctorDTO.getPhone())
+                            .speciality(specialityMapper.dtoToEntity(doctorDTO.getSpeciality()));
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(
+                            "Expected required field in the DataTransferObject, found null", e);
+        }
         return doctor.build();
     }
 }

@@ -26,14 +26,23 @@ public class AppointmentDetailsMapperImpl
     }
 
     @Override
-    public AppointmentDetails dtoToEntity(AppointmentDetailsDTO appointmentDetailsDTO) {
+    public AppointmentDetails dtoToEntity(AppointmentDetailsDTO appointmentDetailsDTO)
+                    throws IllegalArgumentException {
         if (appointmentDetailsDTO == null) {
             return null;
         }
 
-        AppointmentDetails.AppointmentDetailsBuilder appointmentDetails = AppointmentDetails
-                        .builder().feedback(appointmentDetailsDTO.getFeedback().getBytes())
-                        .prescription(appointmentDetailsDTO.getPrescription().getBytes());
+        AppointmentDetails.AppointmentDetailsBuilder appointmentDetails =
+                        AppointmentDetails.builder();
+
+
+        try {
+            appointmentDetails.feedback(appointmentDetailsDTO.getFeedback().getBytes())
+                            .prescription(appointmentDetailsDTO.getPrescription().getBytes());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(
+                            "Expected required field in the DataTransferObject, found null", e);
+        }
 
         return appointmentDetails.build();
     }

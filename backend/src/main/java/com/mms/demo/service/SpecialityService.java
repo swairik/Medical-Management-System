@@ -6,8 +6,7 @@ import java.util.Optional;
 import com.mms.demo.transferobject.SpecialityDTO;
 
 /**
- * The Interface SpecialityService defines all the interactions needed between a
- * high level
+ * The Interface SpecialityService defines all the interactions needed between a high level
  * controller and the corresponding repository
  * 
  * @author Mananveer Singh
@@ -34,7 +33,7 @@ public interface SpecialityService {
      * @param speciality the speciality
      * @return the speciality
      */
-    SpecialityDTO create(SpecialityDTO speciality);
+    SpecialityDTO create(SpecialityDTO speciality) throws IllegalArgumentException;
 
     /**
      * Delete speciality.
@@ -46,9 +45,10 @@ public interface SpecialityService {
     /**
      * Update speciality.
      *
-     * @param id                the id
+     * @param id the id
      * @param specialityUpdates the speciality updates
      * @return the speciality
      */
-    Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates);
+    Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates)
+                    throws IllegalArgumentException;
 }

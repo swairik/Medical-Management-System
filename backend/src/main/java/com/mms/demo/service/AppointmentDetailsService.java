@@ -13,5 +13,6 @@ public interface AppointmentDetailsService {
     Optional<AppointmentDetailsDTO> get(Long id);
 
 
-    Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updates);
+    Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updates)
+                    throws IllegalArgumentException;
 }

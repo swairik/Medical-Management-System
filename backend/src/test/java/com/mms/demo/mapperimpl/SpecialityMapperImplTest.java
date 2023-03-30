@@ -29,11 +29,11 @@ import java.util.Random;
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SpecialityMapperImplTest {
     @Autowired
-    DataTransferObjectMapper<Speciality, SpecialityDTO> mapper;
+    private DataTransferObjectMapper<Speciality, SpecialityDTO> mapper;
 
     @Test
     void testDtoToEntity() {
-        SpecialityDTO specialityDTO = SpecialityDTO.builder().id(1L).name("ABC").build();
+        SpecialityDTO specialityDTO = SpecialityDTO.builder().id(1L).name(null).build();
 
         Speciality speciality = mapper.dtoToEntity(specialityDTO);
 

@@ -44,7 +44,7 @@ public interface AppointmentService {
      * @param patient the patient
      * @return the appointments by patient
      */
-    List<AppointmentDTO> getAllByPatient(Long patientID);
+    List<AppointmentDTO> getAllByPatient(Long patientID) throws IllegalArgumentException;
 
 
     /**
@@ -56,7 +56,7 @@ public interface AppointmentService {
      * @return tle list of all qualifying appointments
      */
     List<AppointmentDTO> getAllByPatientBetween(Long patientID, LocalDateTime start,
-                    LocalDateTime end);
+                    LocalDateTime end) throws IllegalArgumentException;
 
     /**
      * Gets all the appointments of a patient scheduled after a given time.
@@ -65,21 +65,25 @@ public interface AppointmentService {
      * @param stamp the time stamp after which the appointments are valid for consideration
      * @return the list of all qualifying appointments
      */
-    List<AppointmentDTO> getAllByPatientAfter(Long patientID, LocalDateTime stamp);
+    List<AppointmentDTO> getAllByPatientAfter(Long patientID, LocalDateTime stamp)
+                    throws IllegalArgumentException;
 
-    List<AppointmentDTO> getAllByDoctor(Long doctorID);
+    List<AppointmentDTO> getAllByDoctor(Long doctorID) throws IllegalArgumentException;
 
-    List<AppointmentDTO> getAllByDoctorBetween(Long doctorID, LocalDateTime from, LocalDateTime to);
+    List<AppointmentDTO> getAllByDoctorBetween(Long doctorID, LocalDateTime from, LocalDateTime to)
+                    throws IllegalArgumentException;
 
-    List<AppointmentDTO> getAllByDoctorAfter(Long doctorID, LocalDateTime after);
+    List<AppointmentDTO> getAllByDoctorAfter(Long doctorID, LocalDateTime after)
+                    throws IllegalArgumentException;
 
-    List<AppointmentDTO> getAllByPatientAndDoctor(Long patientID, Long doctorID);
+    List<AppointmentDTO> getAllByPatientAndDoctor(Long patientID, Long doctorID)
+                    throws IllegalArgumentException;
 
     List<AppointmentDTO> getAllByPatientAndDoctorBetween(Long patientID, Long doctorID,
-                    LocalDateTime start, LocalDateTime end);
+                    LocalDateTime start, LocalDateTime end) throws IllegalArgumentException;
 
     List<AppointmentDTO> getAllByPatientAndDoctorAfter(Long patientID, Long doctorID,
-                    LocalDateTime after);
+                    LocalDateTime after) throws IllegalArgumentException;
 
 
     /**
@@ -96,7 +100,7 @@ public interface AppointmentService {
     Optional<AppointmentDTO> updateSchedule(Long id, Long scheduleID)
                     throws IllegalArgumentException;
 
-    void markAsAttended(Long id);
+    void markAsAttended(Long id) throws IllegalArgumentException;
 
     /**
      * Delete appointment.

@@ -91,7 +91,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleUpdates)
+    public Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleDTO)
                     throws IllegalArgumentException {
         Optional<Schedule> fetchedContainer = repository.findById(id);
 
@@ -99,6 +99,13 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Referenced schedule does not exist");
         }
 
+        Schedule scheduleUpdates;
+        try {
+            scheduleUpdates = mapper.dtoToEntity(scheduleDTO);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
         Schedule schedule = fetchedContainer.get();
         schedule.setApprovalStatus(scheduleUpdates.getApprovalStatus());
         schedule.setStart(scheduleUpdates.getStart());

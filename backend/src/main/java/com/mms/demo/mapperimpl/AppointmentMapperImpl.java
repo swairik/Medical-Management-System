@@ -45,19 +45,25 @@ public class AppointmentMapperImpl
     }
 
     @Override
-    public Appointment dtoToEntity(AppointmentDTO appointmentDTO) {
+    public Appointment dtoToEntity(AppointmentDTO appointmentDTO) throws IllegalArgumentException {
         if (appointmentDTO == null) {
             return null;
         }
 
-        Appointment.AppointmentBuilder appointment = Appointment.builder()
-                        .appointmentDetails(appointmentDetailsMapper
-                                        .dtoToEntity(appointmentDTO.getAppointmentDetails()))
-                        .attended(appointmentDTO.getAttended())
-                        .doctor(doctorMapper.dtoToEntity(appointmentDTO.getDoctor()))
-                        .id(appointmentDTO.getId())
-                        .patient(patientMapper.dtoToEntity(appointmentDTO.getPatient()))
-                        .start(appointmentDTO.getStart());
+        Appointment.AppointmentBuilder appointment = Appointment.builder();
+
+        try {
+            appointment.appointmentDetails(appointmentDetailsMapper
+                            .dtoToEntity(appointmentDTO.getAppointmentDetails()))
+                            .attended(appointmentDTO.getAttended())
+                            .doctor(doctorMapper.dtoToEntity(appointmentDTO.getDoctor()))
+                            .id(appointmentDTO.getId())
+                            .patient(patientMapper.dtoToEntity(appointmentDTO.getPatient()))
+                            .start(appointmentDTO.getStart());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(
+                            "Expected required field in the DataTransferObject, found null", e);
+        }
 
         return appointment.build();
     }

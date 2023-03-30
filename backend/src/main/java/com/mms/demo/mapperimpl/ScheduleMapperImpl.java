@@ -33,17 +33,22 @@ public class ScheduleMapperImpl implements DataTransferObjectMapper<Schedule, Sc
     }
 
     @Override
-    public Schedule dtoToEntity(ScheduleDTO scheduleDTO) {
+    public Schedule dtoToEntity(ScheduleDTO scheduleDTO) throws IllegalArgumentException {
         if (scheduleDTO == null) {
             return null;
         }
 
-        Schedule.ScheduleBuilder schedule =
-                        Schedule.builder().approvalStatus(scheduleDTO.getApprovalStatus())
-                                        .booked(scheduleDTO.getBooked())
-                                        .doctor(doctorMapper.dtoToEntity(scheduleDTO.getDoctor()))
-                                        .end(scheduleDTO.getEnd()).id(scheduleDTO.getId())
-                                        .start(scheduleDTO.getStart());
+        Schedule.ScheduleBuilder schedule = Schedule.builder();
+
+        try {
+            schedule.approvalStatus(scheduleDTO.getApprovalStatus()).booked(scheduleDTO.getBooked())
+                            .doctor(doctorMapper.dtoToEntity(scheduleDTO.getDoctor()))
+                            .end(scheduleDTO.getEnd()).id(scheduleDTO.getId())
+                            .start(scheduleDTO.getStart());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(
+                            "Expected required field in the DataTransferObject, found null", e);
+        }
 
         return schedule.build();
     }

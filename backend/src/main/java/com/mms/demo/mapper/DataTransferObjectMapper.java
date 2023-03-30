@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public interface DataTransferObjectMapper<E, D> {
     D entityToDto(E entity);
 
-    E dtoToEntity(D dataTransferObject);
+    E dtoToEntity(D dataTransferObject) throws IllegalArgumentException;
 
     default D jsonToDto(String jsonString, Class<D> targetClass) throws JsonProcessingException {
         return new ObjectMapper().readValue(jsonString, targetClass);

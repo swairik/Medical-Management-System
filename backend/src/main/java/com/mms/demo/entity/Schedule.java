@@ -3,7 +3,7 @@ package com.mms.demo.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
-
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -59,6 +59,7 @@ public class Schedule {
     @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
     private Doctor doctor;
 
+    @NonNull
     @Column(name = "schedule_start", nullable = false)
     private LocalDateTime start;
 

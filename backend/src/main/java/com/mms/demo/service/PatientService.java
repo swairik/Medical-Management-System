@@ -34,7 +34,7 @@ public interface PatientService {
      * @param patient the patient
      * @return the patient
      */
-    PatientDTO create(PatientDTO patient);
+    PatientDTO create(PatientDTO patient) throws IllegalArgumentException;
 
     /**
      * Update patient.
@@ -43,7 +43,7 @@ public interface PatientService {
      * @param patient the patient
      * @return the patient
      */
-    Optional<PatientDTO> update(Long id, PatientDTO patient);
+    Optional<PatientDTO> update(Long id, PatientDTO patient) throws IllegalArgumentException;
 
     /**
      * Delete patient.

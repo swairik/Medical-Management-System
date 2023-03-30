@@ -23,13 +23,19 @@ public class SpecialityMapperImpl implements DataTransferObjectMapper<Speciality
     }
 
     @Override
-    public Speciality dtoToEntity(SpecialityDTO specialityDTO) {
+    public Speciality dtoToEntity(SpecialityDTO specialityDTO) throws IllegalArgumentException {
         if (specialityDTO == null) {
             return null;
         }
 
-        Speciality.SpecialityBuilder speciality = Speciality.builder().id(specialityDTO.getId())
-                        .name(specialityDTO.getName());
+        Speciality.SpecialityBuilder speciality = Speciality.builder();
+
+        try {
+            speciality.id(specialityDTO.getId()).name(specialityDTO.getName());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(
+                            "Expected required field in the DataTransferObject, found null", e);
+        }
 
         return speciality.build();
     }

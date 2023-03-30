@@ -68,10 +68,19 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Referenced schedule does not exist");
         }
         Schedule schedule = fetchedScheduleContainer.get();
+        if (Boolean.TRUE.equals(schedule.getBooked())) {
+            throw new IllegalArgumentException(
+                            "Expected a previously unbooked schedule, found booked");
+        }
 
 
-        AppointmentDetails appointmentDetails =
-                        appointmentDetailsMapper.dtoToEntity(appointmentDetailsDTO);
+        AppointmentDetails appointmentDetails;
+        try {
+            appointmentDetails = appointmentDetailsMapper.dtoToEntity(appointmentDetailsDTO);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
         appointmentDetails = appointmentDetailsRepository.save(appointmentDetails);
 
         Appointment appointment = Appointment.builder().appointmentDetails(appointmentDetails)
@@ -109,10 +118,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllByPatientBetween(Long patientID, LocalDateTime start,
-                    LocalDateTime end) {
+                    LocalDateTime end) throws IllegalArgumentException {
         Optional<Patient> fetchedContainer = patientRepository.findById(patientID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedContainer.get();
         List<Appointment> patientAppointments = repository.findAllByPatientAndStartBetween(patient,
@@ -123,10 +132,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getAllByPatientAfter(Long patientID, LocalDateTime stamp) {
+    public List<AppointmentDTO> getAllByPatientAfter(Long patientID, LocalDateTime stamp)
+                    throws IllegalArgumentException {
         Optional<Patient> fetchedContainer = patientRepository.findById(patientID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedContainer.get();
 
@@ -139,10 +149,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getAllByPatient(Long patientID) {
+    public List<AppointmentDTO> getAllByPatient(Long patientID) throws IllegalArgumentException {
         Optional<Patient> fetchedContainer = patientRepository.findById(patientID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedContainer.get();
 
@@ -159,7 +169,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Optional<Appointment> fetchedContainer = repository.findById(id);
 
         if (fetchedContainer.isEmpty()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("No schedule with this ID exists");
         }
 
         Optional<Schedule> fetchedScheduleContainer = scheduleRepository.findById(scheduleID);
@@ -190,10 +200,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getAllByDoctor(Long doctorID) {
+    public List<AppointmentDTO> getAllByDoctor(Long doctorID) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
@@ -203,10 +213,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getAllByDoctorAfter(Long doctorID, LocalDateTime after) {
+    public List<AppointmentDTO> getAllByDoctorAfter(Long doctorID, LocalDateTime after)
+                    throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
@@ -218,10 +229,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllByDoctorBetween(Long doctorID, LocalDateTime from,
-                    LocalDateTime to) {
+                    LocalDateTime to) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
@@ -235,7 +246,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void markAsAttended(Long id) {
         Optional<Appointment> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
-            return;
+            throw new IllegalArgumentException("No appointment with this id exists");
         }
 
         Appointment appointment = fetchedContainer.get();
@@ -245,16 +256,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getAllByPatientAndDoctor(Long patientID, Long doctorID) {
+    public List<AppointmentDTO> getAllByPatientAndDoctor(Long patientID, Long doctorID)
+                    throws IllegalArgumentException {
         Optional<Patient> fetchedPatientContainer = patientRepository.findById(patientID);
         if (fetchedPatientContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedPatientContainer.get();
 
         Optional<Doctor> fetchedDoctorContainer = doctorRepository.findById(doctorID);
         if (fetchedDoctorContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedDoctorContainer.get();
 
@@ -265,16 +277,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllByPatientAndDoctorAfter(Long patientID, Long doctorID,
-                    LocalDateTime after) {
+                    LocalDateTime after) throws IllegalArgumentException {
         Optional<Patient> fetchedPatientContainer = patientRepository.findById(patientID);
         if (fetchedPatientContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedPatientContainer.get();
 
         Optional<Doctor> fetchedDoctorContainer = doctorRepository.findById(doctorID);
         if (fetchedDoctorContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedDoctorContainer.get();
 
@@ -287,16 +299,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllByPatientAndDoctorBetween(Long patientID, Long doctorID,
-                    LocalDateTime from, LocalDateTime to) {
+                    LocalDateTime from, LocalDateTime to) throws IllegalArgumentException {
         Optional<Patient> fetchedPatientContainer = patientRepository.findById(patientID);
         if (fetchedPatientContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced patient does not exist");
         }
         Patient patient = fetchedPatientContainer.get();
 
         Optional<Doctor> fetchedDoctorContainer = doctorRepository.findById(doctorID);
         if (fetchedDoctorContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedDoctorContainer.get();
 

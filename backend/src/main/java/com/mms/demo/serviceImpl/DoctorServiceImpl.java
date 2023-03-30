@@ -34,10 +34,10 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorDTO> getAllBySpeciality(Long specialityID) {
+    public List<DoctorDTO> getAllBySpeciality(Long specialityID) throws IllegalArgumentException {
         Optional<Speciality> fetchedContainer = specialityRepository.findById(specialityID);
         if (fetchedContainer.isEmpty()) {
-            return Collections.emptyList();
+            throw new IllegalArgumentException("Referenced speciality does not exist");
         }
         Speciality speciality = fetchedContainer.get();
 
@@ -56,21 +56,35 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDTO create(DoctorDTO doctorDTO) {
-        Doctor doctor = mapper.dtoToEntity(doctorDTO);
+    public DoctorDTO create(DoctorDTO doctorDTO, Long specialityID)
+                    throws IllegalArgumentException {
+        Optional<Speciality> fetchedContainer = specialityRepository.findById(specialityID);
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced speciality does not exist");
+        }
+        Doctor doctor = mapper.dtoToEntity(doctorDTO).toBuilder().speciality(fetchedContainer.get())
+                        .build();
         doctor = repository.save(doctor);
 
         return mapper.entityToDto(doctor);
     }
 
     @Override
-    public Optional<DoctorDTO> update(Long id, DoctorDTO doctorUpdates) {
+    public Optional<DoctorDTO> update(Long id, DoctorDTO doctorDTO)
+                    throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("No doctor with this id exists");
         }
 
         Doctor doctor = fetchedContainer.get();
+        Doctor doctorUpdates;
+        try {
+            doctorUpdates = mapper.dtoToEntity(doctorDTO);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
         doctor.setAge(doctorUpdates.getAge());
         doctor.setGender(doctorUpdates.getGender());
         doctor.setName(doctorUpdates.getName());
@@ -81,16 +95,17 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID) {
+    public Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID)
+                    throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("No doctor with this id exists");
         }
 
         Optional<Speciality> fetchedSpecialityContainer =
                         specialityRepository.findById(specialityID);
         if (fetchedSpecialityContainer.isEmpty()) {
-            return Optional.empty();
+            throw new IllegalArgumentException("Referenced speciality does not exist");
         }
 
         Doctor doctor = fetchedContainer.get();

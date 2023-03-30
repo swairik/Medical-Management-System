@@ -51,13 +51,19 @@ public class SpecialityServiceImpl implements SpecialityService {
     }
 
     @Override
-    public Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityUpdates)
+    public Optional<SpecialityDTO> update(Long id, SpecialityDTO specialityDto)
                     throws IllegalArgumentException {
         Optional<Speciality> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced speciality does not exist");
         }
-
+        Speciality specialityUpdates;
+        try {
+            specialityUpdates = mapper.dtoToEntity(specialityDto);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
         Speciality speciality = fetchedContainer.get();
         speciality.setName(specialityUpdates.getName());
         speciality = repository.save(speciality);
