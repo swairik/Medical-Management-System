@@ -4,7 +4,7 @@
   width: 100%;
   padding: 1%;
 }
-.container {
+/* .container {
   margin: 1%;
   display: flex;
   height: 200px;
@@ -33,6 +33,11 @@ td {
   padding-right: 15px;
   padding-left: 15px;
   font-weight: bold;
+} */
+
+.list_of_doc{
+  margin: 2%;
+  padding: 2%;
 }
 
 .heading {
@@ -77,6 +82,17 @@ footer a {
   border-radius: 8px;
   border: none;
 }
+
+.add_doctor_menu_btn_edit {
+  background-color: green;
+  color: white;
+  font-size: 14px;
+  padding: 6px 10px 6px 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+
 @media only screen and (max-width: 768px) {
   .container {
     width: 80%;

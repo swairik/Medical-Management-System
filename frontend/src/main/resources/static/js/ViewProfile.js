@@ -49,7 +49,8 @@ $(document).ready(function () {
         $("#dfspeciality").data('value',result.speciality.id)
         $("#dfcontact").val(result.phone);
         $("#dfemail").val(result.email);
-          
+        
+        $("#doc_name").html(result.name);
         },
         error: function (xhr, status, error) {
           if (xhr.status == 403) {

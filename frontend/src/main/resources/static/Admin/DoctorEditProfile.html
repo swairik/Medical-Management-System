@@ -1,0 +1,46 @@
+<html>
+  <head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../css/PatientProfile.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script> 
+      $(function(){
+        $("#load_content").load('AdminNavbar'); 
+      });
+      </script> 
+      <script src="../js/DoctorEditProfile.js">
+      </script>
+  </head>
+  <body>
+
+    <div id="load_content"></div>
+
+    <div class="pedit">
+      
+      <form class = "pedit-form">
+        <h2>Enter Your Details</h2>
+            <label>Name : </label><br>
+            <input type="text" name="dname" id="dname" required><br>
+            <label>Age : </label><br> 
+            <input type="text" name="dage" id="dage" required><br>
+            <label>Gender : </label><br>  
+            <select name="dgender" id="dgender">
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+            </select><br> 
+            <label>Speciality : </label><br>  
+            <select name="dspeciality" id="dspeciality">
+                <!-- <option value="F">Female</option>
+                <option value="M">Male</option> -->
+            </select><br> 
+            <label>Contact No. : </label><br>   
+            <input type="text" name="dphone" id="dphone" required><br><br> 
+            <label>Email : </label><br>   
+            <input type="text" name="demail" id="demail" required disabled><br><br> 
+            <button id="edited" type="submit" style="background-color: #0a9c11">Save</button>   
+      </form>
+    </div>
+    <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
+  </body>
+  </html>

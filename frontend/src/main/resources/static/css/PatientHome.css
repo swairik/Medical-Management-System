@@ -193,7 +193,10 @@ margin: 5px;
 } */
 
 .modal button#show_slot {
-  color: black
+  color: black;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 .modal th{
@@ -202,6 +205,9 @@ margin: 5px;
 }
 .modal td{
   padding: 12px;
+}
+#docList.modal a.close-modal {
+  display: none;
 }
 #close{
   background-color: #ff0000;
