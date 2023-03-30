@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Report;
+import com.mms.demo.transferobject.ReportDTO;
+import java.io.IOException;
 
 /**
  * The Interface ReportService defines all the interactions needed between a high level controller
@@ -20,7 +22,7 @@ public interface ReportService {
      * @param id the id
      * @return the report by id
      */
-    Optional<Report> getReportById(Long id);
+    Optional<ReportDTO> get(Long id);
 
 
     /**
@@ -29,24 +31,7 @@ public interface ReportService {
      * @param stamp the stamp
      * @return the list of reports by stamp
      */
-    List<Report> getReportByStamp(LocalDateTime stamp);
-
-    /**
-     * Gets all the reports by stamp between a given range of time.
-     *
-     * @param start the start of the range
-     * @param end the end of the range
-     * @return the list of all reports in the time range
-     */
-    List<Report> getAllReportsByStampBetween(LocalDateTime start, LocalDateTime end);
-
-    /**
-     * Forcefully generates a report for a given day. If run for the current day, prematurely stores
-     * all the qualifying data. Used frequently by the report generation scheduler.
-     * 
-     * @param when the timestamp used to find the day of report generation
-     */
-    void forceRunReportGenerator(LocalDateTime when);
+    Optional<ReportDTO> getByDay(LocalDateTime stamp);
 
     /**
      * Gets all existing reports in a given range of time and packages them inside a ZIP archive.
@@ -55,43 +40,22 @@ public interface ReportService {
      * @param to end of the range
      * @return the resultant ZIP archive converted to a byte array
      */
-    Optional<byte[]> generateReports(LocalDateTime from, LocalDateTime to);
+    Optional<ReportDTO> getAllByDayBetween(LocalDateTime start, LocalDateTime end)
+                    throws IOException;
 
     /**
-     * Goes through all reports in a given range and combines the qualifying details for a doctor
-     * into a single file.
+     * Forcefully generates a report for a given day. If run for the current day, prematurely stores
+     * all the qualifying data. Used frequently by the report generation scheduler.
      * 
-     * @param from start of the range
-     * @param to end of the range
-     * @param doctor the doctor
-     * @return the resultant ZIP archive converted to a byte array
+     * @param forDay the timestamp used to find the day of report generation
      */
-    Optional<byte[]> generateScheduleReportForDoctor(LocalDateTime from, LocalDateTime to,
-                    Doctor doctor);
+    void forceRunReportGenerator(LocalDateTime forDay) throws IOException;
 
-    /**
-     * Creates the report. Not intended to be used through an endpoint at the Controller layer.
-     *
-     * @param report the report
-     * @return the report
-     */
-    Report createReport(Report report);
 
-    /**
-     * Delete report. Not intended to be used through an endpoint at the Controller layer.
-     *
-     * @param id the id
-     */
-    void deleteReport(Long id);
+    Optional<ReportDTO> generateForDoctor(Long doctorID, LocalDateTime from, LocalDateTime to)
+                    throws IllegalArgumentException, IOException;
 
-    /**
-     * Update report. Not intended to be used through an endpoint at the Controller layer.
-     *
-     * @param id the id
-     * @param update the update
-     * @return the report
-     */
-    Report updateReport(Long id, Report update);
+
 
     /**
      * Declares the scheduled job that periodically generates reports

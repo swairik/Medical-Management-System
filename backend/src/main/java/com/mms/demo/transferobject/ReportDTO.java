@@ -12,7 +12,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class ReportDTO {
     Long id;
     String filename;

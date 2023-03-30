@@ -61,7 +61,6 @@ public class SpecialityMapperImplTest {
         SpecialityDTO convertedDTO = null;
         try {
             String jsonString = mapper.dtoToJson(specialityDTO);
-            System.out.println("JSON -------->>>>>>>>>: " + jsonString);
 
             convertedDTO = mapper.jsonToDto(jsonString, SpecialityDTO.class);
         } catch (JsonProcessingException e) {
