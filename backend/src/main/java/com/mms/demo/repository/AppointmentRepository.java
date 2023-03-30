@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.mms.demo.entity.Appointment;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
+import com.mms.demo.entity.Speciality;
 
 /**
  * AppointmentRepository defines an interface to generate JPA defined queries to interact with the
@@ -46,4 +47,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findAllByPatientAndDoctorAndStartGreaterThanEqual(Patient patient,
                     Doctor doctor, LocalDateTime start);
+
+    List<Appointment> findAllByStartBetween(LocalDateTime start, LocalDateTime end);
+
+    Long countByDoctor_Speciality(Speciality speciality);
+
+
+    Long countByDoctorAndAppointmentDetails_PrescriptionNull(Doctor doctor);
+
 }
