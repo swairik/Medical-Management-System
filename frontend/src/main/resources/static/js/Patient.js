@@ -25,6 +25,14 @@ $(document).ready(function () {
 
   var doctor_array=[];
 
+ 
+
+  $(document).click(function() {
+    // code to handle the click event
+    $("#doctor_search_result").empty();
+    $("#doctor_search").val("")
+  });
+
   $.ajax({
     url: "http://localhost:8050/doctor/display",
     type: "GET",
@@ -132,6 +140,8 @@ $(document).ready(function () {
     $.each(filteredData, function(index, item) {
       $("#doctor_search_result").append(`<li value=${item.id}>` + item.name + "</li>");
     });
+
+
   });
 
   $("#doctor_search_result").on("click", "li", function() {
