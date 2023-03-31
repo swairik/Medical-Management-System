@@ -120,7 +120,7 @@ public class DoctorController {
                 .build();
 
         DoctorDTO createdDoctor = doctorService.create(doctor, spId);
-        // credentialService.create(credentials);
+        credentialService.create(credentials);
 
         String token = jwtService.generateToken(credentials);
 
