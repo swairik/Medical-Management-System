@@ -35,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         Doctor doctor = fetchedContainer.get();
 
-        Schedule schedule = Schedule.builder().doctor(doctor).start(start).build();
+        Schedule schedule = Schedule.builder().doctor(doctor).start(start).end(start.plusMinutes(30)).build();
         schedule = repository.save(schedule);
 
         return mapper.entityToDto(schedule);
@@ -109,11 +109,25 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = fetchedContainer.get();
         schedule.setApprovalStatus(scheduleUpdates.getApprovalStatus());
         schedule.setStart(scheduleUpdates.getStart());
-        schedule.setEnd(scheduleUpdates.getEnd());
+        schedule.setEnd(scheduleUpdates.getStart().plusMinutes(30));
 
         schedule = repository.save(schedule);
 
         return Optional.of(mapper.entityToDto(schedule));
+    }
+
+    @Override
+    public void markAsApproved(Long id) throws IllegalArgumentException {
+        Optional<Schedule> fetchedContainer = repository.findById(id);
+
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced schedule does not exist");
+        }
+
+        Schedule schedule = fetchedContainer.get();
+        schedule.setApprovalStatus(true);
+        repository.save(schedule);
+
     }
 
 }

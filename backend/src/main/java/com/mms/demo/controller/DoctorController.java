@@ -1,190 +1,207 @@
-// package com.mms.demo.controller;
+package com.mms.demo.controller;
 
-// import java.util.List;
-// import java.util.stream.Collectors;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.core.annotation.AuthenticationPrincipal;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.web.bind.annotation.CrossOrigin;
-// import org.springframework.web.bind.annotation.DeleteMapping;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
+import com.mms.demo.entity.Credential;
+import com.mms.demo.entity.Role;
+import com.mms.demo.exception.CustomException;
+import com.mms.demo.model.DoctorRequest;
+import com.mms.demo.model.EmailDetails;
+import com.mms.demo.model.RegisterDoctorRequest;
+import com.mms.demo.service.CredentialService;
+import com.mms.demo.service.DoctorService;
+import com.mms.demo.service.EmailService;
+import com.mms.demo.service.JwtService;
+import com.mms.demo.service.PatientService;
+import com.mms.demo.service.ReportService;
+import com.mms.demo.service.SpecialityService;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.SpecialityDTO;
 
-// import com.mms.demo.entity.Credential;
-// import com.mms.demo.entity.Doctor;
-// import com.mms.demo.entity.Role;
-// import com.mms.demo.entity.Speciality;
-// import com.mms.demo.exception.Custom403Exception;
-// import com.mms.demo.exception.CustomException;
-// import com.mms.demo.model.DoctorRequest;
-// import com.mms.demo.model.DoctorResponse;
-// import com.mms.demo.model.RegisterDoctorRequest;
-// import com.mms.demo.model.RegisterDoctorResponse;
-// import com.mms.demo.service.CredentialService;
-// import com.mms.demo.service.DoctorService;
-// import com.mms.demo.service.PatientService;
-// import com.mms.demo.service.ReportService;
-// import com.mms.demo.service.SpecialityService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
-// import jakarta.validation.Valid;
-// import lombok.RequiredArgsConstructor;
+@CrossOrigin("*")
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/doctor")
+public class DoctorController {
 
-// @CrossOrigin("*")
-// @RequiredArgsConstructor
-// @RestController
-// @RequestMapping("/doctor")
-// public class DoctorController {
+    @Autowired
+    DoctorService doctorService;
 
-// @Autowired
-// DoctorService doctorService;
+    @Autowired
+    PatientService patientService;
 
-// @Autowired
-// PatientService patientService;
+    @Autowired
+    SpecialityService specialityService;
 
-// @Autowired
-// SpecialityService specialityService;
+    @Autowired
+    ReportService reportService;
 
-// @Autowired
-// ReportService reportService;
+    @Autowired
+    CredentialService credentialService;
 
-// @Autowired
-// CredentialService credentialService;
+    @Autowired
+    EmailService emailService;
 
-// private final PasswordEncoder passwordEncoder;
+    @Autowired
+    JwtService jwtService;
 
-// // @GetMapping("/display")
-// // public ResponseEntity<List<DoctorResponse>> showAllDoctors() {
-// // List<Doctor> doctors = doctorService.getAllDoctors();
-// // List<DoctorResponse> response =
-// // doctors.stream().map((d) -> DoctorResponse.createResponseFromDoctor(d))
-// // .collect(Collectors.toList());
-// // return new ResponseEntity<>(response, HttpStatus.OK);
-// // }
+    private final PasswordEncoder passwordEncoder;
 
-// // @GetMapping("/display/{id}")
-// // public ResponseEntity<DoctorResponse> showDoctorById(@PathVariable Long
-// id) {
-// // Doctor dr = doctorService.getDoctortById(id)
-// // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-// // "DOCTOR_NOT_FOUND"));
+    @GetMapping("/display")
+    public ResponseEntity<List<DoctorDTO>> showAllDoctors() {
+        List<DoctorDTO> doctorList = doctorService.getAll();
+        return new ResponseEntity<>(doctorList, HttpStatus.OK);
+    }
 
-// // DoctorResponse response = DoctorResponse.createResponseFromDoctor(dr);
-// // return new ResponseEntity<>(response, HttpStatus.OK);
-// // }
+    @GetMapping("/display/{id}")
+    public ResponseEntity<DoctorDTO> showDoctorById(@PathVariable Long id) {
+        DoctorDTO doctor = doctorService.get(id)
+                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                        "DOCTOR_NOT_FOUND", HttpStatus.NOT_FOUND));
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
+    }
 
-// // @GetMapping("/display/speciality/{id}")
-// // public ResponseEntity<List<DoctorResponse>>
-// showDoctorBySpeciality(@PathVariable Long id) {
-// // Speciality speciality = specialityService.getSpecialityById(id)
-// // .orElseThrow(() -> new CustomException("Speciality with given id not
-// found",
-// // "SPECIALITY_NOT_FOUND"));
+    @GetMapping("/display/speciality/{id}")
+    public ResponseEntity<List<DoctorDTO>> showDoctorBySpeciality(@PathVariable Long id) {
+        SpecialityDTO speciality = specialityService.get(id)
+                .orElseThrow(() -> new CustomException("Speciality with given id not found", "SPECIALITY_NOT_FOUND",
+                        HttpStatus.NOT_FOUND));
 
-// // List<Doctor> doctors = doctorService.getDoctorBySpeciality(speciality);
-// // List<DoctorResponse> response =
-// // doctors.stream().map((d) -> DoctorResponse.createResponseFromDoctor(d))
-// // .collect(Collectors.toList());
-// // return new ResponseEntity<>(response, HttpStatus.OK);
-// // }
+        List<DoctorDTO> doctors = doctorService.getAllBySpeciality(speciality.getId());
+        return new ResponseEntity<>(doctors, HttpStatus.OK);
+    }
 
-// // @PostMapping("/")
-// // public ResponseEntity<RegisterDoctorResponse> createDoctor(
-// // @Valid @RequestBody RegisterDoctorRequest doctorRequest) {
-// // List<Doctor> doctors = doctorService.getAllDoctors();
-// // Doctor doctorAlreadyCreatedWithEmail = doctors.stream()
-// // .filter((d) -> d.getEmail().equals(doctorRequest.getEmail())).findFirst()
-// // .orElse(null);
-// // if (doctorAlreadyCreatedWithEmail != null) {
-// // throw new CustomException("Doctor with given email id already exists",
-// // "DOCTOR_ALREADY_CREATED");
-// // }
-// // Doctor doctorAlreadyCreatedWithPhone = doctors.stream()
-// // .filter((d) -> d.getPhone().equals(doctorRequest.getPhone())).findFirst()
-// // .orElse(null);
-// // if (doctorAlreadyCreatedWithPhone != null) {
-// // throw new CustomException("Doctor with given phone already exists",
-// // "DOCTOR_ALREADY_CREATED");
-// // }
+    @PostMapping("/")
+    public ResponseEntity<DoctorDTO> createDoctor(@PathVariable Long spId, @Valid @RequestBody RegisterDoctorRequest doctorRequest) {
+        List<DoctorDTO> doctors = doctorService.getAll();
+        DoctorDTO doctorAlreadyCreatedWithEmail = doctors.stream()
+                .filter((d) -> d.getEmail().equals(doctorRequest.getEmail())).findFirst()
+                .orElse(null);
+        if (doctorAlreadyCreatedWithEmail != null) {
+            throw new CustomException("Doctor with given email id already exists",
+                    "DOCTOR_ALREADY_CREATED", HttpStatus.CONFLICT);
+        }
+        DoctorDTO doctorAlreadyCreatedWithPhone = doctors.stream()
+                .filter((d) -> d.getPhone().equals(doctorRequest.getPhone())).findFirst()
+                .orElse(null);
+        if (doctorAlreadyCreatedWithPhone != null) {
+            throw new CustomException("Doctor with given phone already exists",
+                    "DOCTOR_ALREADY_CREATED", HttpStatus.CONFLICT);
+        }
 
-// // Speciality speciality =
-// specialityService.getSpecialityById(doctorRequest.getSpecialityId())
-// // .orElseThrow(() -> new CustomException("Speciality with given id not
-// found",
-// // "SPECIALITY_NOT_FOUND"));
+        String password = "password";
 
-// // String password = doctorRequest.getEmail().substring(0, 3) + "passsword";
+        var credentials = Credential.builder().email(doctorRequest.getEmail())
+                .password(passwordEncoder.encode(password)).role(Role.DOCTOR).build();
 
-// // var credentials = Credential.builder().email(doctorRequest.getEmail())
-// // .password(passwordEncoder.encode(password)).role(Role.DOCTOR).build();
+        DoctorDTO doctor = DoctorDTO.builder()
+                .name(doctorRequest.getName())
+                .gender(doctorRequest.getGender())
+                .age(doctorRequest.getAge())
+                .email(doctorRequest.getEmail())
+                .phone(doctorRequest.getPhone())
+                .build();
 
-// // credentialService.createCredentials(credentials);
+        DoctorDTO createdDoctor = doctorService.create(doctor, spId);
+        // credentialService.create(credentials);
 
-// // var doctor =
-// Doctor.builder().name(doctorRequest.getName()).age(doctorRequest.getAge())
-// // .gender(doctorRequest.getGender()).email(doctorRequest.getEmail())
-// // .phone(doctorRequest.getPhone()).speciality(speciality).build();
+        String token = jwtService.generateToken(credentials);
 
-// // Doctor createdDoctor = doctorService.createDoctor(doctor);
-// // RegisterDoctorResponse doctorResponse =
-// // RegisterDoctorResponse.createResponseFromDoctor(createdDoctor);
-// // doctorResponse.setPassword(password);
-// // return new ResponseEntity<>(doctorResponse, HttpStatus.CREATED);
-// // }
+        String subject = "Account has been created";
 
-// // @PutMapping("/{id}")
-// // public ResponseEntity<DoctorResponse> updateDoctor(@PathVariable Long id,
-// // @Valid @RequestBody DoctorRequest doctorRequest,
-// // @AuthenticationPrincipal Credential user) {
+        String msgBody = "This email id has been registered as a doctor in Care4u.\n" +
+                "Following are the user details : \n" +
+                "Name : " + createdDoctor.getName() + "\n" +
+                "Email : " + createdDoctor.getEmail() + "\n" +
+                "Password : " + password + "\n" +
+                "Gender : " + (createdDoctor.getGender() == "M" ? "Female" : "Male") + "\n" +
+                "Age : " + createdDoctor.getAge() + "\n" +
+                "Phone : " + createdDoctor.getPhone() + "\n" +
+                "Speciality : " + createdDoctor.getSpeciality().getName() + "\n" +
+                "To reset your password click on the link : " + "\n" +
+                "http://localhost:8080/UpdatePassword?token=" + token + "&email=" + createdDoctor.getEmail();
 
-// // Doctor doctor = doctorService.getDoctortById(id)
-// // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-// // "DOCTOR_NOT_FOUND"));
+        EmailDetails emailDetails = EmailDetails.builder().recipient(createdDoctor.getEmail()).subject(subject)
+                .msgBody(msgBody).build();
+        emailService.sendSimpleMail(emailDetails);
 
-// // if (checkPermissions(user, doctor.getEmail()) == false) {
-// // throw new Custom403Exception(
-// // "Logged in user is not permitted to edit another user's profile",
-// // "PROFILE_EDIT_NOT_ALLOWED");
-// // }
+        return new ResponseEntity<>(createdDoctor, HttpStatus.CREATED);
+    }
 
-// // Doctor updateDoctor = createDoctorFromRequest(doctorRequest);
-// // updateDoctor.setEmail(doctor.getEmail());
-// // Doctor updatedDoctor = doctorService.updateDoctor(id, updateDoctor);
-// // DoctorResponse doctorResponse =
-// DoctorResponse.createResponseFromDoctor(updatedDoctor);
-// // return new ResponseEntity<>(doctorResponse, HttpStatus.OK);
-// // }
+    @PutMapping("/{did}")
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long did,
+            @Valid @RequestBody DoctorRequest doctorRequest,
+            @AuthenticationPrincipal Credential user) {
 
-// // @DeleteMapping("/{id}")
-// // public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-// // doctorService.deleteDoctor(id);
-// // return new ResponseEntity<>(HttpStatus.OK);
-// // }
+        DoctorDTO doctor = doctorService.get(did)
+                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                        "DOCTOR_NOT_FOUND", HttpStatus.NOT_FOUND));
 
-// // public Doctor createDoctorFromRequest(DoctorRequest doctorRequest) {
-// // Speciality speciality =
-// specialityService.getSpecialityById(doctorRequest.getSpecialityId())
-// // .orElseThrow(() -> new CustomException("Speciality with given id not
-// found",
-// // "SPECIALITY_NOT_FOUND"));
-// // Doctor doctor =
-// Doctor.builder().name(doctorRequest.getName()).age(doctorRequest.getAge())
-// // .gender(doctorRequest.getGender()).phone(doctorRequest.getPhone())
-// // .speciality(speciality).build();
-// // return doctor;
-// // }
+        if (checkPermissions(user, doctor.getEmail()) == false) {
+            throw new CustomException(
+                    "Logged in user is not permitted to edit another user's profile",
+                    "PROFILE_EDIT_NOT_ALLOWED", HttpStatus.FORBIDDEN);
+        }
+        
+        DoctorDTO updateDoctor = DoctorDTO.builder()
+                .name(doctorRequest.getName())
+                .age(doctorRequest.getAge())
+                .gender(doctorRequest.getGender())
+                .phone(doctorRequest.getPhone())
+                .build();
 
-// // private Boolean checkPermissions(Credential user, String email) {
-// // if (user.getRole().equals(Role.DOCTOR) && !user.getEmail().equals(email))
-// // return false;
-// // return true;
-// // }
+        DoctorDTO updatedDoctor = doctorService.update(did, updateDoctor)
+                .orElseThrow(() -> new CustomException("Error while updating doctor", "DOCTOR_NOT_UPDATED",
+                        HttpStatus.INTERNAL_SERVER_ERROR));
+        return new ResponseEntity<>(updatedDoctor, HttpStatus.OK);
+    }
 
-// }
+    @PutMapping("/{did}/speciality/{specialityId}")
+    public ResponseEntity<DoctorDTO> updateDoctorSpeciality(@PathVariable Long did, @PathVariable Long specialityId,
+            @AuthenticationPrincipal Credential user) {
+        DoctorDTO doctor = doctorService.get(did)
+                .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                        "DOCTOR_NOT_FOUND", HttpStatus.NOT_FOUND));
+
+        if (checkPermissions(user, doctor.getEmail()) == false) {
+            throw new CustomException(
+                    "Logged in user is not permitted to edit another user's profile",
+                    "PROFILE_EDIT_NOT_ALLOWED", HttpStatus.FORBIDDEN);
+        }
+
+        DoctorDTO updatedDoctor = doctorService.updateSpeciality(did, specialityId)
+                .orElseThrow(() -> new CustomException("Error while updating doctor", "DOCTOR_NOT_UPDATED",
+                        HttpStatus.INTERNAL_SERVER_ERROR));
+        return new ResponseEntity<>(updatedDoctor, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
+        // doctorService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private Boolean checkPermissions(Credential user, String email) {
+        if (user.getRole().equals(Role.DOCTOR) && !user.getEmail().equals(email))
+            return false;
+        return true;
+    }
+
+}

@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import com.mms.demo.entity.Patient;
 import com.mms.demo.transferobject.PatientDTO;
 
 @Data
@@ -37,9 +36,13 @@ public class PatientRequest {
     private String email;
 
     public static PatientDTO createPatientFromRequest(Long id, PatientRequest patientRequest) {
-        PatientDTO patient = PatientDTO.builder().id(id).name(patientRequest.getName())
-                .gender(patientRequest.getGender()).age(patientRequest.getAge())
-                .phone(patientRequest.getPhone()).email(patientRequest.getEmail()).build();
+        PatientDTO patient = PatientDTO.builder()
+                .id(id).name(patientRequest.getName())
+                .gender(patientRequest.getGender())
+                .age(patientRequest.getAge())
+                .phone(patientRequest.getPhone())
+                .email(patientRequest.getEmail())
+                .build();
         return patient;
     }
 

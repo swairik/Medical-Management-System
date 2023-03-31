@@ -3,6 +3,7 @@ package com.mms.demo.serviceImpl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -43,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mailMessage);
             return;
         } catch (Exception e) {
-            throw new CustomException("Error while sending mail", "EMAIL_NOT_SENT");
+            throw new CustomException("Error while sending mail", "EMAIL_NOT_SENT", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
