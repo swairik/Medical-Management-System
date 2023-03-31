@@ -20,6 +20,6 @@ public class AppointmentRequest {
     @NotNull(message = "Schedule cannot be null")
     private long scheduleId;
 
-    @Builder.Default
+    @NotNull(message = "Appointment Details cannot be null")
     private AppointmentDetailsDTO appointmentDetails;
 }

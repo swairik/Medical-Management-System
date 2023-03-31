@@ -3,7 +3,6 @@ package com.mms.demo.exception;
 import org.springframework.http.HttpStatus;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 public class CustomException extends RuntimeException {
