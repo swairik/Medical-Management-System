@@ -1,26 +1,45 @@
 package com.mms.demo.serviceImpl;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.entity.Slot;
+import com.mms.demo.mapper.DataTransferObjectMapper;
+import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.service.ScheduleService;
+import com.mms.demo.transferobject.ScheduleDTO;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ScheduleRepository repository;
 
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private DataTransferObjectMapper<Schedule, ScheduleDTO> mapper;
+
     @Override
-    public Schedule createSchedule(Schedule schedule) {
-        return repository.save(schedule);
+    public ScheduleDTO create(Long doctorID, LocalDateTime start) throws IllegalArgumentException {
+        Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced doctor does not exist");
+        }
+        Doctor doctor = fetchedContainer.get();
+
+        Schedule schedule = Schedule.builder().doctor(doctor).start(start).end(start.plusMinutes(30)).build();
+        schedule = repository.save(schedule);
+
+        return mapper.entityToDto(schedule);
+
     }
 
     @Override
@@ -29,48 +48,86 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<Schedule> getAllSchedules() {
-        return repository.findAll();
+    public List<ScheduleDTO> getAll() {
+        return repository.findAll().stream().map(s -> mapper.entityToDto(s))
+                        .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Schedule> getScheduleById(Long id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public List<Schedule> getSchedulesByDoctor(Doctor doctor) {
-        return repository.findAllByDoctor(doctor);
-    }
-
-
-    @Override
-    public List<Schedule> getSchedulesBySlot(Slot slot) {
-        return repository.findAllBySlot(slot);
-    }
-
-    @Override
-    public List<Schedule> getSchedulesByDoctorAndWeekDay(Doctor doctor, LocalDate start,
-                    LocalDate end) {
-        return repository.findAllByDoctorAndWeekDateBetween(doctor, start, end);
-    }
-
-    @Override
-    public Schedule updateSchedule(Long id, Schedule scheduleUpdates) {
-        Optional<Schedule> temp = getScheduleById(id);
-
-        if (temp.isEmpty()) {
-            return null;
+    public Optional<ScheduleDTO> get(Long id) {
+        Optional<Schedule> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
+            return Optional.empty();
         }
 
-        Schedule schedule = temp.get();
-        schedule.setDoctor(scheduleUpdates.getDoctor());
-        schedule.setSlot(scheduleUpdates.getSlot());
-        schedule.setWeekDate(scheduleUpdates.getWeekDate());
-
-        return repository.save(schedule);
+        return Optional.of(mapper.entityToDto(fetchedContainer.get()));
     }
 
+    @Override
+    public List<ScheduleDTO> getByDoctor(Long doctorID) throws IllegalArgumentException {
+        Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced doctor does not exist");
+        }
+        Doctor doctor = fetchedContainer.get();
 
+        return repository.findAllByDoctor(doctor).stream().map(s -> mapper.entityToDto(s))
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleDTO> getByDoctorBetween(Long doctorID, LocalDateTime start,
+                    LocalDateTime end) throws IllegalArgumentException {
+
+        Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced doctor does not exist");
+        }
+        Doctor doctor = fetchedContainer.get();
+
+        return repository.findAllByDoctorAndStartBetween(doctor,
+                        start.truncatedTo(ChronoUnit.SECONDS), end.truncatedTo(ChronoUnit.SECONDS))
+                        .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleDTO)
+                    throws IllegalArgumentException {
+        Optional<Schedule> fetchedContainer = repository.findById(id);
+
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced schedule does not exist");
+        }
+
+        Schedule scheduleUpdates;
+        try {
+            scheduleUpdates = mapper.dtoToEntity(scheduleDTO);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
+        Schedule schedule = fetchedContainer.get();
+        schedule.setApprovalStatus(scheduleUpdates.getApprovalStatus());
+        schedule.setStart(scheduleUpdates.getStart());
+        schedule.setEnd(scheduleUpdates.getStart().plusMinutes(30));
+
+        schedule = repository.save(schedule);
+
+        return Optional.of(mapper.entityToDto(schedule));
+    }
+
+    @Override
+    public void markAsApproved(Long id) throws IllegalArgumentException {
+        Optional<Schedule> fetchedContainer = repository.findById(id);
+
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced schedule does not exist");
+        }
+
+        Schedule schedule = fetchedContainer.get();
+        schedule.setApprovalStatus(true);
+        repository.save(schedule);
+
+    }
 
 }

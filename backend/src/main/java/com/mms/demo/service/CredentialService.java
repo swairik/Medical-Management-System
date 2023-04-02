@@ -17,7 +17,7 @@ public interface CredentialService {
      * @param id the id
      * @return the credentials by id
      */
-    Optional<Credential> getCredentialsById(Long id);
+    Optional<Credential> get(Long id);
 
     /**
      * Gets the credentials by email.
@@ -25,7 +25,7 @@ public interface CredentialService {
      * @param email the email
      * @return the credentials by email
      */
-    Optional<Credential> getCredentialsByEmail(String email);
+    Optional<Credential> getByEmail(String email);
 
     /**
      * Creates credentials.
@@ -33,7 +33,7 @@ public interface CredentialService {
      * @param credentials the credentials
      * @return the credentials, on successful creation
      */
-    Credential createCredentials(Credential credentials);
+    Credential create(Credential credentials);
 
     /**
      * Update credentials.
@@ -42,12 +42,12 @@ public interface CredentialService {
      * @param credentials the credentials
      * @return the credential
      */
-    Credential updateCredentials(Long id, Credential credentials);
+    Credential update(Long id, Credential credentials);
 
     /**
      * Delete credentials.
      *
      * @param id the id
      */
-    void deleteCredentials(Long id);
+    void delete(Long id);
 }

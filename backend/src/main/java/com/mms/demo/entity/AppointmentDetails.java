@@ -52,28 +52,15 @@ public class AppointmentDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /**
-     * A reference to the Patient table. Defines the ownership of an entry from the side of a
-     * Patient. A Patient can have details stored for multiple appointments.
-     */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(nullable = false, referencedColumnName = "patient_id")
-    private Patient patient;
+    @Lob
+    @Column(name = "appointment_details_prescription", length = 100000)
+    @Builder.Default
+    private byte[] prescription = null;
 
-    /**
-     * A reference to the prescribing doctor.
-     */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(referencedColumnName = "doctor_id", nullable = false)
-    private Doctor doctor;
-
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "prescription_id", nullable = false)
-    private Prescription prescription;
-
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "feedback_id", nullable = false)
-    private Feedback feedback;
+    @Lob
+    @Column(name = "appointment_details_feedback", length = 100000)
+    @Builder.Default
+    private byte[] feedback = null;
 
     @Column(name = "appointment_details_stamp")
     private LocalDateTime stamp;

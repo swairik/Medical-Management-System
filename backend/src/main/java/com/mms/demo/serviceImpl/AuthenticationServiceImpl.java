@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Credential;
-import com.mms.demo.entity.Doctor;
-import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Role;
 import com.mms.demo.entity.Token;
 import com.mms.demo.exception.CustomException;
@@ -30,9 +29,10 @@ import com.mms.demo.service.EmailService;
 import com.mms.demo.service.JwtService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.TokenService;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.PatientDTO;
 
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -56,22 +56,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
-        Credential alreadyCreatedCredential = credentialService
-                .getCredentialsByEmail(registerRequest.getEmail()).orElse(null);
+        Credential alreadyCreatedCredential = credentialService.getByEmail(registerRequest.getEmail()).orElse(null);
 
         if (alreadyCreatedCredential != null) {
-            throw new CustomException("User with email already exists", "USER_ALREADY_CREATED");
+            throw new CustomException("User with email already exists", "USER_ALREADY_CREATED", HttpStatus.FORBIDDEN);
         }
 
         var credentials = Credential.builder().email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole()).build();
 
+        credentialService.create(credentials);
+
         if (registerRequest.getRole() == Role.PATIENT) {
-            var patient = Patient.builder().name(registerRequest.getName())
+            var patient = PatientDTO.builder().name(registerRequest.getName())
                     .email(registerRequest.getEmail()).build();
 
-            patientService.createPatient(patient);
+            patientService.create(patient);
 
             String subject = "Account has been created";
 
@@ -88,8 +89,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             emailService.sendSimpleMail(emailDetails);
         }
 
-        credentialService.createCredentials(credentials);
-
         return RegisterResponse.builder().message("User succesfully created").build();
 
     }
@@ -98,7 +97,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-        var user = credentialService.getCredentialsByEmail(authenticationRequest.getEmail())
+        var user = credentialService.getByEmail(authenticationRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
         var jwtToken = jwtService.generateToken(user);
 
@@ -115,14 +114,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(user.getRole()).build();
 
         if (user.getRole().equals(Role.PATIENT)) {
-            Patient patient = patientService.getAllPatients().stream()
+            PatientDTO patient = patientService.getAll().stream()
                     .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
                     .orElse(null);
             if (patient != null)
                 response.setId(patient.getId());
 
         } else if (user.getRole().equals(Role.DOCTOR)) {
-            Doctor doctor = doctorService.getAllDoctors().stream()
+            DoctorDTO doctor = doctorService.getAll().stream()
                     .filter((p) -> p.getEmail().equals(user.getEmail())).findFirst()
                     .orElse(null);
             if (doctor != null)
@@ -134,7 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String forgotPassword(String email) {
-        var user = credentialService.getCredentialsByEmail(email)
+        var user = credentialService.getByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
 
         String token = jwtService.generateToken(user);
@@ -147,23 +146,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         EmailDetails emailDetails = EmailDetails.builder().recipient(email).subject(subject)
                 .msgBody(msgBody).build();
         emailService.sendSimpleMail(emailDetails);
-        // if (response.equals("Error")) {
-        // throw new CustomException("Error while sending email", "EMAIL_NOT_SENT");
-        // }
+
         return "Email has been sent";
     }
 
     public String updatePassword(PasswordRequest passwordRequest) {
-        var user = credentialService.getCredentialsByEmail(passwordRequest.getEmail())
+        var user = credentialService.getByEmail(passwordRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
         if (!passwordRequest.getPassword().equals(passwordRequest.getConfirmPassword())) {
-            throw new CustomException("Passwords do not match", "PASSWORD_NOT_MATCHED");
+            throw new CustomException("Passwords do not match", "PASSWORD_NOT_MATCHED", HttpStatus.BAD_REQUEST);
         }
 
         if (jwtService.isTokenValid(passwordRequest.getToken(), user) == false
                 || jwtService.extractUsername(passwordRequest.getToken())
                         .equals(passwordRequest.getEmail()) == false) {
-            throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN");
+            throw new CustomException("Token is invalid", "INVALID_RESET_TOKEN", HttpStatus.BAD_REQUEST);
         }
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
 
@@ -175,7 +172,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .isRevoked(true).expirationStamp(expirationStamp).build();
         tokenService.createToken(token);
 
-        credentialService.updateCredentials(user.getId(), user);
+        credentialService.update(user.getId(), user);
 
         return "Password updated successfully";
     }

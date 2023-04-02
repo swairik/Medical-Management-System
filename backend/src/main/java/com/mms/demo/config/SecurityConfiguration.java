@@ -54,19 +54,10 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
                 .requestMatchers(HttpMethod.DELETE, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
-                // .requestMatchers("/slot/display/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/slot/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                .requestMatchers(HttpMethod.PUT, "/slot/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                .requestMatchers(HttpMethod.DELETE, "/slot/**").hasAnyAuthority("ADMIN")
-
                 // .requestMatchers("/speciality/display/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/speciality/**").hasAnyAuthority("ADMIN")
-
-                // .requestMatchers(HttpMethod.POST, "/appointmentDetails/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                // .requestMatchers(HttpMethod.PUT, "/appointmentDetails/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                // .requestMatchers(HttpMethod.DELETE, "/appointmentDetails/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
                 .anyRequest().authenticated().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

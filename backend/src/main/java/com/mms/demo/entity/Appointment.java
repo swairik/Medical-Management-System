@@ -2,7 +2,7 @@ package com.mms.demo.entity;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,13 +62,15 @@ public class Appointment {
     @JoinColumn(nullable = false, referencedColumnName = "patient_id")
     private Patient patient;
 
-    /**
-     * A reference to the Slot table. Defines the ownership of an entry from the side of a Slot. A
-     * single Slot can be assigned to multiple Patients.
-     */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(nullable = false, referencedColumnName = "slot_id")
-    private Slot slot;
+    @JoinColumn(nullable = false, referencedColumnName = "doctor_id")
+    private Doctor doctor;
+
+    @Column(name = "appointment_start", nullable = false)
+    private LocalDateTime start;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    private AppointmentDetails appointmentDetails;
 
     /**
      * A boolean flag that represents whether the appointment was attended by the patient or not.

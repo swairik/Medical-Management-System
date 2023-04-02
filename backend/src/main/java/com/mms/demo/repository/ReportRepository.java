@@ -1,8 +1,8 @@
 package com.mms.demo.repository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mms.demo.entity.Report;
@@ -20,7 +20,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      * @param stamp the timestamp. Only the date is relevant.
      * @return the list of Reports issued on the same day.
      */
-    List<Report> findAllByStamp(LocalDateTime stamp);
+    Optional<Report> findByStamp(LocalDate stamp);
 
     /**
      * Find all reports issued between a given range of days.
@@ -30,5 +30,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      *        also included.
      * @return the list of reports issued in this range of days.
      */
-    List<Report> findAllByStampBetween(LocalDateTime start, LocalDateTime end);
+    List<Report> findAllByStampBetween(LocalDate start, LocalDate end);
 }

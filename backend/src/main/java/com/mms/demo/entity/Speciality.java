@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -44,6 +45,7 @@ public class Speciality {
     /**
      * The title of the Speciality.
      */
+    @NonNull
     @Column(name = "speciality_name", nullable = false, unique = true)
     private String name;
 }

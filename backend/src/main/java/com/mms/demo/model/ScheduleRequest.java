@@ -14,12 +14,13 @@ public class ScheduleRequest {
     @NotNull(message = "Doctor Id cannot be null")
     private Long doctorId;
 
-    @NotNull(message = "Slot Id cannot be null")
-    private Long slotId;
-
     @NotNull(message = "Year & week cannot be null")
-    private String weekDate;
+    private String startTime;
+
+    @Builder.Default
+    private String endTime = "";
 
     @Builder.Default
     private Boolean approval = false;
+
 }

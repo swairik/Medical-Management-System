@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import com.mms.demo.entity.Patient;
+import com.mms.demo.transferobject.PatientDTO;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class PatientResponse {
     private String email;
     private String phone;
 
-    public static PatientResponse createResponseFromPatient(Patient patient) {
+    public static PatientResponse createResponseFromPatient(PatientDTO patient) {
         PatientResponse patientResponse = PatientResponse.builder()
                 .id(patient.getId())
                 .name(patient.getName())

@@ -1,5 +1,7 @@
 package com.mms.demo.model;
 
+import com.mms.demo.transferobject.AppointmentDetailsDTO;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +17,9 @@ public class AppointmentRequest {
     @NotNull(message = "Patient cannot be null")
     private long patientId;
 
-    @NotNull(message = "Slot cannot be null")
-    private long slotId;
+    @NotNull(message = "Schedule cannot be null")
+    private long scheduleId;
 
-    @Builder.Default
-    private Boolean attended = false;
+    @NotNull(message = "Appointment Details cannot be null")
+    private AppointmentDetailsDTO appointmentDetails;
 }
