@@ -31,14 +31,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                                 exception.getHttpStatus());
         }
 
-        @ExceptionHandler(Custom403Exception.class)
-        public ResponseEntity<ErrorResponse> handle403Exception(Custom403Exception exception) {
-                return new ResponseEntity<>(
-                                ErrorResponse.builder().errorMessage(exception.getMessage())
-                                                .errorCode(exception.getErrorCode()).build(),
-                                HttpStatus.FORBIDDEN);
-        }
-
         @ExceptionHandler({ AuthenticationException.class })
         public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception exception) {
                 return new ResponseEntity<>(
