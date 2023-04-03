@@ -70,6 +70,6 @@ public class SpecialityMapperImplTest {
             System.out.println(e);
         }
 
-        System.out.println(convertedDTO);
+        assertThat(convertedDTO).isNotNull();
     }
 }

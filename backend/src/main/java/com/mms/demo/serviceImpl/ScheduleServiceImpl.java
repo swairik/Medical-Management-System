@@ -35,6 +35,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<ScheduleDTO> create(Long doctorID, LocalDateTime start,
                     Optional<LocalDateTime> endContainer) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
+
+        if (start.isAfter(LocalDateTime.now().minusSeconds(30)) == false) {
+            throw new IllegalArgumentException("Creation of slots at a past time is not allowed");
+        }
+
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced doctor does not exist");
         }
@@ -44,8 +49,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         LocalDateTime end = null;
         if (endContainer.isPresent()) {
             end = endContainer.get().truncatedTo(ChronoUnit.MINUTES);
-            if (start.isAfter(end)) {
-                throw new IllegalArgumentException("End of slot cannot be before start");
+            if (start.isAfter(end) || start.isEqual(end)) {
+                throw new IllegalArgumentException(
+                                "End of slot cannot be before or equal to start");
             }
         } else {
             end = start.plusMinutes(30);
