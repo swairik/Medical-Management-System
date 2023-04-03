@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
-
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
@@ -32,10 +30,10 @@ public class PatientServiceTest {
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                        .limit(targetStringLength).collect(StringBuilder::new,
-                                        StringBuilder::appendCodePoint, StringBuilder::append)
-                        .toString();
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength).collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
 
         return generatedString;
     }
@@ -43,7 +41,7 @@ public class PatientServiceTest {
     private PatientDTO generateRandomPatientDTO() {
         Random rng = new Random();
         return PatientDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                        .name(genAlnum(14)).phone(genAlnum(10)).build();
+                .name(genAlnum(14)).phone(genAlnum(10)).build();
     }
 
     @Autowired
@@ -55,12 +53,10 @@ public class PatientServiceTest {
     void testCreate() {
         PatientDTO patientDTO = generateRandomPatientDTO();
 
-        patientService.create(patientDTO);
+        assertThat(patientService.create(patientDTO)).extracting("id").isNotNull();
         assertThatExceptionOfType(DataIntegrityViolationException.class)
-                        .isThrownBy(() -> patientService.create(patientDTO));
+                .isThrownBy(() -> patientService.create(patientDTO));
     }
-
-
 
     @Test
     void testGet() {
