@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
 
-
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
@@ -31,10 +29,10 @@ public class PatientMapperImplTest {
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                        .limit(targetStringLength).collect(StringBuilder::new,
-                                        StringBuilder::appendCodePoint, StringBuilder::append)
-                        .toString();
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength).collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
 
         return generatedString;
     }
@@ -42,7 +40,7 @@ public class PatientMapperImplTest {
     private PatientDTO generateRandomPatientDTO() {
         Random rng = new Random();
         return PatientDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                        .name(genAlnum(14)).phone(genAlnum(10)).build();
+                .name(genAlnum(14)).phone(genAlnum(10)).build();
     }
 
     @Autowired
@@ -50,18 +48,16 @@ public class PatientMapperImplTest {
 
     @Test
     void testDtoToEntity() {
-        PatientDTO patientDTOtest = PatientDTO.builder().build();
+        PatientDTO patientDTOtest = generateRandomPatientDTO().toBuilder().email(null).build();
         assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(patientDTOtest));
 
-
+        assertThat(mapper.dtoToEntity(patientDTOtest)).isNotNull();
     }
 
     @Test
     void testEntityToDto() {
         PatientDTO patientDTO = generateRandomPatientDTO();
-        Patient patient = mapper.dtoToEntity(patientDTO);
-        assertThat(patient).isNotNull();
 
-        assertThat(patientDTO).isEqualTo(mapper.entityToDto(patient));
+        assertThat(patientDTO).isEqualTo(mapper.entityToDto(mapper.dtoToEntity(patientDTO)));
     }
 }
