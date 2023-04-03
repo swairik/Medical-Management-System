@@ -3,8 +3,11 @@ package com.mms.demo.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +98,33 @@ public class ScheduleController {
         }
 
         List<ScheduleDTO> schedulesList = scheduleService.getApprovedByDoctor(did, true,  Optional.of(dateTime));
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
+
+    @GetMapping("/display/doctor/{did}/upcomingAll")
+    public ResponseEntity<List<ScheduleDTO>> displayAllSchedulesByDoctorUpcoming(
+            @PathVariable Long did, @RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT", HttpStatus.BAD_REQUEST);
+        }
+
+        List<ScheduleDTO> schedulesList;
+
+        // List<ScheduleDTO> approvedSchedulesList = scheduleService.getApprovedByDoctor(did, true,  Optional.of(dateTime));
+        // List<ScheduleDTO> unapprovedSchedulesList = scheduleService.getApprovedByDoctor(did, false,  Optional.of(dateTime));
+        
+        // List<ScheduleDTO> schedulesList = Stream.concat(approvedSchedulesList.stream(), unapprovedSchedulesList.stream()).collect(Collectors.toList());
+
+        // Collections.sort(schedulesList, new Comparator<ScheduleDTO>(){
+        //     public int compare(ScheduleDTO o1, ScheduleDTO o2){
+        //        return o1.getStart().minus(o2.getStart());
+        //     }
+        //  );
+
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
