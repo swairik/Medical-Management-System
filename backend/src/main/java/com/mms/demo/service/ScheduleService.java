@@ -42,6 +42,7 @@ public interface ScheduleService {
      */
     List<ScheduleDTO> getByDoctor(Long doctorID) throws IllegalArgumentException;
 
+    List<ScheduleDTO> getByDoctorAfter(Long doctorID) throws IllegalArgumentException;
 
     /**
      * Gets all schedules assigned to a doctor between given days.

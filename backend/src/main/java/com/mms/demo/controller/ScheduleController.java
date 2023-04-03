@@ -63,8 +63,8 @@ public class ScheduleController {
     @GetMapping("/display/{id}")
     public ResponseEntity<ScheduleDTO> displayScheduleById(@PathVariable Long id) {
         ScheduleDTO schedule = scheduleService.get(id)
-                .orElseThrow(() -> new CustomException("Schedule with given id not found",
-                        "SCHEDULE_NOT_FOUND", HttpStatus.NOT_FOUND));
+                        .orElseThrow(() -> new CustomException("Schedule with given id not found",
+                                        "SCHEDULE_NOT_FOUND", HttpStatus.NOT_FOUND));
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
@@ -81,57 +81,51 @@ public class ScheduleController {
 
     @GetMapping("/display/approved/{did}")
     public ResponseEntity<List<ScheduleDTO>> displayApprovedSchedulesByDoctor(
-            @PathVariable Long did) {
-        List<ScheduleDTO> schedulesList = scheduleService.getApprovedByDoctor(did, true, Optional.empty());
+                    @PathVariable Long did) {
+        List<ScheduleDTO> schedulesList =
+                        scheduleService.getApprovedByDoctor(did, true, Optional.empty());
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
     @GetMapping("/display/doctor/{did}/upcoming")
     public ResponseEntity<List<ScheduleDTO>> displayApprovedSchedulesByDoctorUpcoming(
-            @PathVariable Long did, @RequestParam String stamp) {
+                    @PathVariable Long did, @RequestParam String stamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime dateTime;
         try {
             dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
         } catch (Exception e) {
-            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT",
+                            HttpStatus.BAD_REQUEST);
         }
 
-        List<ScheduleDTO> schedulesList = scheduleService.getApprovedByDoctor(did, true,  Optional.of(dateTime));
+        List<ScheduleDTO> schedulesList =
+                        scheduleService.getApprovedByDoctor(did, true, Optional.of(dateTime));
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
     @GetMapping("/display/doctor/{did}/upcomingAll")
     public ResponseEntity<List<ScheduleDTO>> displayAllSchedulesByDoctorUpcoming(
-            @PathVariable Long did, @RequestParam String stamp) {
+                    @PathVariable Long did, @RequestParam String stamp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime dateTime;
         try {
             dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
         } catch (Exception e) {
-            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT",
+                            HttpStatus.BAD_REQUEST);
         }
 
-        List<ScheduleDTO> schedulesList;
-
-        // List<ScheduleDTO> approvedSchedulesList = scheduleService.getApprovedByDoctor(did, true,  Optional.of(dateTime));
-        // List<ScheduleDTO> unapprovedSchedulesList = scheduleService.getApprovedByDoctor(did, false,  Optional.of(dateTime));
-        
-        // List<ScheduleDTO> schedulesList = Stream.concat(approvedSchedulesList.stream(), unapprovedSchedulesList.stream()).collect(Collectors.toList());
-
-        // Collections.sort(schedulesList, new Comparator<ScheduleDTO>(){
-        //     public int compare(ScheduleDTO o1, ScheduleDTO o2){
-        //        return o1.getStart().minus(o2.getStart());
-        //     }
-        //  );
+        List<ScheduleDTO> schedulesList = scheduleService.getByDoctorAfter(did, dateTime);
 
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
     @GetMapping("/display/patient/approved/{did}")
     public ResponseEntity<List<ScheduleDTO>> displayNonZeroApprovedSchedulesByDoctor(
-            @PathVariable Long did) {
-        List<ScheduleDTO> schedulesList = scheduleService.getBookedAndApprovedByDoctor(did, true, false, Optional.empty());
+                    @PathVariable Long did) {
+        List<ScheduleDTO> schedulesList = scheduleService.getBookedAndApprovedByDoctor(did, true,
+                        false, Optional.empty());
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
@@ -200,26 +194,30 @@ public class ScheduleController {
 
     @PostMapping("/")
     public ResponseEntity<List<ScheduleDTO>> createSchedule(
-            @Valid @RequestBody ScheduleRequest scheduleRequest,
-            @AuthenticationPrincipal Credential user) {
+                    @Valid @RequestBody ScheduleRequest scheduleRequest,
+                    @AuthenticationPrincipal Credential user) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime startTime;
         Optional<LocalDateTime> endTime = Optional.empty();
         try {
-            startTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter).truncatedTo(ChronoUnit.SECONDS);
+            startTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter)
+                            .truncatedTo(ChronoUnit.SECONDS);
             if (scheduleRequest.getEndTime().isEmpty() == false)
                 endTime = Optional.ofNullable(
-                        LocalDateTime.parse(scheduleRequest.getEndTime(), formatter).truncatedTo(ChronoUnit.SECONDS));
+                                LocalDateTime.parse(scheduleRequest.getEndTime(), formatter)
+                                                .truncatedTo(ChronoUnit.SECONDS));
         } catch (Exception e) {
-            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT",
+                            HttpStatus.BAD_REQUEST);
         }
 
-        DoctorDTO doctor = doctorService.get(scheduleRequest.getDoctorId()).orElseThrow(
-                () -> new CustomException("Doctor with given id not found", "DOCTOR_NOT_FOUND", HttpStatus.NOT_FOUND));
+        DoctorDTO doctor = doctorService.get(scheduleRequest.getDoctorId())
+                        .orElseThrow(() -> new CustomException("Doctor with given id not found",
+                                        "DOCTOR_NOT_FOUND", HttpStatus.NOT_FOUND));
         if (checkPermissions(user, doctor.getEmail()) == false) {
             throw new CustomException(
-                    "Logged in user is not permitted to create another user's schedule",
-                    "SCHEDULE_CREATION_NOT_ALLOWED", HttpStatus.FORBIDDEN);
+                            "Logged in user is not permitted to create another user's schedule",
+                            "SCHEDULE_CREATION_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
 
         // List<ScheduleDTO> allSchedules =
@@ -234,47 +232,51 @@ public class ScheduleController {
         // already exists",
         // "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
         // }
-        List<ScheduleDTO> createdSchedule = scheduleService.create(scheduleRequest.getDoctorId(), startTime, endTime);
+        List<ScheduleDTO> createdSchedule =
+                        scheduleService.create(scheduleRequest.getDoctorId(), startTime, endTime);
 
         return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleDTO> updateSchedule(@PathVariable Long id,
-            @Valid @RequestBody ScheduleRequest scheduleRequest, @AuthenticationPrincipal Credential user) {
+                    @Valid @RequestBody ScheduleRequest scheduleRequest,
+                    @AuthenticationPrincipal Credential user) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime startTime;
         try {
-            startTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter).truncatedTo(ChronoUnit.SECONDS);
+            startTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter)
+                            .truncatedTo(ChronoUnit.SECONDS);
         } catch (Exception e) {
-            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT",
+                            HttpStatus.BAD_REQUEST);
         }
 
         ScheduleDTO schedule = scheduleService.get(id)
-                .orElseThrow(() -> new CustomException("Schedule with given id not found", "SCHEDULE_NOT_FOUND",
-                        HttpStatus.NOT_FOUND));
+                        .orElseThrow(() -> new CustomException("Schedule with given id not found",
+                                        "SCHEDULE_NOT_FOUND", HttpStatus.NOT_FOUND));
         if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
             throw new CustomException(
-                    "Logged in user is not permitted to edit another user's schedule",
-                    "SCHEDULE_UPDATE_NOT_ALLOWED", HttpStatus.FORBIDDEN);
+                            "Logged in user is not permitted to edit another user's schedule",
+                            "SCHEDULE_UPDATE_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
 
         List<ScheduleDTO> allSchedules = scheduleService.getByDoctor(scheduleRequest.getDoctorId());
-        ScheduleDTO alreadyCreatedSchedule = allSchedules.stream().filter((s) -> s.getStart().equals(startTime))
-                .findFirst()
-                .orElse(null);
+        ScheduleDTO alreadyCreatedSchedule = allSchedules.stream()
+                        .filter((s) -> s.getStart().equals(startTime)).findFirst().orElse(null);
 
         if (alreadyCreatedSchedule != null) {
-            throw new CustomException("Schedule with given combination of doctor & time already exists",
-                    "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
+            throw new CustomException(
+                            "Schedule with given combination of doctor & time already exists",
+                            "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
 
-        ScheduleDTO updateSchedule = ScheduleDTO.builder().approvalStatus(scheduleRequest.getApproval())
-                .start(startTime).build();
+        ScheduleDTO updateSchedule = ScheduleDTO.builder()
+                        .approvalStatus(scheduleRequest.getApproval()).start(startTime).build();
 
         ScheduleDTO updatedSchedule = scheduleService.update(id, updateSchedule)
-                .orElseThrow(() -> new CustomException("Error while updating schedule", "SCHEDULE_NOT_UPDATED",
-                        HttpStatus.INTERNAL_SERVER_ERROR));
+                        .orElseThrow(() -> new CustomException("Error while updating schedule",
+                                        "SCHEDULE_NOT_UPDATED", HttpStatus.INTERNAL_SERVER_ERROR));
 
         return new ResponseEntity<>(updatedSchedule, HttpStatus.OK);
     }
@@ -287,15 +289,15 @@ public class ScheduleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id,
-            @AuthenticationPrincipal Credential user) {
+                    @AuthenticationPrincipal Credential user) {
         ScheduleDTO schedule = scheduleService.get(id)
-                .orElseThrow(() -> new CustomException("Schedule with given id not found",
-                        "SCHEDULE_NOT_FOUND", HttpStatus.NOT_FOUND));
+                        .orElseThrow(() -> new CustomException("Schedule with given id not found",
+                                        "SCHEDULE_NOT_FOUND", HttpStatus.NOT_FOUND));
 
         if (checkPermissions(user, schedule.getDoctor().getEmail()) == false) {
             throw new CustomException(
-                    "Logged in user is not permitted to delete another user's schedule",
-                    "SCHEDULE_DELETE_NOT_ALLOWED", HttpStatus.FORBIDDEN);
+                            "Logged in user is not permitted to delete another user's schedule",
+                            "SCHEDULE_DELETE_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
 
         scheduleService.deleteSchedule(id);
