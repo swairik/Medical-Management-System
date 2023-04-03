@@ -1,5 +1,6 @@
 package com.mms.demo.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mms.demo.entity.Doctor;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.service.PatientService;
 import com.mms.demo.service.ReportService;
+import com.mms.demo.transferobject.ReportDTO;
 
 @CrossOrigin("*")
 @RestController
@@ -38,62 +39,33 @@ class ReportController {
     @Autowired
     ReportService reportService;
 
-    @GetMapping("/display/generateReport")
-    public ResponseEntity<Resource> generateReport(@RequestParam String from,
-                    @RequestParam String to) {
-        // reportService.forceRunReportGenerator(LocalDateTime.now());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime start, end;
-        try {
-            start = LocalDateTime.parse(from, formatter).truncatedTo(ChronoUnit.DAYS);
-            end = LocalDateTime.parse(to, formatter).truncatedTo(ChronoUnit.DAYS);
-            System.out.println("Fetching reports between " + start + " and " + end);
-
-        } catch (Exception e) {
-            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
-        }
-
-        for (LocalDateTime iter = start.truncatedTo(ChronoUnit.DAYS); iter
-                        .isAfter(end) != true; iter = iter.plusDays(1)) {
-            if (reportService.getReportByStamp(start).isEmpty()) {
-                reportService.forceRunReportGenerator(start);
-                System.out.println("Force generated report for " + start);
-            } else {
-
-            }
-        }
-
-        byte[] reports = reportService.generateReports(start, end)
-                        .orElseThrow(() -> new CustomException("Error while generating report",
-                                        "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
-        ByteArrayResource response = new ByteArrayResource(reports);
-
-        String filename = String.format("Report_%s_%s.zip", start.toString(), end.toString());
-        // return ResponseEntity.ok()
-        // .contentType(MediaType.APPLICATION_OCTET_STREAM)
-        // .contentLength(response.contentLength())
-        // .header(HttpHeaders.CONTENT_DISPOSITION,
-        // ContentDisposition.attachment()
-        // .filename(filename)
-        // .build().toString())
-        // .body(response);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        headers.add(HttpHeaders.CONTENT_ENCODING, "binary");
-        System.out.println("Writing " + reports.length + " bytes, specified "
-                        + response.contentLength());
-
-        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
-                        .contentLength(response.contentLength()).body(response);
+    @GetMapping("/display/{id}")
+    public ResponseEntity<ReportDTO> getReportById(@PathVariable Long id) {
+        ReportDTO report = reportService.get(id).orElseThrow(() -> new CustomException("Error while fetching report",
+                "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
+        return new ResponseEntity<>(report, HttpStatus.OK);
     }
 
-    @GetMapping("/display/generateDoctorReport/{id}")
-    public ResponseEntity<Resource> generateDoctorReport(@PathVariable Long id,
-                    @RequestParam String from, @RequestParam String to) {
-        Doctor doctor = doctorService.getDoctortById(id)
-                        .orElseThrow(() -> new CustomException("Doctor with given id not found",
-                                        "DOCTOR_NOT_FOUND"));
+    @GetMapping("/display/day")
+    public ResponseEntity<ReportDTO> getReportByDay(@RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.SECONDS);
+
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+        }
+
+        ReportDTO report = reportService.getByDay(dateTime)
+                .orElseThrow(() -> new CustomException("Error while fetching report",
+                        "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @GetMapping("/display/between")
+    public ResponseEntity<ReportDTO> generateReportBetween(@PathVariable Long did,
+            @RequestParam String from, @RequestParam String to) throws IOException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime start, end;
@@ -102,20 +74,86 @@ class ReportController {
             end = LocalDateTime.parse(to, formatter);
 
         } catch (Exception e) {
-            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT");
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
         }
+        ReportDTO report = reportService.getAllByDayBetween(start, end)
+                .orElseThrow(() -> new CustomException("Error while fetching report",
+                        "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
 
-        byte[] reports = reportService.generateScheduleReportForDoctor(start, end, doctor)
-                        .orElseThrow(() -> new CustomException("Error while generating report",
-                                        "REPORT_NOT_AVAILABLE_FOR_TIME_PERIOD"));
-        ByteArrayResource response = new ByteArrayResource(reports);
-        String filename =
-                        String.format("Report_Doctor_%s_%s.zip", start.toString(), end.toString());
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
-                        .contentLength(response.contentLength())
-                        .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                                        .filename(filename).build().toString())
-                        .body(response);
+        return new ResponseEntity<>(report, HttpStatus.OK);
+    }
+
+    @GetMapping("/display/between/download")
+    public ResponseEntity<Resource> generateReportBetweenDownload(@RequestParam String from, @RequestParam String to) throws IOException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime start, end;
+        try {
+            start = LocalDateTime.parse(from, formatter);
+            end = LocalDateTime.parse(to, formatter);
+
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+        }
+        ReportDTO report = reportService.getAllByDayBetween(start, end)
+                .orElseThrow(() -> new CustomException("Error while fetching report",
+                        "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + report.getFilename());
+        headers.add(HttpHeaders.CONTENT_ENCODING, "binary");
+        ByteArrayResource response = new ByteArrayResource(report.getContents());
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(response.contentLength()).body(response);
+    }
+
+    @GetMapping("/display/doctor/{did}")
+    public ResponseEntity<ReportDTO> generateDoctorReportBetween(@PathVariable Long did,
+            @RequestParam String from, @RequestParam String to) throws IOException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime start, end;
+        try {
+            start = LocalDateTime.parse(from, formatter);
+            end = LocalDateTime.parse(to, formatter);
+
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+        }
+        for (LocalDateTime dateTime = start; dateTime.isAfter(end) == false; dateTime = dateTime.plusDays(1)) {
+            reportService.forceRunReportGenerator(dateTime);
+        }
+        ReportDTO report = reportService.generateForDoctor(did, start, end)
+                .orElseThrow(() -> new CustomException("Error while fetching report",
+                        "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
+
+        return new ResponseEntity<>(report, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/display/doctor/{did}/download")
+    public ResponseEntity<Resource> generateDoctorReportDownloadBetween(@PathVariable Long did,
+            @RequestParam String from, @RequestParam String to) throws IOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime start, end;
+        try {
+            start = LocalDateTime.parse(from, formatter);
+            end = LocalDateTime.parse(to, formatter);
+
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
+        }
+        ReportDTO report = reportService.generateForDoctor(did, start, end)
+                .orElseThrow(() -> new CustomException("Error while fetching report",
+                        "REPORT_NOT_FOUND", HttpStatus.INTERNAL_SERVER_ERROR));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + report.getFilename());
+        headers.add(HttpHeaders.CONTENT_ENCODING, "binary");
+        ByteArrayResource response = new ByteArrayResource(report.getContents());
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(response.contentLength()).body(response);
+
     }
 
 }

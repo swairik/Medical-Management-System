@@ -1,7 +1,7 @@
 $(document).ready(function () {
   const cookie = document.cookie;
-  if(cookie=='') window.location.href = "Auth";
-  
+  if (cookie == "") window.location.href = "Auth";
+
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
@@ -91,26 +91,24 @@ $(document).ready(function () {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      responseType: "arraybuffer",
-      success: function (result) {
-        alert("Downloading..")
-        
-        // Create a new Blob object from the response data
-        var blob = new Blob([result], { type: "application/octet-stream" });
-        var url = URL.createObjectURL(blob);
-        
-        // Create a new hidden a tag with the download URL
-        var a = document.createElement("a");
+      xhrFields: {
+        responseType: "blob",
+      },
+      success: function (data,status,xhr) {
+        alert("Downloading..");
+        console.log(data);
+
+        // const filename = xhr.getResponseHeader('Content-Disposition')
+        //             .match(/filename="?(.+)"?/)[1];
+        // console.log(filename)
+
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement("a");
         a.href = url;
         a.download = "Report.zip";
-        a.style.display = "none";
-        
-        // Append the a tag to the body and simulate a click on it to start the download
         document.body.appendChild(a);
         a.click();
-        
-        // Remove the a tag from the body after the download is complete
-        document.body.removeChild(a);
+        a.remove();
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

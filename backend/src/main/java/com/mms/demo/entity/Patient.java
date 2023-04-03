@@ -2,7 +2,7 @@ package com.mms.demo.entity;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +54,7 @@ public class Patient {
      * The full name of the patient.
      * 
      */
+    @NonNull
     @Column(name = "patient_name", nullable = false)
     private String name;
 
@@ -78,6 +79,7 @@ public class Patient {
      * The email address of the patient.
      * 
      */
+    @NonNull
     @Column(name = "patient_email", length = 384, unique = true)
     @Email
     private String email;

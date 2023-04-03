@@ -2,6 +2,7 @@ package com.mms.demo.entity;
 
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -53,7 +54,7 @@ public class Report {
      */
     @Column(name = "report_timestamp")
     @Builder.Default
-    private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    private LocalDate stamp = LocalDate.now();
 
     /**
      * The contents of the report. Contains an XSSF Workbook converted to a byte array.

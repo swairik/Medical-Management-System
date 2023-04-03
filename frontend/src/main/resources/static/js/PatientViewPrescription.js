@@ -14,7 +14,7 @@ $(document).ready(function () {
   console.log(patient_id);
 
   $.ajax({
-    url: `http://localhost:8050/appointment/display/patient/${patient_id}`,
+    url: `http://localhost:8050/appointmentDetails/display/patient/${patient_id}`,
     type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -36,12 +36,12 @@ $(document).ready(function () {
         console.log(value);
         $(".prescription-table").append(
           `<tr>
-          <td id="prescription_doctor">${value.scheduleResponse.doctorResponse.name}</td>
-          <td id="prescription_speciality">${value.scheduleResponse.doctorResponse.speciality.name}</td>
-          <td id="prescription_date">${value.scheduleResponse.weekDate}</td>
+          <td id="prescription_doctor">${value.doctorResponse.name}</td>
+          <td id="prescription_speciality">${value.doctorResponse.speciality.name}</td>
+          <td id="prescription_date">${value.appointmentTimeStamp.substring(0,10)}</td>
           <td id="prescription_status">Added/Not Added</td>
           <td id="prescription_view">
-            <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.scheduleResponse.doctorResponse.id} patient_id=${value.patientResponse.id}>
+            <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.doctorResponse.id} patient_id=${value.patientResponse.id}>
             View</button>
           </td>
         </tr>`

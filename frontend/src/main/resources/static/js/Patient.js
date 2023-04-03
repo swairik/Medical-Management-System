@@ -23,6 +23,43 @@ $(document).ready(function () {
     .split("=")[1];
   console.log(token);
 
+  var doctor_array=[];
+
+ 
+
+  $(document).click(function() {
+    // code to handle the click event
+    $("#doctor_search_result").empty();
+    $("#doctor_search").val("")
+  });
+
+  $.ajax({
+    url: "http://localhost:8050/doctor/display",
+    type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (result) {
+      console.log(result);
+      docList = result;
+      console.log(docList);
+      $.each(result, function (key, value) {
+        console.log(value);
+        doctor_array.push(value)
+        // console.log(doctor_array)
+      });
+    },
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
+      }
+    },
+  });
+
+  console.log(doctor_array)
+
   $.ajax({
     url: "http://localhost:8050/speciality/display",
     type: "GET",
@@ -83,6 +120,31 @@ $(document).ready(function () {
     console.log("clicked");
     console.log(this.value);
 
+    window.location.href = "BookAppointment?id=" + this.value;
+  });
+
+  $("#doctor_search").on("keyup", function() {
+    // Get the current value of the input field
+    var filterValue = $(this).val().toLowerCase();
+
+    console.log(filterValue)
+
+    var filteredData = doctor_array.filter(function(item) {
+      return item.name.toLowerCase().indexOf(filterValue) > -1;
+    });
+
+    console.log(filteredData)
+
+    $("#doctor_search_result").empty();
+    
+    $.each(filteredData, function(index, item) {
+      $("#doctor_search_result").append(`<li value=${item.id}>` + item.name + "</li>");
+    });
+
+
+  });
+
+  $("#doctor_search_result").on("click", "li", function() {
     window.location.href = "BookAppointment?id=" + this.value;
   });
 });

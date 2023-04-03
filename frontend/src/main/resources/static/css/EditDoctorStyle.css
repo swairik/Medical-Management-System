@@ -82,6 +82,17 @@ footer a {
   border-radius: 8px;
   border: none;
 }
+
+.add_doctor_menu_btn_edit {
+  background-color: green;
+  color: white;
+  font-size: 14px;
+  padding: 6px 10px 6px 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+
 @media only screen and (max-width: 768px) {
   .container {
     width: 80%;

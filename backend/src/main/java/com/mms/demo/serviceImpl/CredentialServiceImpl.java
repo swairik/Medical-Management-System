@@ -15,22 +15,22 @@ public class CredentialServiceImpl implements CredentialService {
     CredentialRepository repository;
 
     @Override
-    public Optional<Credential> getCredentialsById(Long id) {
+    public Optional<Credential> get(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public Optional<Credential> getCredentialsByEmail(String email) {
+    public Optional<Credential> getByEmail(String email) {
         return repository.findByEmail(email);
     }
 
     @Override
-    public Credential createCredentials(Credential credentials) {
+    public Credential create(Credential credentials) {
         return repository.save(credentials);
     }
 
     @Override
-    public Credential updateCredentials(Long id, Credential credentialsUpdates) {
+    public Credential update(Long id, Credential credentialsUpdates) {
         Optional<Credential> temp = repository.findById(id);
 
         if (temp.isEmpty()) {
@@ -46,7 +46,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public void deleteCredentials(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 
