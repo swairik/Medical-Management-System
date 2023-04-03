@@ -55,11 +55,13 @@ public interface ScheduleService {
                     throws IllegalArgumentException;
 
 
-    List<ScheduleDTO> getApprovedByDoctor(Long doctorID);
+    List<ScheduleDTO> getApprovedByDoctor(Long doctorID, Boolean approval,
+                    Optional<LocalDateTime> after);
 
 
 
-    List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID);
+    List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID, Boolean approval, Boolean booked,
+                    Optional<LocalDateTime> after);
 
     /**
      * Creates the schedule.

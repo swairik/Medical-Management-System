@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,14 +125,27 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleDTO> getApprovedByDoctor(Long doctorID) {
-        return getByDoctor(doctorID).stream().filter(s -> s.getApprovalStatus())
+    public List<ScheduleDTO> getApprovedByDoctor(Long doctorID, Boolean approval,
+                    Optional<LocalDateTime> after) {
+        List<ScheduleDTO> qualifiers = getByDoctor(doctorID);
+
+        if (after.isPresent()) {
+            qualifiers = qualifiers.stream()
+                            .filter(s -> !s.getStart()
+                                            .isBefore(after.get().truncatedTo(ChronoUnit.MINUTES)))
+                            .collect(Collectors.toList());
+        }
+
+        return qualifiers.stream().filter(s -> Objects.equals(s.getApprovalStatus(), approval))
                         .collect(Collectors.toList());
+
     }
 
     @Override
-    public List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID) {
-        return getApprovedByDoctor(doctorID).stream().filter(s -> s.getBooked())
+    public List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID, Boolean approval,
+                    Boolean booked, Optional<LocalDateTime> after) {
+        return getApprovedByDoctor(doctorID, approval, after).stream()
+                        .filter(s -> Objects.equals(s.getBooked(), booked))
                         .collect(Collectors.toList());
     }
 
