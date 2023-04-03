@@ -89,7 +89,7 @@ public class DoctorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<DoctorDTO> createDoctor(@PathVariable Long spId, @Valid @RequestBody RegisterDoctorRequest doctorRequest) {
+    public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody RegisterDoctorRequest doctorRequest) {
         List<DoctorDTO> doctors = doctorService.getAll();
         DoctorDTO doctorAlreadyCreatedWithEmail = doctors.stream()
                 .filter((d) -> d.getEmail().equals(doctorRequest.getEmail())).findFirst()
@@ -119,7 +119,7 @@ public class DoctorController {
                 .phone(doctorRequest.getPhone())
                 .build();
 
-        DoctorDTO createdDoctor = doctorService.create(doctor, spId);
+        DoctorDTO createdDoctor = doctorService.create(doctor, doctorRequest.getSpecialityId());
         credentialService.create(credentials);
 
         String token = jwtService.generateToken(credentials);
