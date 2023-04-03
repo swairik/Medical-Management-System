@@ -16,6 +16,7 @@
       });
     </script>
     <script src="../js/Patient.js"></script>
+    <script src="../js/PatientViewProfile.js"></script>
     <script src="../js/PatientViewPrescription.js"></script>
   </head>
   <body>
@@ -24,16 +25,19 @@
     <div class="float-parent">
       <div class="float-child">
         <div class="child1">
+          <h3>Welcome, <span id="patient-name"></span> !</h3>
           <h1 id="tag">"We Care 4 Your Well Being"</h1>
           <br /><br />
           <h3>Quick Search</h3>
-          <form>
+          <!-- <form> -->
             <input
               type="text"
               name="search"
+              id="doctor_search"
               placeholder="Find a doctor by name.."
             />
-          </form>
+            <ul id="doctor_search_result"></ul>
+          <!-- </form> -->
           <br /><br /><br />
           <h3>Follow these easy steps :</h3>
           <img id="steps" src="images/steps.png" alt=" " />
@@ -44,11 +48,11 @@
       <div class="service-child">
         <p class="quote">Check in with Your Health!</p>
         <p class="service">Book an appointment today</p>
-        <a href="#part2"><img src="images/image 12.png" alt="click here" /></a>
+        <a href="#book"><img src="images/image 12.png" alt="click here" /></a>
       </div>
       <div class="service-child">
         <p class="quote">Your health comes first!</p>
-        <p class="service">Edit existing appointment</p>
+        <p class="service">Your Appointments</p>
         <a href="EditAppointment"
           ><img src="images/image 13.png" alt="click here"
         /></a>
@@ -64,9 +68,13 @@
 
     <div class="specialities">
       <h2>KEY SPECIALITIES</h2>
+      <div class="grid">
+
+      </div>
     </div>
 
-   <footer>Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
+
+   <footer id="book">Mail us at :<a href="mailto:care4u.mms@gmail.com">care4u.mms@gmail.com</a></footer>
 
     <div id="docList" class="modal">
       <h2>Doctor's Name</h2>
@@ -78,11 +86,8 @@
     <div id="popup" class="modal">
       <h2>E-PRESCRIPTION</h2>
       <div id="Prescription" class="content">
-        <table class="prescription-table">
-          <th>Doctor Name</th>
-          <th>Speciality</th>
-          <th>Date</th>
-          <th></th>
+        <br><h3 id="NA">No Prescription Available</h3>
+        <table class="prescription-table" style="display: none;">
         </table>
       </div>
       <a href="#" rel="modal:close"> </a>

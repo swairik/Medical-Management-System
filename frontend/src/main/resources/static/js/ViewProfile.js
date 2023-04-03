@@ -13,6 +13,8 @@ $(document).ready(function () {
         })
 
         const cookie = document.cookie;
+        if(cookie=='') window.location.href = "Auth";
+        
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
@@ -47,7 +49,8 @@ $(document).ready(function () {
         $("#dfspeciality").data('value',result.speciality.id)
         $("#dfcontact").val(result.phone);
         $("#dfemail").val(result.email);
-          
+        
+        $("#doc_name").html(result.name);
         },
         error: function (xhr, status, error) {
           if (xhr.status == 403) {

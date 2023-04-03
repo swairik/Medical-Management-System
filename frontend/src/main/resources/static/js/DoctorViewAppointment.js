@@ -25,6 +25,8 @@ $(document).ready(function () {
   var date = new Date();
 
   const cookie = document.cookie;
+  if(cookie=='') window.location.href = "Auth";
+  
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))

@@ -52,8 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -72,6 +71,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(registerRequest.getEmail()).build();
 
             patientService.create(patient);
+
+            String subject = "Account has been created";
+
+            String msgBody = "This email id has been registered as a patient in Care4u.\n" +
+                    "Following are the user details : \n" +
+                    "Name : " + patient.getName() + "\n" +
+                    "Email : " + patient.getEmail() + "\n" +
+                    "Gender : " + (patient.getGender() == null ? "-" : patient.getGender() == "M" ? "Male" : "Female") + "\n" +
+                    "Age : " + (patient.getAge() == null ? "-" : patient.getAge()) + "\n" +
+                    "Phone : " + (patient.getPhone() == null ? "-" : patient.getPhone());
+
+            EmailDetails emailDetails = EmailDetails.builder().recipient(patient.getEmail()).subject(subject)
+                    .msgBody(msgBody).build();
+            emailService.sendSimpleMail(emailDetails);
         }
 
         credentialService.create(credentials);

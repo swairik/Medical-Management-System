@@ -127,6 +127,10 @@ footer a{
 
 .right {
   width: 68%;
+  text-align: center;
+}
+.right h2 {
+  color: #E15E55;
 }
 
 .row:after {
@@ -138,9 +142,15 @@ footer a{
   background-color: #ffffffc3;
   margin: 0% 2% 2% 2%;
   border-radius: 8px;
-  padding: 1% 2% 3% 2%;
+  padding: 1% 2% 2% 2%;
+  float: left;
+  width: 29%;
+  text-align: center;
+  color: #004798;
 }
-
+.counts table td{
+  padding:0em 1.5em 0em 1.5em;
+}
 .graph1,.graph2{
   float: left;
   display: block;
@@ -152,18 +162,16 @@ footer a{
 .graph1{
   border-right:2px dashed #727275 ;
 }
-#AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
-  float: left;
-  width: 25%;
+.range_of_days {
+  margin-bottom: 2%;
 }
-#ACounts, #ADoctors{
-  font-size: 32px;
+.counts h2{
   color: #E15E55;
 }
 @media only screen and (max-width: 768px){
   .admin_heading {
     margin: 3%;
-    color: #E15E55;
+    color: rgb(234, 172, 168);
     padding-bottom: 2%;
     font-size: 24px;
     border-bottom: 3px solid #E15E55;
@@ -187,11 +195,13 @@ footer a{
     padding: 0%;
   }
   .column{
-    width: 90%;
+    width: 94%;
   }
 
   .right{
-    margin: 3%;}
+    margin: 3%;
+    height: fit-content;
+  }
 
   .left{
     margin: 3%
@@ -202,15 +212,17 @@ footer a{
   .graph1,.graph2{
     float: none;
     width: 100%;
+    padding-top: 5%;
   }
 
   .graph1{
     border: none;
     border-bottom:2px dashed #727275 ;}
 
-  #AppointmentCounts, #ActiveDoctors, #ACounts, #ADoctors{
+  .counts{
     float: none;
-    width: 100%;
-    padding: 5%;
+    width: 90%;
+    padding: 2.5%;
+    margin: 5%;
   }
 }

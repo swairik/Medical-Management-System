@@ -192,7 +192,6 @@ public class ScheduleController {
             throw new CustomException("Schedule with given combination of doctor & time already exists",
                     "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
-        System.out.println(scheduleRequest);
         ScheduleDTO createdSchedule = scheduleService.create(scheduleRequest.getDoctorId(), dateTime);
 
         return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);

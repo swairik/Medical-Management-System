@@ -24,11 +24,11 @@ public class PatientRequest {
     @Pattern(regexp = "M|F", message = "Gender must be M or F")
     private String gender;
 
-    @NotNull(message = "Age cannot be null")
+    @NotNull(message = "Age cannot be zero")
     @Min(0)
     private Integer age;
 
-    @Size(min = 7, max = 14, message = "Phone number must be between 7-14 characters")
+    @Size(min = 10, max = 10, message = "Phone number must have 10 characters")
     @NotNull
     private String phone;
 

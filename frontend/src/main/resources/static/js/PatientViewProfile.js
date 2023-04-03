@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
   const cookie = document.cookie;
+  if(cookie=='') window.location.href = "Auth";
+  
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
@@ -25,6 +27,8 @@ $(document).ready(function () {
       $("#pgender").html(result.gender?result.gender:'-');
       $("#pcontact").html(result.phone?result.phone:'-');
       $("#pemail").html(result.email);
+
+      $("#patient-name").html(result.name);
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {

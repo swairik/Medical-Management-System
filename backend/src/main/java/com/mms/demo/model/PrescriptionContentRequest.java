@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PrescriptionContentRequest {
-    String medication;
-    String test;
-    String diagnosis;
+    @Builder.Default
+    String medication = "";
+    @Builder.Default
+    String test = "";
+    @Builder.Default
+    String diagnosis = "";
 }
