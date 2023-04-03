@@ -32,8 +32,6 @@ public class EmailServiceImpl implements EmailService {
     @Value("${email.reminder.delay}")
     private Long minimumReminderDelay;
 
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     AppointmentRepository appointmentRepository;
@@ -75,7 +73,7 @@ public class EmailServiceImpl implements EmailService {
 
             EmailDetails emailDetails = EmailDetails.builder().recipient(patient.getEmail())
                             .subject(subject).msgBody(msgBody).build();
-            emailService.sendSimpleMail(emailDetails);
+            sendSimpleMail(emailDetails);
         }
 
     }

@@ -7,7 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class PatientDTO {
     Long id;
     String name;

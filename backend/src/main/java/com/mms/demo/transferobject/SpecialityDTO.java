@@ -8,7 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class SpecialityDTO {
     Long id;
     String name;

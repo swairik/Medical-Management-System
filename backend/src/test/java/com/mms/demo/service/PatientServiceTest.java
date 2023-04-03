@@ -9,12 +9,13 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Patient;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.PatientDTO;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -55,48 +56,43 @@ public class PatientServiceTest {
         PatientDTO patientDTO = generateRandomPatientDTO();
 
         patientService.create(patientDTO);
-        patientService.create(patientDTO);
+        assertThatExceptionOfType(DataIntegrityViolationException.class)
+                        .isThrownBy(() -> patientService.create(patientDTO));
     }
 
 
 
-    // @Test
-    // void testGet() {
-    // PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
-    // assertThat(patientService.get(patientDTO.id())).contains(patientDTO);
-    // assertThat(patientService.get(patientDTO.id() - 1)).isNotSameAs(Optional.of(patientDTO));
-    // assertThat(patientService.get(patientDTO.id() + 1)).isEmpty();
-    // }
+    @Test
+    void testGet() {
+        PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+        assertThat(patientService.get(patientDTO.getId())).contains(patientDTO);
+        assertThat(patientService.get(patientDTO.getId() - 1)).isNotSameAs(Optional.of(patientDTO));
+        assertThat(patientService.get(patientDTO.getId() + 1)).isEmpty();
+    }
 
-    // @Test
-    // void testDelete() {
-    // PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
-    // patientService.delete(patientDTO.id());
-    // assertThat(patientService.get(patientDTO.id())).isEmpty();
-    // }
+    @Test
+    void testDelete() {
+        PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+        patientService.delete(patientDTO.getId());
+        assertThat(patientService.get(patientDTO.getId())).isEmpty();
+    }
 
-    // @Test
-    // void testGetAll() {
-    // ArrayList<PatientDTO> patientDTOs = new ArrayList<>();
-    // for (int i = 0; i < 5; i++) {
-    // patientDTOs.add(patientService.create(generateRandomPatientDTO()));
-    // }
+    @Test
+    void testGetAll() {
+        ArrayList<PatientDTO> patientDTOs = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            patientDTOs.add(patientService.create(generateRandomPatientDTO()));
+        }
 
-    // ArrayList<PatientDTO> excludedPatientDTOs = new ArrayList<>();
-    // for (int i = 0; i < 5; i++) {
-    // excludedPatientDTOs.add(patientService.create(generateRandomPatientDTO()));
-    // }
+        assertThat(patientService.getAll()).containsAll(patientDTOs);
+    }
 
-    // assertThat(patientService.getAll()).containsAll(patientDTOs);
-    // assertThat(patientService.getAll()).doesNotContainAnyElementsOf(excludedPatientDTOs);
-    // }
+    @Test
+    void testUpdate() {
+        PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+        PatientDTO updates = patientDTO.toBuilder().name(genAlnum(10)).build();
 
-    // @Test
-    // void testUpdate() {
-    // PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
-    // PatientDTO updates = patientDTO.toBuilder().name(genAlnum(10)).build();
-
-    // assertThat(patientService.update(patientDTO.id(), updates)).contains(updates);
-    // assertThat(patientService.update(100L, updates)).isEmpty();
-    // }
+        assertThat(patientService.update(patientDTO.getId(), updates)).contains(updates);
+        assertThatIllegalArgumentException().isThrownBy(() -> patientService.update(100L, updates));
+    }
 }

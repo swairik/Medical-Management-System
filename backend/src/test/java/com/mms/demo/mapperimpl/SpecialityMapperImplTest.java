@@ -18,7 +18,7 @@ import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.SpecialityDTO;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -33,10 +33,13 @@ public class SpecialityMapperImplTest {
 
     @Test
     void testDtoToEntity() {
-        SpecialityDTO specialityDTO = SpecialityDTO.builder().id(1L).name(null).build();
+        final SpecialityDTO specialityDTOtest = SpecialityDTO.builder().id(1L).name(null).build();
 
+        assertThatIllegalArgumentException()
+                        .isThrownBy(() -> mapper.dtoToEntity(specialityDTOtest));
+
+        SpecialityDTO specialityDTO = SpecialityDTO.builder().name("Spec").build();
         Speciality speciality = mapper.dtoToEntity(specialityDTO);
-
         assertThat(speciality).isNotNull();
 
         assertThat(speciality.getId()).isEqualTo(specialityDTO.getId());
