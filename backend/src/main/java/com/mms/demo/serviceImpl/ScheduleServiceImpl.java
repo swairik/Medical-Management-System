@@ -110,6 +110,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public List<ScheduleDTO> getByDoctorAfter(Long doctorID, LocalDateTime stamp)
+                    throws IllegalArgumentException {
+        Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
+        if (fetchedContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced doctor does not exist");
+        }
+        Doctor doctor = fetchedContainer.get();
+
+        return repository.findAllByDoctorAndStartGreaterThanEqual(doctor, stamp).stream()
+                        .map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+    }
+
+    @Override
     public List<ScheduleDTO> getByDoctorBetween(Long doctorID, LocalDateTime start,
                     LocalDateTime end) throws IllegalArgumentException {
 
