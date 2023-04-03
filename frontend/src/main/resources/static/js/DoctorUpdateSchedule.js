@@ -30,19 +30,20 @@ $(document).ready(function () {
     .split("; ")
     .find((row) => row.startsWith("authToken="))
     .split("=")[1];
-    const id = cookie
+    const doctor_id = cookie
     .split("; ")
     .find((row) => row.startsWith("id="))
     .split("=")[1];
   console.log(token)
-  console.log(id);
+  console.log(doctor_id);
 
-  var week_id = document.getElementById("week");
+  var date_id = document.getElementById("date");
   var start_time_id = document.getElementById("start_time");
   var end_time_id = document.getElementById("end_time");
 
-  week_id.min = `${result[0]}-W${result[1]}`;
-  week_id.value = `${result[0]}-W${result[1]}`;
+  date_id.min = getDate(curDateTime);
+
+  date_id.value = getDate(curDateTime);
 
   start_time_id.value =
     (curDateTime.getHours() < 10 ? "0" : "") +
@@ -58,7 +59,7 @@ $(document).ready(function () {
     curDateTime.getMinutes();
 
   $.ajax({
-    url: `http://localhost:8050/schedule/display/doctor/${id}`,
+    url: `http://localhost:8050/schedule/display/doctor/${doctor_id}`,
     type: "GET",
     headers: {
       "Authorization": `Bearer ${token}`
@@ -72,19 +73,17 @@ $(document).ready(function () {
         $(".responsive-table").append(`
             <li class="table-row">
             
-            <div class="col col-2" data-label="Date">${value.weekDate}</div>
-            <div class="col col-3" data-label="Day">${
-              value.slotResponse.weekday
-            }</div>
+            <div class="col col-2" data-label="Date">${value.start.substring(0, value.start.indexOf('T'))}</div>
+            
             <div class="col col-4" data-label="StartTime">${
-              value.slotResponse.start
+              value.start.substring(value.start.indexOf('T')+1).replace(/:00$/, '')
             }</div>
             <div class="col col-5" data-label="EndTime">${
-              value.slotResponse.end
+              value.end.substring(value.end.indexOf('T')+1).replace(/:00$/, '')
             }</div>
             
             <div class="col col-7" data-label="Status">${
-              value.approval ? "Approved" : "Not Appproved"
+              value.approvalStatus ? "Approved" : "Not Appproved"
             }</div>
             <div class="col col-8" data-label="Remove"><button id="remove_button" type="remove" value=${
               value.id
@@ -103,59 +102,39 @@ $(document).ready(function () {
   });
 
   $("#save_button").click(function (e) {
-    var slotData = {
-      weekday: $("#days").val(),
-      start: $("#start_time").val(),
-      end: $("#end_time").val(),
-    };
 
-    console.log(slotData);
+    console.log($("#date").val())
+    console.log($("#start_time").val())
+    console.log($("#end_time").val())
+
+    const modifiedDate = ($("#date").val()).replace(/-/g, '/');
+
+    console.log(modifiedDate)
+
+    const doctorSchedule = 
+    {
+      "doctorId": doctor_id,
+      "startTime":modifiedDate + ' ' + $("#start_time").val() + ':00',
+      "endTime": modifiedDate + ' ' + $("#end_time").val() +  ':00'
+    }
 
     console.log("clicked");
     e.preventDefault();
+    console.log(doctorSchedule)
     $.ajax({
-      url: "http://localhost:8050/slot/",
+      url: "http://localhost:8050/schedule/",
       type: "POST",
       dataType: "json",
       contentType: "application/json",
-      data: JSON.stringify(slotData),
+      data: JSON.stringify(doctorSchedule),
       headers: {
         "Authorization": `Bearer ${token}`
       },
       success: function (result) {
         console.log(result);
-
         $.each(result, function (key, value) {
           console.log("hi")
-          $.ajax({
-            url: "http://localhost:8050/schedule/",
-            type: "POST",
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify({
-              doctorId: id,
-              slotId: value.id,
-              weekDate: $("#week").val(),
-            }),
-            headers: {
-              "Authorization": `Bearer ${token}`
-            },
-            success: function (result) {
-              console.log(result);
-              // window.location.href = 'UpdateSchedule';
-            },
-            error: function (xhr, status, errorThrown) {
-              console(xhr)
-              if (xhr.status == 403) {
-                window.location.href = "Auth";
-              } else {
-                alert("Some Error Occurred");
-              }
-            },
-          });
         });
-        alert("Schedule Updated Successfully!");
-        window.location.href = "UpdateSchedule";
       },
       error: function (xhr, status, errorThrown) {
         let errorObj;
@@ -169,36 +148,34 @@ $(document).ready(function () {
           if (errorObj) alert(errorObj.errorMessage);
           else alert("Some Error Occurred");
         }
-
-        //console.log(errorObj.errorMessage);
       },
     });
   });
 
-  $(".responsive-table").on("click", "button#remove_button", function (e) {
-    console.log("clicked");
-    console.log(this);
-    e.preventDefault();
-    $.ajax({
-      type: "DELETE",
-      url: `http://localhost:8050/schedule/${this.value}`,
-      headers: {
-        "Authorization": `Bearer ${token}`
-      },
-      success: function (result) {
-        alert("Schedule Removed Successfully");
-        window.location.href = "UpdateSchedule";
-      },
-      error: function (xhr, status, errorThrown) {
-        if (xhr.status == 403) {
-          window.location.href = "Auth";
-        } else {
-          if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+  // $(".responsive-table").on("click", "button#remove_button", function (e) {
+  //   console.log("clicked");
+  //   console.log(this);
+  //   e.preventDefault();
+  //   $.ajax({
+  //     type: "DELETE",
+  //     url: `http://localhost:8050/schedule/${this.value}`,
+  //     headers: {
+  //       "Authorization": `Bearer ${token}`
+  //     },
+  //     success: function (result) {
+  //       alert("Schedule Removed Successfully");
+  //       window.location.href = "UpdateSchedule";
+  //     },
+  //     error: function (xhr, status, errorThrown) {
+  //       if (xhr.status == 403) {
+  //         window.location.href = "Auth";
+  //       } else {
+  //         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
-        }
-      },
-    });
-  });
+  //         if (errorObj) alert(errorObj.errorMessage);
+  //         else alert("Some Error Occurred");
+  //       }
+  //     },
+  //   });
+  // });
 });

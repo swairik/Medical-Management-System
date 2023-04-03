@@ -1,70 +1,70 @@
-$(document).ready(function () {
-  const cookie = document.cookie;
-  if(cookie=='') window.location.href = "Auth";
+// $(document).ready(function () {
+//   const cookie = document.cookie;
+//   if(cookie=='') window.location.href = "Auth";
   
-  const token = cookie
-    .split("; ")
-    .find((row) => row.startsWith("authToken="))
-    .split("=")[1];
-  const patient_id = cookie
-    .split("; ")
-    .find((row) => row.startsWith("id="))
-    .split("=")[1];
-  console.log(token);
-  console.log(patient_id);
+//   const token = cookie
+//     .split("; ")
+//     .find((row) => row.startsWith("authToken="))
+//     .split("=")[1];
+//   const patient_id = cookie
+//     .split("; ")
+//     .find((row) => row.startsWith("id="))
+//     .split("=")[1];
+//   console.log(token);
+//   console.log(patient_id);
 
-  $.ajax({
-    url: `http://localhost:8050/appointmentDetails/display/patient/${patient_id}`,
-    type: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (result) {
-      console.log(result);
-      $('#NA').replaceWith($('.prescription-table').show());
-      $(".prescription-table").append(
-        `<th>Doctor Name</th>
-        <th>Speciality</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th></th>`
-      );
-      $.each(result, function (key, value) {
-        console.log(value);
-        $(".prescription-table").append(
-          `<tr>
-          <td id="prescription_doctor">${value.doctorResponse.name}</td>
-          <td id="prescription_speciality">${value.doctorResponse.speciality.name}</td>
-          <td id="prescription_date">${value.appointmentTimeStamp.substring(0,10)}</td>
-          <td id="prescription_status">Added/Not Added</td>
-          <td id="prescription_view">
-            <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.doctorResponse.id} patient_id=${value.patientResponse.id}>
-            View</button>
-          </td>
-        </tr>`
-        );
-      });
-    },
-    error: function (xhr, status, errorThrown) {
-      if (xhr.status == 403) {
-        window.location.href = "Auth";
-      } else {
-        var errorObj;
-        if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+//   $.ajax({
+//     url: `http://localhost:8050/appointmentDetails/display/patient/${patient_id}`,
+//     type: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (result) {
+//       console.log(result);
+//       $('#NA').replaceWith($('.prescription-table').show());
+//       $(".prescription-table").append(
+//         `<th>Doctor Name</th>
+//         <th>Speciality</th>
+//         <th>Date</th>
+//         <th>Status</th>
+//         <th></th>`
+//       );
+//       $.each(result, function (key, value) {
+//         console.log(value);
+//         $(".prescription-table").append(
+//           `<tr>
+//           <td id="prescription_doctor">${value.doctorResponse.name}</td>
+//           <td id="prescription_speciality">${value.doctorResponse.speciality.name}</td>
+//           <td id="prescription_date">${value.appointmentTimeStamp.substring(0,10)}</td>
+//           <td id="prescription_status">Added/Not Added</td>
+//           <td id="prescription_view">
+//             <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.doctorResponse.id} patient_id=${value.patientResponse.id}>
+//             View</button>
+//           </td>
+//         </tr>`
+//         );
+//       });
+//     },
+//     error: function (xhr, status, errorThrown) {
+//       if (xhr.status == 403) {
+//         window.location.href = "Auth";
+//       } else {
+//         var errorObj;
+//         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
-      }
-    },
-  });
+//         if (errorObj) alert(errorObj.errorMessage);
+//         else alert("Some Error Occurred");
+//       }
+//     },
+//   });
 
-  $(".prescription-table").on("click", "#prescription_view_btn", function (e) {
-    console.log("clicked");
-    console.log(this.value);
-    console.log($(this).attr("doctor_id"))
+//   $(".prescription-table").on("click", "#prescription_view_btn", function (e) {
+//     console.log("clicked");
+//     console.log(this.value);
+//     console.log($(this).attr("doctor_id"))
 
-    window.location.href = "ViewPrescription?appointment_id=" + this.value + "&patient_id=" + $(this).attr("patient_id") + "&doctor_id=" + $(this).attr("doctor_id") ;
-  });
+//     window.location.href = "ViewPrescription?appointment_id=" + this.value + "&patient_id=" + $(this).attr("patient_id") + "&doctor_id=" + $(this).attr("doctor_id") ;
+//   });
 
 
-});
+// });
