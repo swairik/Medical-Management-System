@@ -131,9 +131,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         @ExceptionHandler({ DataIntegrityViolationException.class })
         public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(Exception e) {
                 return new ResponseEntity<>(
-                                ErrorResponse.builder().errorMessage(e.getMessage())
+                                ErrorResponse.builder().errorMessage("Error encountered")
                                                 .errorCode("DATA_INTEGRITY_EXCEPTION").build(),
-                                HttpStatus.BAD_REQUEST);
+                                HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         @ExceptionHandler({ Exception.class })

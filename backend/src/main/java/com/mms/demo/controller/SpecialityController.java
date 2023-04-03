@@ -55,7 +55,7 @@ public class SpecialityController {
         }
 
         SpecialityDTO createdSpeciality = specialityService.create(specialityRequest);
-        return new ResponseEntity<>(createdSpeciality, HttpStatus.OK);
+        return new ResponseEntity<>(createdSpeciality, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

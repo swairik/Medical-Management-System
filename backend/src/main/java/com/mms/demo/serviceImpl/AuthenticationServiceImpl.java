@@ -67,14 +67,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole()).build();
 
-        credentialService.create(credentials);
-
         if (registerRequest.getRole() == Role.PATIENT) {
             var patient = PatientDTO.builder().name(registerRequest.getName())
                     .email(registerRequest.getEmail()).build();
 
             patientService.create(patient);
         }
+
+        credentialService.create(credentials);
 
         return RegisterResponse.builder().message("User succesfully created").build();
 
