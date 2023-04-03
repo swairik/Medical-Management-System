@@ -21,6 +21,9 @@ $(document).ready(function () {
     },
     success: function (result) {
       console.log(result);
+      if(result.length===0){
+
+      }else{
       $('#NA').replaceWith($('.prescription-table').show());
       $(".prescription-table").append(
         `<th>Doctor Name</th>
@@ -44,6 +47,7 @@ $(document).ready(function () {
         </tr>`
         );
       });
+    }
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {

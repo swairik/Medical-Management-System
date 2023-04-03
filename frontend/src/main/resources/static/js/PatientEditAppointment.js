@@ -52,9 +52,25 @@ $(document).ready(function () {
     },
     success: function (result) {
       console.log(result);
+      if(result.length===0){
+        $("#Table_header").append(`<br><br><h2>You have no Upcoming Appointments<h2>`) 
+      }else{
+        $("#Table_header").append(`
+        <caption>Upcoming Appointment Details</caption>
+    <thead>
+      <tr>
+        <th scope="col">Doctor's Name</th>
+        <th scope="col">Speciality</th>
+        <th scope="col">Date</th>
+        <th scope="col">Day</th>
+        <th scope="col">Slot Time</th>
+        <th scope="col">Cancel Appointment</th>
+      </tr>
+    </thead>`)
       $.each(result, function (key, value) {
           $("#patient_appointment").append(constructAppointmentInfo(value));
       });
+    }
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {

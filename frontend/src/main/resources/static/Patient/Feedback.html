@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/PatientProfile.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+        $(function () {
+          $("#load_content").load("PatientNavbar");
+        });
+      </script>
+  </head>
+  <body>
+    <div id="load_content"></div>
+    <h2>Patient Feedback Form</h2>
+    <form action="" id="feedback">
+        <label for="Question1">How was your experience making an appointment?</label><br>
+        <textarea class="input" id="Question1"></textarea><br>
+        <label for="Question2">How was your experience with the doctor?</label><br>
+        <textarea class="input" id="Question2"></textarea><br>
+        <label for="Question3">Some suggestions to improve?</label><br>
+        <textarea class="input" id="Question3"></textarea><br>
+        <label for="Question4">Rate your overall experience</label><br>
+        
+        <input class="submit" type="submit" value="Submit">
+      </form>
+    <footer>
+        Mail us at :<a href="mailto:support@care4u.com">support@care4u.com</a>
+      </footer>
+  </body>
