@@ -58,37 +58,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         dtoBuilder.specialityDoctorCount(specialityDoctorCount);
         dtoBuilder.specialityPatientCount(specialityPatientCount);
 
-        // // find for entire month
-        // LocalDate currentDate = LocalDate.now();
-        // LocalDateTime monthStart = currentDate.withDayOfMonth(1).atStartOfDay();
-        // LocalDateTime monthEnd = currentDate
-        // .withDayOfMonth(currentDate.getMonth().length(currentDate.isLeapYear()))
-        // .atTime(LocalTime.MAX);
-        // List<Appointment> appointments =
-        // appointmentRepository.findAllByStartBetween(monthStart, monthEnd);
-        // dtoBuilder.appointmentsThisMonth(appointments.stream().count());
-
-        // final DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
-        // final DayOfWeek lastDayOfWeek = DayOfWeek
-        // .of(((firstDayOfWeek.getValue() + 5) % DayOfWeek.values().length) + 1);
-        // final LocalDate weekStart =
-        // LocalDate.now().with(TemporalAdjusters.previousOrSame(firstDayOfWeek)); // first
-        // // day
-        // final LocalDate weekEnd =
-        // LocalDate.now().with(TemporalAdjusters.nextOrSame(lastDayOfWeek)); // last
-        // // day
-        // dtoBuilder.appointmentsThisWeek(appointments.stream()
-        // .filter(a -> !(a.getStart().isBefore(weekStart.atStartOfDay())
-        // || a.getStart().isAfter(weekEnd.atTime(LocalTime.MAX))))
-        // .count());
-
-        // dtoBuilder.appointmentsToday(appointments.stream()
-        // .filter(a -> !(a.getStart().isBefore(currentDate.atStartOfDay())
-        // || a.getStart().isAfter(currentDate.atTime(LocalTime.MAX))))
-        // .count());
-
-        // dtoBuilder.d
-
         LocalDate currentDate = LocalDate.now();
         LocalDate monthStart = currentDate.withDayOfMonth(1);
         LocalDate monthEnd = currentDate
@@ -166,7 +135,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                                         weekEnd.atTime(LocalTime.MAX))
                         .stream().filter(a -> a.getAttended()).count()));
 
-        return Optional.empty();
+        return Optional.of(dtoBuilder.build());
     }
 
 }
