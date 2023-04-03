@@ -2,6 +2,7 @@ package com.mms.demo.serviceImpl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,15 +31,41 @@ public class ScheduleServiceImpl implements ScheduleService {
     private DataTransferObjectMapper<Schedule, ScheduleDTO> mapper;
 
     @Override
-    public ScheduleDTO create(Long doctorID, LocalDateTime start) throws IllegalArgumentException {
+    public ScheduleDTO create(Long doctorID, LocalDateTime start,
+                    Optional<LocalDateTime> endContainer) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
-        Schedule schedule = Schedule.builder().doctor(doctor).start(start)
-                        .end(start.plusMinutes(30)).build();
+        start = start.truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime end = null;
+        if (endContainer.isPresent()) {
+            end = endContainer.get().truncatedTo(ChronoUnit.MINUTES);
+            if (start.isAfter(end)) {
+                throw new IllegalArgumentException("End of slot cannot be before start");
+            }
+        } else {
+            end = start.plusMinutes(30);
+        }
+
+        List<Schedule> schedules = new ArrayList<>();
+        for (LocalDateTime time = start; !time.isAfter(end); time = time.plusMinutes(30)) {
+            Schedule schedule = Schedule.builder().doctor(doctor).start(time)
+                            .end(time.plusMinutes(30)).build();
+            schedules.add(schedule);
+
+            if (repository.findByDoctorAndStart(doctor, time).isPresent()) {
+                throw new IllegalArgumentException(
+                                "A previous schedule with the specified fields already exists: Doctor ("
+                                                + doctor.getName() + "), Time (" + time.toString()
+                                                + ")");
+            }
+
+            repository.saveAll(schedules);
+        }
+        Schedule schedule = Schedule.builder().doctor(doctor).start(start).end(end).build();
         schedule = repository.save(schedule);
 
         return mapper.entityToDto(schedule);
