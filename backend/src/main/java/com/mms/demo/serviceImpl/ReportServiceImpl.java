@@ -182,7 +182,7 @@ public class ReportServiceImpl implements ReportService {
             try {
                 reportWorkbook = ByteArrayToXSSFWorkbook(report.getContents());
             } catch (IOException e) {
-                throw new IOException("Unaable to convert report to workbook", e);
+                throw new IOException("Unable to convert report to workbook", e);
             }
 
             XSSFSheet sheet = reportWorkbook.getSheet(Long.toString(doctor.getId()));

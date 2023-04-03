@@ -233,7 +233,7 @@ public class AppointmentController {
 
         AppointmentDTO createdAppointment = appointmentService.create(appointmentRequest.getPatientId(), appointmentRequest.getScheduleId(), appointmentRequest.getAppointmentDetails());
 
-        return new ResponseEntity<>(createdAppointment, HttpStatus.OK);
+        return new ResponseEntity<>(createdAppointment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{aptId}/{sid}")
