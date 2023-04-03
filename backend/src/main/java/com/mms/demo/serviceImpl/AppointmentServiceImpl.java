@@ -96,6 +96,22 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void delete(Long id) {
+        Optional<Appointment> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
+            return;
+        }
+        Appointment appointment = fetchedContainer.get();
+
+        Optional<Schedule> fetchedScheduleContainer = scheduleRepository
+                        .findByDoctorAndStart(appointment.getDoctor(), appointment.getStart());
+        if (fetchedScheduleContainer.isEmpty()) {
+            return;
+        }
+
+        Schedule schedule = fetchedScheduleContainer.get();
+        schedule.setBooked(false);
+        scheduleRepository.save(schedule);
+
         repository.deleteById(id);
 
     }
