@@ -88,7 +88,7 @@ public class Doctor {
     /**
      * Phone number of the doctor.
      */
-    @Column(name = "doctor_phone", length = 14, nullable = false)
+    @Column(name = "doctor_phone", length = 14, nullable = false, unique = true)
     private String phone;
 
     /**

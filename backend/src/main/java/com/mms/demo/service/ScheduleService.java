@@ -32,6 +32,7 @@ public interface ScheduleService {
      */
     List<ScheduleDTO> getAll();
 
+    List<ScheduleDTO> getAllUnapproved();
 
     /**
      * Gets the schedules by doctor.
@@ -52,6 +53,13 @@ public interface ScheduleService {
      */
     List<ScheduleDTO> getByDoctorBetween(Long doctorID, LocalDateTime start, LocalDateTime end)
                     throws IllegalArgumentException;
+
+
+    List<ScheduleDTO> getApprovedByDoctor(Long doctorID);
+
+
+
+    List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID);
 
     /**
      * Creates the schedule.

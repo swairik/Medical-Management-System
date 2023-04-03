@@ -18,6 +18,8 @@ import com.mms.demo.transferobject.ScheduleDTO;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
+
+
     @Autowired
     private ScheduleRepository repository;
 
@@ -35,7 +37,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         Doctor doctor = fetchedContainer.get();
 
-        Schedule schedule = Schedule.builder().doctor(doctor).start(start).end(start.plusMinutes(30)).build();
+        Schedule schedule = Schedule.builder().doctor(doctor).start(start)
+                        .end(start.plusMinutes(30)).build();
         schedule = repository.save(schedule);
 
         return mapper.entityToDto(schedule);
@@ -88,6 +91,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return repository.findAllByDoctorAndStartBetween(doctor,
                         start.truncatedTo(ChronoUnit.SECONDS), end.truncatedTo(ChronoUnit.SECONDS))
                         .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleDTO> getAllUnapproved() {
+        return repository.findAllByApprovalStatus(false).stream().map(s -> mapper.entityToDto(s))
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleDTO> getApprovedByDoctor(Long doctorID) {
+        return getByDoctor(doctorID).stream().filter(s -> s.getApprovalStatus())
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleDTO> getBookedAndApprovedByDoctor(Long doctorID) {
+        return getApprovedByDoctor(doctorID).stream().filter(s -> s.getBooked())
+                        .collect(Collectors.toList());
     }
 
     @Override
