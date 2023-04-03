@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Credential;
@@ -73,35 +76,42 @@ public class ScheduleController {
     // public ResponseEntity<List<ScheduleResponse>>
     // displaySchedulesBySlot(@PathVariable Long sid) {}
 
-    // @GetMapping("/display/approved/{did}")
-    // public ResponseEntity<List<ScheduleResponse>>
-    // displayApprovedSchedulesByDoctor(
-    // @PathVariable Long did) {
-    // Doctor doctor = doctorService.getDoctortById(did)
-    // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-    // "DOCTOR_NOT_FOUND"));
-    // List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
-    // List<ScheduleResponse> response = schedules.stream().filter((s) ->
-    // s.getApproval())
-    // .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
-    // .collect(Collectors.toList());
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-    // }
+    @GetMapping("/display/approved/{did}")
+    public ResponseEntity<List<ScheduleDTO>> displayApprovedSchedulesByDoctor(
+            @PathVariable Long did) {
+        List<ScheduleDTO> schedulesList = scheduleService.getApprovedByDoctor(did, true, Optional.empty());
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
+
+    @GetMapping("/display/doctor/{did}/upcoming")
+    public ResponseEntity<List<ScheduleDTO>> displayApprovedSchedulesByDoctorUpcoming(
+            @PathVariable Long did, @RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT", HttpStatus.BAD_REQUEST);
+        }
+
+        List<ScheduleDTO> schedulesList = scheduleService.getApprovedByDoctor(did, true,  Optional.of(dateTime));
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
+
+    @GetMapping("/display/patient/approved/{did}")
+    public ResponseEntity<List<ScheduleDTO>> displayNonZeroApprovedSchedulesByDoctor(
+            @PathVariable Long did) {
+        List<ScheduleDTO> schedulesList = scheduleService.getBookedAndApprovedByDoctor(did, true, false, Optional.empty());
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
 
     // @GetMapping("/display/patient/approved/{did}")
-    // public ResponseEntity<List<ScheduleResponse>>
+    // public ResponseEntity<List<ScheduleDTO>>
     // displayNonZeroApprovedSchedulesByDoctor(
     // @PathVariable Long did) {
-    // Doctor doctor = doctorService.getDoctortById(did)
-    // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-    // "DOCTOR_NOT_FOUND"));
-    // List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
-    // List<ScheduleResponse> response = schedules.stream().filter((s) ->
-    // s.getApproval())
-    // .filter((s) -> (s.getSlot().getCapacity() != 0))
-    // .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
-    // .collect(Collectors.toList());
-    // return new ResponseEntity<>(response, HttpStatus.OK);
+    // List<ScheduleDTO> schedulesList =
+    // scheduleService.getBookedAndApprovedByDoctor(did);
+    // return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     // }
 
     // @GetMapping("/display/{pid}/{did}")
@@ -128,16 +138,11 @@ public class ScheduleController {
     // return new ResponseEntity<>(response, HttpStatus.OK);
     // }
 
-    // @GetMapping("/display/unapproved")
-    // public ResponseEntity<List<ScheduleResponse>> displayUnapprovedSchedules() {
-    // List<Schedule> schedules = scheduleService.getAllSchedules();
-    // List<Schedule> unapprovedSchedules = schedules.stream()
-    // .filter((s) -> (s.getApproval() == false)).collect(Collectors.toList());
-    // List<ScheduleResponse> response = unapprovedSchedules.stream()
-    // .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
-    // .collect(Collectors.toList());
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-    // }
+    @GetMapping("/display/unapproved")
+    public ResponseEntity<List<ScheduleDTO>> displayUnapprovedSchedules() {
+        List<ScheduleDTO> schedulesList = scheduleService.getAllUnapproved();
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
 
     // @GetMapping("/display/doctor/{id}/weekday")
     // public ResponseEntity<List<ScheduleResponse>>
@@ -164,13 +169,17 @@ public class ScheduleController {
     // }
 
     @PostMapping("/")
-    public ResponseEntity<ScheduleDTO> createSchedule(
+    public ResponseEntity<List<ScheduleDTO>> createSchedule(
             @Valid @RequestBody ScheduleRequest scheduleRequest,
             @AuthenticationPrincipal Credential user) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime dateTime;
+        LocalDateTime startTime;
+        Optional<LocalDateTime> endTime = Optional.empty();
         try {
-            dateTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter).truncatedTo(ChronoUnit.SECONDS);
+            startTime = LocalDateTime.parse(scheduleRequest.getStartTime(), formatter).truncatedTo(ChronoUnit.SECONDS);
+            if (scheduleRequest.getEndTime().isEmpty() == false)
+                endTime = Optional.ofNullable(
+                        LocalDateTime.parse(scheduleRequest.getEndTime(), formatter).truncatedTo(ChronoUnit.SECONDS));
         } catch (Exception e) {
             throw new CustomException("Wrong format of date & time", "WRONG_FROMAT", HttpStatus.BAD_REQUEST);
         }
@@ -183,16 +192,19 @@ public class ScheduleController {
                     "SCHEDULE_CREATION_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
 
-        List<ScheduleDTO> allSchedules = scheduleService.getByDoctor(scheduleRequest.getDoctorId());
-        ScheduleDTO alreadyCreatedSchedule = allSchedules.stream().filter((s) -> s.getStart().equals(dateTime))
-                .findFirst()
-                .orElse(null);
+        // List<ScheduleDTO> allSchedules =
+        // scheduleService.getByDoctor(scheduleRequest.getDoctorId());
+        // ScheduleDTO alreadyCreatedSchedule = allSchedules.stream().filter((s) ->
+        // s.getStart().equals(startTime))
+        // .findFirst()
+        // .orElse(null);
 
-        if (alreadyCreatedSchedule != null) {
-            throw new CustomException("Schedule with given combination of doctor & time already exists",
-                    "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
-        }
-        ScheduleDTO createdSchedule = scheduleService.create(scheduleRequest.getDoctorId(), dateTime);
+        // if (alreadyCreatedSchedule != null) {
+        // throw new CustomException("Schedule with given combination of doctor & time
+        // already exists",
+        // "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
+        // }
+        List<ScheduleDTO> createdSchedule = scheduleService.create(scheduleRequest.getDoctorId(), startTime, endTime);
 
         return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);
     }
