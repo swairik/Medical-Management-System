@@ -31,7 +31,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private DataTransferObjectMapper<Schedule, ScheduleDTO> mapper;
 
     @Override
-    public ScheduleDTO create(Long doctorID, LocalDateTime start,
+    public List<ScheduleDTO> create(Long doctorID, LocalDateTime start,
                     Optional<LocalDateTime> endContainer) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
         if (fetchedContainer.isEmpty()) {
@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         List<Schedule> schedules = new ArrayList<>();
-        for (LocalDateTime time = start; !time.isAfter(end); time = time.plusMinutes(30)) {
+        for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(30)) {
             Schedule schedule = Schedule.builder().doctor(doctor).start(time)
                             .end(time.plusMinutes(30)).build();
             schedules.add(schedule);
@@ -62,13 +62,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                                                 + doctor.getName() + "), Time (" + time.toString()
                                                 + ")");
             }
-
-            repository.saveAll(schedules);
         }
-        Schedule schedule = Schedule.builder().doctor(doctor).start(start).end(end).build();
-        schedule = repository.save(schedule);
+        schedules = repository.saveAll(schedules);
 
-        return mapper.entityToDto(schedule);
+        return schedules.stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
 
     }
 

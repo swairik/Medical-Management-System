@@ -67,7 +67,8 @@ public interface ScheduleService {
      * @param schedule the schedule
      * @return the schedule
      */
-    ScheduleDTO create(Long doctorID, LocalDateTime start) throws IllegalArgumentException;
+    List<ScheduleDTO> create(Long doctorID, LocalDateTime start, Optional<LocalDateTime> end)
+                    throws IllegalArgumentException;
 
     /**
      * Update start and end, and approval status of a schedule.
