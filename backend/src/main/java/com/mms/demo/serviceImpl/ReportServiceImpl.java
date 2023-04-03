@@ -78,7 +78,16 @@ public class ReportServiceImpl implements ReportService {
     public Optional<ReportDTO> getByDay(LocalDateTime stamp) {
         Optional<Report> fetchedContainer = reportRepository.findByStamp(stamp.toLocalDate());
         if (fetchedContainer.isEmpty()) {
-            return Optional.empty();
+            try {
+                forceRunReportGenerator(stamp);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+
+            fetchedContainer = reportRepository.findByStamp(stamp.toLocalDate());
+            if (fetchedContainer.isEmpty()) {
+                return Optional.empty();
+            }
         }
 
         Report report = fetchedContainer.get();
@@ -129,9 +138,29 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Optional<ReportDTO> getAllByDayBetween(LocalDateTime start, LocalDateTime end)
                     throws IOException {
-        List<Report> reports = reportRepository
-                        .findAllByStampBetween(start.toLocalDate(), end.toLocalDate()).stream()
-                        .filter(r -> r.getContents() != null).collect(Collectors.toList());
+        List<Report> reports = new ArrayList<>();
+        for (LocalDate date = start.toLocalDate(); date.isAfter(end.toLocalDate()) == false; date =
+                        date.plusDays(1)) {
+            Optional<Report> report = reportRepository.findByStamp(date);
+
+            if (report.isEmpty()) {
+                try {
+                    forceRunReportGenerator(date.atStartOfDay());
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
+
+            report = reportRepository.findByStamp(date);
+            if (report.isEmpty()) {
+                continue;
+            }
+
+            reports.add(report.get());
+        }
+
+        reports = reports.stream().filter(r -> r.getContents() != null)
+                        .collect(Collectors.toList());
 
         if (reports.isEmpty()) {
             return Optional.empty();
@@ -166,15 +195,37 @@ public class ReportServiceImpl implements ReportService {
         LocalDate fromDate = from.toLocalDate();
         LocalDate toDate = to.toLocalDate();
 
-        List<Report> reports = reportRepository.findAllByStampBetween(fromDate, toDate).stream()
-                        .filter(r -> r.getContents() != null).collect(Collectors.toList());
-
-
         Optional<Doctor> fetchedDoctorContainer = doctorRepository.findById(doctorID);
         if (fetchedDoctorContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedDoctorContainer.get();
+
+        List<Report> reports = new ArrayList<>();
+        for (LocalDate date = from.toLocalDate(); !date.isAfter(to.toLocalDate()); date =
+                        date.plusDays(1)) {
+            Optional<Report> report = reportRepository.findByStamp(date);
+
+            if (report.isEmpty()) {
+                try {
+                    forceRunReportGenerator(date.atStartOfDay());
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
+
+            report = reportRepository.findByStamp(date);
+            if (report.isEmpty()) {
+                continue;
+            }
+
+            reports.add(report.get());
+        }
+
+        reports = reports.stream().filter(r -> r.getContents() != null)
+                        .collect(Collectors.toList());
+
+
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         for (Report report : reports) {
@@ -293,6 +344,13 @@ public class ReportServiceImpl implements ReportService {
         // patients
         List<Doctor> allDoctors = doctorRepository.findAll();
         for (Doctor doctor : allDoctors) {
+            List<Appointment> appointments = appointmentRepository.findAllByDoctorAndStartBetween(
+                            doctor, temporalTarget,
+                            temporalTarget.toLocalDate().atTime(LocalTime.MAX));
+            if (appointments.isEmpty()) {
+                continue;
+            }
+
             XSSFSheet currentDoctorMetaSheet = workbook.createSheet(doctor.getId().toString());
             XSSFRow currentRow = currentDoctorMetaSheet.createRow(0);
             currentRow.createCell(0).setCellValue("Name");
@@ -308,9 +366,6 @@ public class ReportServiceImpl implements ReportService {
                 titlesRow.createCell(i).setCellValue(titles.get(i));
             }
 
-            List<Appointment> appointments = appointmentRepository.findAllByDoctorAndStartBetween(
-                            doctor, temporalTarget,
-                            temporalTarget.toLocalDate().atTime(LocalTime.MAX));
             for (Appointment appointment : appointments) {
                 currentRow = currentDoctorMetaSheet
                                 .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
@@ -338,9 +393,17 @@ public class ReportServiceImpl implements ReportService {
         } catch (IOException e) {
             throw new IOException("Could not create a byte array for the excel workbook", e);
         }
-        Report newReport = Report.builder().contents(workbookByteArray)
-                        .stamp(temporalTarget.toLocalDate()).build();
-        reportRepository.save(newReport);
+
+        Report.ReportBuilder reportBuilder = Report.builder();
+        Optional<Report> fetchedContainer =
+                        reportRepository.findByStamp(temporalTarget.toLocalDate());
+        if (fetchedContainer.isPresent()) {
+            reportBuilder = fetchedContainer.get().toBuilder();
+            System.out.println("Report already exists, updating");
+        }
+
+        reportBuilder.contents(workbookByteArray).stamp(temporalTarget.toLocalDate());
+        reportRepository.save(reportBuilder.build());
         System.out.println("Saved report for " + temporalTarget.truncatedTo(ChronoUnit.SECONDS));
     }
 
