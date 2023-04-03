@@ -26,14 +26,14 @@ import java.util.Random;
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-public class ScheduleServiceTest {
+public class AppointmentServiceTest {
     @Test
     void testCreate() {
 
     }
 
     @Test
-    void testDeleteSchedule() {
+    void testDelete() {
 
     }
 
@@ -48,42 +48,57 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    void testGetAllUnapproved() {
+    void testGetAllByDoctor() {
 
     }
 
     @Test
-    void testGetApprovedByDoctor() {
+    void testGetAllByDoctorAfter() {
 
     }
 
     @Test
-    void testGetBookedAndApprovedByDoctor() {
+    void testGetAllByDoctorBetween() {
 
     }
 
     @Test
-    void testGetByDoctor() {
+    void testGetAllByPatient() {
 
     }
 
     @Test
-    void testGetByDoctorAfter() {
+    void testGetAllByPatientAfter() {
 
     }
 
     @Test
-    void testGetByDoctorBetween() {
+    void testGetAllByPatientAndDoctor() {
 
     }
 
     @Test
-    void testMarkAsApproved() {
+    void testGetAllByPatientAndDoctorAfter() {
 
     }
 
     @Test
-    void testUpdate() {
+    void testGetAllByPatientAndDoctorBetween() {
+
+    }
+
+    @Test
+    void testGetAllByPatientBetween() {
+
+    }
+
+    @Test
+    void testMarkAsAttended() {
+
+    }
+
+    @Test
+    void testUpdateSchedule() {
 
     }
 }
