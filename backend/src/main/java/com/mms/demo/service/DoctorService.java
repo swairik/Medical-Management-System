@@ -65,6 +65,7 @@ public interface DoctorService {
     Optional<DoctorDTO> updateSpeciality(Long id, Long specialityID)
                     throws IllegalArgumentException;
 
+
     /**
      * Delete doctor.
      *

@@ -64,6 +64,7 @@ $(document).ready(function () {
         phone: $("#dfcontact").val(),
         specialityId: $("#dfspeciality").val(),
       };
+      console.log(docData)
 
       $.ajax({
         url: "http://localhost:8050/doctor/",

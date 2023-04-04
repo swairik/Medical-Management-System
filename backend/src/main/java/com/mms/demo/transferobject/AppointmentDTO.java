@@ -1,6 +1,5 @@
 package com.mms.demo.transferobject;
 
-
 import java.time.LocalDateTime;
 import io.micrometer.common.lang.NonNull;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @Value
-@Builder
+@Builder(toBuilder = true)
 public final class AppointmentDTO {
     Long id;
     PatientDTO patient;

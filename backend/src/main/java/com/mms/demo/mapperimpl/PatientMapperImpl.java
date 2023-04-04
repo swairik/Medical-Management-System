@@ -3,7 +3,6 @@ package com.mms.demo.mapperimpl;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.PatientDTO;
-import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Component

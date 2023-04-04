@@ -105,4 +105,12 @@ public class Doctor {
     @Column(name = "doctor_registration_timestamp", nullable = false)
     @Builder.Default
     private LocalDateTime stamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+    @Column(name = "doctor_rating_count", nullable = false)
+    @Builder.Default
+    private Long ratingCount = 0L;
+
+    @Column(name = "doctor_rating_average", nullable = false)
+    @Builder.Default
+    private Double ratingAverage = 0.0;
 }

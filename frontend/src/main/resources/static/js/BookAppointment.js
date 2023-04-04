@@ -24,15 +24,20 @@ const constructDoctorInfo = (result) => {
     `;
 };
 
-const constructSlotMenu = (result) => {
+const constructSlotMenu = (value) => {
+  const date=value.start.substring(0, value.start.indexOf('T')).split('-')
   return `
   <li class="table-row">
-    <div class="col col-1" data-label="Date">${result.weekDate}</div>
-    <div class="col col-3" data-label="Day">${result.slotResponse.weekday}</div>
-    <div class="col col-4" data-label="StartTime">${result.slotResponse.start}</div>
-    <div class="col col-5" data-label="EndTime">${result.slotResponse.end}</div>
+    <div class="col col-1" data-label="Date">${date[2]}-${date[1]}-${date[0]}</div>
+    <div class="col col-4" data-label="StartTime">${
+      value.start.substring(value.start.indexOf('T')+1).replace(/:00$/, '')
+    }</div>
+    <div class="col col-5" data-label="EndTime">${
+      value.end.substring(value.end.indexOf('T')+1).replace(/:00$/, '')
+    }</div>
     <div class="col col-6">
-    <button type="submit" id="book_slot" value=${result.slotResponse.id} weekDate=${result.weekDate} slotStart=${result.slotResponse.start}>Book</button>
+    <button type="submit" id="book_slot" value=${value.id} 
+    }>Book</button>
     </div>
     </li>
     `;
@@ -145,19 +150,15 @@ $(document).ready(function () {
     console.log("clicked");
     console.log(this);
     
-    var appointData = {
-      patientId: patient_id,
-      slotId: this.value,
-    };
-
-    console.log(this.value)
-    console.log($(this).attr("weekDate"))
-    console.log($(this).attr("slotStart"))
+  
 
     var appointDetailsData = {
       patientId: patient_id,
-      doctorId: doctor_id,
-      appointmentDateTime: ($(this).attr("weekDate")).replace(/-/g, "/")+' '+$(this).attr("slotStart")
+      scheduleId: this.value,
+      appointmentDetails: {
+        prescription: "",
+        feedback: ""
+      }
     }
 
     console.log(appointDetailsData)
@@ -168,41 +169,15 @@ $(document).ready(function () {
       url: `http://localhost:8050/appointment/`,
       dataType: "json",
       contentType: "application/json",
-      data: JSON.stringify(appointData),
+      data: JSON.stringify(appointDetailsData),
       headers: {
         Authorization: `Bearer ${token}`,
       },
       success: function (result) {
         console.log(result);
         console.log("Booked");
-        // alert("Slot Booked");
-        // window.location.href = 'EditAppointment';
-        $.ajax({
-          type: "POST",
-          url: `http://localhost:8050/appointmentDetails/`,
-          dataType: "json",
-          contentType: "application/json",
-          data: JSON.stringify(appointDetailsData),
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          success: function (result) {
-            console.log(result);
-            console.log("Booked");
-            alert("Slot Booked");
-            window.location.href = 'EditAppointment';
-          },
-          error: function (xhr, status, errorThrown) {
-            if (xhr.status == 403) {
-              window.location.href = "Auth";
-            } else {
-              if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
-    
-              if (errorObj) alert(errorObj.errorMessage);
-              else alert("Some Error Occurred");
-            }
-          },
-        });
+        alert("Slot Booked");
+        window.location.href = 'EditAppointment';
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {

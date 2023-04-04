@@ -2,11 +2,9 @@ package com.mms.demo.mapperimpl;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Schedule;
-import com.mms.demo.entity.Speciality;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.DoctorDTO;
 import com.mms.demo.transferobject.ScheduleDTO;
-import com.mms.demo.transferobject.SpecialityDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

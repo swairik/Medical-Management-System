@@ -1,13 +1,12 @@
 const constructAppointmentInfo = (result) => {
   return `
     <tr>
-    <td data-label="DocNmae">${result.scheduleResponse.doctorResponse.name}</td>
-    <td data-label="speciality">${result.scheduleResponse.doctorResponse.speciality.name}</td>
-    <td data-label="Date">${result.scheduleResponse.weekDate}</td>
-    <td data-label="Slot">${result.scheduleResponse.slotResponse.weekday}</td>
-    <td data-label="Slot">${result.scheduleResponse.slotResponse.start}-${result.scheduleResponse.slotResponse.end}</td>
+    <td data-label="DocNmae">${result.doctor.name}</td>
+    <td data-label="speciality">${result.doctor.speciality.name}</td>
+    <td data-label="Date">${result.start.substring(0, result.start.indexOf('T'))}</td>
+    <td data-label="Slot">${result.start.substring(result.start.indexOf('T')+1).replace(/:00$/, '')}</td>
     <td data-label="">
-        <button class="cancel" value=${result.id} doctor_id=${result.scheduleResponse.doctorResponse.id}>Cancel</button>
+        <button class="cancel" value=${result.id} doctor_id=${result.doctor.id}>Cancel</button>
     </td>
   </tr>
       `;
@@ -62,7 +61,6 @@ $(document).ready(function () {
         <th scope="col">Doctor's Name</th>
         <th scope="col">Speciality</th>
         <th scope="col">Date</th>
-        <th scope="col">Day</th>
         <th scope="col">Slot Time</th>
         <th scope="col">Cancel Appointment</th>
       </tr>

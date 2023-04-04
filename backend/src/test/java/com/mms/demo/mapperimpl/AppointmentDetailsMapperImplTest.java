@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
@@ -20,6 +21,7 @@ import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.AppointmentDTO;
 import com.mms.demo.transferobject.AppointmentDetailsDTO;
 import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.PatientDTO;
 import com.mms.demo.transferobject.SpecialityDTO;
 import static org.assertj.core.api.Assertions.*;
 
@@ -30,8 +32,7 @@ import java.util.Random;
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-public class DoctorMapperImplTest {
-
+public class AppointmentDetailsMapperImplTest {
     private String genAlnum(int targetStringLength) {
         int leftLimit = 48;
         int rightLimit = 122;
@@ -46,42 +47,25 @@ public class DoctorMapperImplTest {
         return generatedString;
     }
 
-    private SpecialityDTO generateRandomSpecialityDTO() {
-        Random rng = new Random();
-        return SpecialityDTO.builder().name(genAlnum(6)).build();
-    }
-
-    private DoctorDTO generateRandomDoctorDTO() {
-        Random rng = new Random();
-        return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                .name(genAlnum(14)).phone(genAlnum(10)).speciality(generateRandomSpecialityDTO()).build();
+    private AppointmentDetailsDTO generateRandomDetailsDTO() {
+        return AppointmentDetailsDTO.builder().feedback(genAlnum(100)).prescription(genAlnum(100)).build();
     }
 
     @Autowired
-    DataTransferObjectMapper<Doctor, DoctorDTO> mapper;
-
-    static DoctorDTO doctorDTOtest;
+    DataTransferObjectMapper<AppointmentDetails, AppointmentDetailsDTO> mapper;
 
     @Test
     void testDtoToEntity() {
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().speciality(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
+        AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
 
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().email(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
+        assertThat(mapper.dtoToEntity(appointmentDetailsDTO)).isNotNull();
 
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().phone(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
-
-        DoctorDTO doctorDTO = generateRandomDoctorDTO();
-
-        assertThat(mapper.dtoToEntity(doctorDTO)).isNotNull();
     }
 
     @Test
     void testEntityToDto() {
-        DoctorDTO doctorDTO = generateRandomDoctorDTO();
+        AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
 
-        assertThat(doctorDTO).isEqualTo(mapper.entityToDto(mapper.dtoToEntity(doctorDTO)));
+        assertThat(appointmentDetailsDTO).isEqualTo(mapper.entityToDto(mapper.dtoToEntity(appointmentDetailsDTO)));
     }
 }
