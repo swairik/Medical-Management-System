@@ -68,6 +68,21 @@ public class ScheduleController {
         return new ResponseEntity<>(schedule, HttpStatus.OK);
     }
 
+    @GetMapping("/display/upcoming")
+    public ResponseEntity<List<ScheduleDTO>> displayAllSchedulesUpcoming(@RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT",
+                            HttpStatus.BAD_REQUEST);
+        }
+        List<ScheduleDTO> schedulesList = scheduleService.getAllAfter(dateTime);
+        return new ResponseEntity<>(schedulesList, HttpStatus.OK);
+    }
+
+
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<List<ScheduleDTO>> displaySchedulesByDoctor(@PathVariable Long did) {
         List<ScheduleDTO> schedulesList = scheduleService.getByDoctor(did);
