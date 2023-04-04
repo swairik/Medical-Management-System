@@ -52,8 +52,9 @@ $(document).ready(function () {
     success: function (result) {
       console.log(result);
       if(result.length===0){
-        $("#Table_header").append(`<br><br><h2>You have no Upcoming Appointments<h2>`) 
+        
       }else{
+        $('#NA').replaceWith($('#Table_header').show());
         $("#Table_header").append(`
         <caption>Upcoming Appointment Details</caption>
     <thead>

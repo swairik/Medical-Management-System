@@ -130,10 +130,16 @@ $(document).ready(function () {
     },
     success: function (result) {
       console.log(result);
+      if(result.length===0){
+        
+      }else{
+        $('#NA').replaceWith($('#table_head').show());
+        $('.responsive-table').show(); 
       $.each(result, function (key, value) {
         console.log(value);
         $("#slot_menu").append(constructSlotMenu(value));
       });
+    }
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
