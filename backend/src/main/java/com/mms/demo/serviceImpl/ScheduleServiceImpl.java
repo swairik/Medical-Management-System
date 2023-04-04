@@ -64,7 +64,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         List<Schedule> schedules = new ArrayList<>();
-        for (LocalDateTime time = start; time.plusMinutes(30).isBefore(end); time = time.plusMinutes(30)) {
+        for (LocalDateTime time = start; time.plusMinutes(30).isAfter(end) == false; time =
+                        time.plusMinutes(30)) {
             Schedule schedule = Schedule.builder().doctor(doctor).start(time)
                             .end(time.plusMinutes(30)).build();
             schedules.add(schedule);

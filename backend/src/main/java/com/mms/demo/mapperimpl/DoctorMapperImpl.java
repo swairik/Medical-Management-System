@@ -29,7 +29,11 @@ public class DoctorMapperImpl implements DataTransferObjectMapper<Doctor, Doctor
         doctorDTO.phone(doctor.getPhone());
         doctorDTO.speciality(specialityMapper.entityToDto(doctor.getSpeciality()));
         doctorDTO.ratingCount(doctor.getRatingCount());
-        doctorDTO.ratingAverage(doctor.getRatingAverage());
+        double rating = 0.0;
+        if (doctor.getRatingCount() >= 1) {
+            rating = (double) doctor.getRatingSum() / doctor.getRatingCount();
+        }
+        doctorDTO.ratingAverage(rating);
 
         return doctorDTO.build();
     }

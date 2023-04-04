@@ -69,19 +69,14 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
             Doctor doctor = fetchedDoctorContainer.get();
 
             Long currentRating = appointmentDetails.getRating();
-            System.out.println(currentRating);
-            Double adjustedRating = doctor.getRatingAverage() * doctor.getRatingCount();
-            adjustedRating += updatesDto.getRating() - currentRating;
-            System.out.println(adjustedRating);
+
             Long ratingCount = doctor.getRatingCount();
             if (currentRating == 0) {
                 ratingCount += 1;
             }
             doctor.setRatingCount(ratingCount);
-            if (ratingCount > 0) {
-                doctor.setRatingAverage(adjustedRating / ratingCount);
-            }
-            
+            long adjustedRating = doctor.getRatingSum() - currentRating + updatesDto.getRating();
+            doctor.setRatingSum(adjustedRating);
 
             doctorRepository.save(doctor);
         }
@@ -100,7 +95,7 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
         if (updatesDto.getRating() > 0) {
             appointmentDetails.setRating(updatesDto.getRating());
         }
-        
+
         appointmentDetails = repository.save(appointmentDetails);
 
         return Optional.of(mapper.entityToDto(appointmentDetails));

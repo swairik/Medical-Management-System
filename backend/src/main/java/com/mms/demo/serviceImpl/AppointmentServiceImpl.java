@@ -80,7 +80,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Failed to parse entity from data transfer object",
                             e);
         }
-        appointmentDetails = appointmentDetailsRepository.save(appointmentDetails);
+        // appointmentDetails = appointmentDetailsRepository.save(appointmentDetails);
 
         Appointment appointment = Appointment.builder().appointmentDetails(appointmentDetails)
                         .doctor(schedule.getDoctor()).patient(patient).start(schedule.getStart())

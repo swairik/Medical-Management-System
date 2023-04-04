@@ -66,7 +66,7 @@ public class AppointmentServiceTest {
 
     private AppointmentDetailsDTO generateRandomDetailsDTO() {
         return AppointmentDetailsDTO.builder().feedback(genAlnum(100)).prescription(genAlnum(100))
-                        .build();
+                        .rating(5L).build();
     }
 
     private AppointmentDTO generateRandomAppointmentDTO() {
@@ -75,11 +75,24 @@ public class AppointmentServiceTest {
                         .start(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
     }
 
-    static private LocalDateTime clock = LocalDateTime.now();
+    private AppointmentDTO generateRandomPersistentAppointmentDTO() {
+        DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
+                        specialityService.create(generateRandomSpecialityDTO()).getId());
+        ScheduleDTO scheduleDTO = scheduleService
+                        .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+        PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
+        AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
+        AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
+                        scheduleDTO.getId(), appointmentDetailsDTO);
+
+        return appointmentDTO;
+    }
+
+    static private LocalDateTime clock = LocalDateTime.now().plusDays(1);
 
     private LocalDateTime getNextTick() {
         LocalDateTime temp = clock;
-        clock = clock.plusMinutes(5);
+        clock = clock.plusMinutes(30);
         return temp;
     }
 
@@ -88,6 +101,8 @@ public class AppointmentServiceTest {
 
     @Autowired
     AppointmentService appointmentService;
+
+
 
     @Autowired
     DoctorService doctorService;
@@ -112,22 +127,15 @@ public class AppointmentServiceTest {
                         () -> appointmentService.create(appointmentDTO.getPatient().getId(), null,
                                         appointmentDTO.getAppointmentDetails()));
 
-        DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
-        ScheduleDTO scheduleDTO = scheduleService
-                        .create(doctorDTO.getId(), getNextTick(), Optional.of(getNextTick()))
-                        .get(0);
-        PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
-        appointmentDTO = appointmentService.create(patientDTO.getId(), scheduleDTO.getId(),
-                        generateRandomDetailsDTO());
+
+        appointmentDTO = generateRandomPersistentAppointmentDTO();
         assertThat(appointmentDTO.getId()).isNotNull();
-
-
-
+        assertThat(appointmentDTO.getAppointmentDetails().getId()).isNotNull();
     }
 
     @Test
     void testDelete() {
+        appointmentDTO = generateRandomPersistentAppointmentDTO();
 
     }
 
