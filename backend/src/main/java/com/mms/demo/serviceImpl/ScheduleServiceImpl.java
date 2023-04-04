@@ -46,12 +46,21 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Slots should be created minimum 2 hours from now");
         }
 
+        start = start.truncatedTo(ChronoUnit.MINUTES);
+
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
-        start = start.truncatedTo(ChronoUnit.MINUTES);
+        List<Schedule> candidates = repository.findAllByDoctorAndStartBetween(doctor,
+                        start.minusMinutes(29), start.plusMinutes(29));
+        if (!candidates.isEmpty()) {
+            throw new IllegalArgumentException("Slots cannot be within 30 minutes of each other");
+        }
+
+
+
         LocalDateTime end = null;
         if (endContainer.isPresent()) {
             end = endContainer.get().truncatedTo(ChronoUnit.MINUTES);
@@ -61,6 +70,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         } else {
             end = start.plusMinutes(30);
+        }
+
+        candidates = repository.findAllByDoctorAndStartBetween(doctor, end.minusMinutes(29),
+                        end.plusMinutes(29));
+        if (!candidates.isEmpty()) {
+            throw new IllegalArgumentException("Slots cannot be within 30 minutes of each other");
         }
 
         List<Schedule> schedules = new ArrayList<>();
