@@ -22,6 +22,12 @@ import com.mms.demo.transferobject.ScheduleDTO;
 public class ScheduleServiceImpl implements ScheduleService {
 
 
+    @Override
+    public List<ScheduleDTO> getAllAfter(LocalDateTime stamp) {
+        return repository.findAllByStartGreaterThanEqual(stamp.truncatedTo(ChronoUnit.MINUTES))
+                        .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+    }
+
     @Autowired
     private ScheduleRepository repository;
 

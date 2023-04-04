@@ -24,6 +24,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
      */
     List<Schedule> findAllByDoctor(Doctor doctor);
 
+    List<Schedule> findAllByStartGreaterThanEqual(LocalDateTime stamp);
+
     /**
      * Find all schedules corresponding to a doctor that fall between a range of days.
      * 
