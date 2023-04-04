@@ -4,60 +4,76 @@ $(document).ready(function () {
 
   console.log(urlParams);
 
-  
   const appointmentDetailsId = urlParams.get("appointmentDetailsId");
   const appointmentId = urlParams.get("appointmentId");
-  
+
   console.log(appointmentDetailsId);
   const cookie = document.cookie;
-  if(cookie=='') window.location.href = "Auth";
-  
+  if (cookie == "") window.location.href = "Auth";
+
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
     .split("=")[1];
 
-    console.log(token)
-  
-    $.ajax({
-      url: `http://localhost:8050/appointment/display/${appointmentId}`,
-      type: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      success: function (result) {
-        console.log(result);
-        console.log(result.appointmentDetails.prescription)
-        $("#pID").text(result.id);
-        $("#pname").text(result.patient.name);
-        $("#page").text(result.patient.age);
-        $("#pgender").text(result.patient.gender);
-        $("#pdocname").text(result.doctor.name);
-        $("#pdate").text(result.start.substring(0, result.start.indexOf('T')));
-        $("#diagnosis").text(result.appointmentDetails.prescription);
-        $("#medication").text(result.appointmentDetails.feedback);
-        $("#tests").text(result.appointmentDetails.tests);
-      },
-      error: function (xhr, status, errorThrown) {
-        if (xhr.status == 403) {
-          window.location.href = "Auth";
-        } else {
-          alert("Some Error Occurred");
-        }
-      },
-    });
+  console.log(token);
+
+  $.ajax({
+    url: `http://localhost:8050/appointment/display/${appointmentId}`,
+    type: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    success: function (result) {
+      console.log(result);
+      console.log(result.appointmentDetails.prescription);
+
+      var diagnosis= "", medication="", tests=""
+
+      var prescriptionString = result.appointmentDetails.prescription
+
+      if(result.appointmentDetails.prescription.length!=0) {
+        diagnosis = prescriptionString.substring(prescriptionString.indexOf("Diagnosis=") + ("Diagnosis=").length, prescriptionString.indexOf("Medication"));
+        medication = prescriptionString.substring(prescriptionString.indexOf("Medication=") + ("Medication=").length, prescriptionString.indexOf("Tests"));
+        tests = prescriptionString.substring(prescriptionString.indexOf("Tests=") + ("Tests=").length);
+      } 
+      
+      $("#pID").text(result.id);
+      $("#pname").text(result.patient.name);
+      $("#page").text(result.patient.age);
+      $("#pgender").text(result.patient.gender);
+      $("#pdocname").text(result.doctor.name);
+      $("#pdate").text(result.start.substring(0, result.start.indexOf("T")));
+      $("#diagnosis").text(diagnosis);
+      $("#medication").text(medication);
+      $("#tests").text(tests);
+    },
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
+      }
+    },
+  });
 
   $("#prescription_form").on("submit", function (e) {
     e.preventDefault(); // Prevent default form submission
 
-    var prescriptionData= "Diagnosis=" + $("#diagnosis").val() + "Medication=" + $("#medication").val() + "Tests=" + $("#tests").val()
+    var prescriptionData =
+      "Diagnosis=" +
+      $("#diagnosis").val() +
+      "Medication=" +
+      $("#medication").val() +
+      "Tests=" +
+      $("#tests").val();
 
-    console.log(prescriptionData)
+    console.log(prescriptionData);
 
     var prescriptionData = {
       prescription: prescriptionData,
       feedback: "",
-      rating: 0.0
+      rating: 0.0,
     };
 
     console.log(prescriptionData);
@@ -65,7 +81,7 @@ $(document).ready(function () {
     // Send Ajax request
     $.ajax({
       url: `http://localhost:8050/appointmentDetails/${appointmentDetailsId}`,
-      method: 'PUT',
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
       },
