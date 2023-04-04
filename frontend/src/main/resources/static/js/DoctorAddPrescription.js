@@ -27,13 +27,16 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
+        console.log(result.appointmentDetails.prescription)
         $("#pID").text(result.id);
         $("#pname").text(result.patient.name);
         $("#page").text(result.patient.age);
         $("#pgender").text(result.patient.gender);
         $("#pdocname").text(result.doctor.name);
         $("#pdate").text(result.start.substring(0, result.start.indexOf('T')));
-        // $(".DoctorInfo").append(constructDoctorInfo(result));
+        $("#diagnosis").text(result.appointmentDetails.prescription);
+        $("#medication").text(result.appointmentDetails.feedback);
+        $("#tests").text(result.appointmentDetails.tests);
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -43,13 +46,16 @@ $(document).ready(function () {
         }
       },
     });
-  
 
   $("#prescription_form").on("submit", function (e) {
     e.preventDefault(); // Prevent default form submission
 
+    var prescriptionData= "Diagnosis=" + $("#diagnosis").val() + "Medication=" + $("#medication").val() + "Tests=" + $("#tests").val()
+
+    console.log(prescriptionData)
+
     var prescriptionData = {
-      prescription: "check",
+      prescription: prescriptionData,
       feedback: "",
       rating: 0.0
     };

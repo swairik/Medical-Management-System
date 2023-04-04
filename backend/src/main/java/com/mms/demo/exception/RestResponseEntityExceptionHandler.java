@@ -115,8 +115,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         @ExceptionHandler({ NullPointerException.class })
         public ResponseEntity<ErrorResponse> handleNullPointerException(Exception e) {
+                System.out.println(e);
                 return new ResponseEntity<>(
-                                ErrorResponse.builder().errorMessage(e.getMessage()).errorCode("NULL_POINTER_EXCEPTION")
+                                ErrorResponse.builder().errorMessage(e.getStackTrace().toString()).errorCode("NULL_POINTER_EXCEPTION")
                                                 .build(),
                                 HttpStatus.BAD_REQUEST);
         }
