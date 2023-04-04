@@ -2,7 +2,7 @@ package com.mms.demo.entity;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,19 +56,32 @@ public class Appointment {
 
     /**
      * A reference to the Patient table. Defines the ownership of an entry from the side of a
-     * Patient. A Patient can have multiple appointments in differen Slots.
+     * Patient. A Patient can have multiple appointments associated with them.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(nullable = false, referencedColumnName = "patient_id")
     private Patient patient;
 
     /**
-     * A reference to the Slot table. Defines the ownership of an entry from the side of a Slot. A
-     * single Slot can be assigned to multiple Patients.
+     * A reference to the Doctor table. Defines the ownership of an entry from the side of a Doctor.
+     * A Doctor can have multiple appointments associated with them.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(nullable = false, referencedColumnName = "slot_id")
-    private Slot slot;
+    @JoinColumn(nullable = false, referencedColumnName = "doctor_id")
+    private Doctor doctor;
+
+    /**
+     * The starting time of the appointment, accurate up to a minute.
+     */
+    @Column(name = "appointment_start", nullable = false)
+    private LocalDateTime start;
+
+    /**
+     * A reference to the details associated with this appointment. Contains the feedback and the
+     * prescription.
+     */
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    private AppointmentDetails appointmentDetails;
 
     /**
      * A boolean flag that represents whether the appointment was attended by the patient or not.

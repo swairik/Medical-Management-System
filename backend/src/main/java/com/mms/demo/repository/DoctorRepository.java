@@ -41,4 +41,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
      * @return the list of doctors that registered in the given range
      */
     List<Doctor> findAllByStampBetween(LocalDateTime start, LocalDateTime end);
+
+    long countBySpeciality(Speciality speciality);
 }

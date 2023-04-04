@@ -6,92 +6,143 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Speciality;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.mms.demo.mapper.DataTransferObjectMapper;
+import com.mms.demo.transferobject.DoctorDTO;
+import com.mms.demo.transferobject.SpecialityDTO;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
-
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class DoctorServiceTest {
-    @Autowired
-    DoctorService impl;
-
-    @Autowired
-    SpecialityService specImpl;
-
     private String genAlnum(int targetStringLength) {
         int leftLimit = 48;
-        int rightLimit = 122; 
+        int rightLimit = 122;
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-            .limit(targetStringLength)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-        
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength).collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
         return generatedString;
     }
 
-    static final Speciality spec = Speciality.builder().name("Dentist").build();
-    static Doctor doctor;
-
-    @Test
-    @Order(1)
-    @DisplayName("Testing create on a single doctor")
-    void testCreateDoctor() {
-        specImpl.createSpeciality(spec);
-        assertThat(specImpl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
-
-        doctor = Doctor.builder().age(40).email(genAlnum(10) + "@xyz.com").gender("M").name("Jerry").phone("123").speciality(spec).build();
-        assertThat(impl.createDoctor(doctor)).isEqualTo(doctor);
+    private SpecialityDTO generateRandomSpecialityDTO() {
+        Random rng = new Random();
+        return SpecialityDTO.builder().name(genAlnum(6)).build();
     }
 
-    @Order(2)
-    @Test
-    @DisplayName("Testing fetch on all doctors")
-    void testGetAllDoctors() {
-        assertThat(impl.getAllDoctors()).isNotEmpty().contains(doctor);
+    private DoctorDTO generateRandomDoctorDTO() {
+        Random rng = new Random();
+        return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
+                .name(genAlnum(14)).phone(genAlnum(10)).speciality(generateRandomSpecialityDTO()).build();
     }
 
-    @Order(3)
+    @Autowired
+    DoctorService doctorService;
+
+    @Autowired
+    SpecialityService specialityService;
+
+    @Autowired
+    DataTransferObjectMapper<Doctor, DoctorDTO> mapper;
+
+    static DoctorDTO doctorDTO;
+
     @Test
-    @DisplayName("Testing fetch on a single doctor by speciality")
-    void testGetDoctorBySpeciality() {
-        assertThat(impl.getDoctorBySpeciality(spec)).isNotEmpty().contains(doctor);
+    void testCreate() {
+        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(null, null));
+
+        doctorDTO = generateRandomDoctorDTO();
+        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(doctorDTO, null));
+        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(doctorDTO, 1L));
+
+        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        assertThat(doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId())).extracting("id").isNotNull();
     }
 
-    @Order(4)
     @Test
-    @DisplayName("Testing on a single doctor by id")
-    void testGetDoctortById() {
-        assertThat(impl.getDoctortById(doctor.getId())).isNotEmpty().contains(doctor);
+    void testDelete() {
+        doctorDTO = generateRandomDoctorDTO();
+        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+        doctorService.delete(doctorDTO.getId());
+        assertThat(doctorService.get(doctorDTO.getId())).isEmpty();
     }
 
-    @Order(5)
     @Test
-    @DisplayName("Testing update on a single doctor")
-    void testUpdateDoctor() {
-        Doctor tempDoctor = doctor.toBuilder().name("Bob").build();
-
-        assertThat(impl.updateDoctor(doctor.getId(), tempDoctor)).isEqualTo(tempDoctor).isNotEqualTo(doctor);
+    void testGet() {
+        doctorDTO = generateRandomDoctorDTO();
+        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+        assertThat(doctorService.get(doctorDTO.getId())).contains(doctorDTO);
+        assertThat(doctorService.get(doctorDTO.getId() - 1)).isNotSameAs(Optional.of(doctorDTO));
+        assertThat(doctorService.get(doctorDTO.getId() + 1)).isEmpty();
     }
 
-    @Order(6)
     @Test
-    @DisplayName("Testing delete on a single doctor by id")
-    void testDeleteDoctor() {
-        impl.deleteDoctor(doctor.getId());
+    void testGetAll() {
+        ArrayList<DoctorDTO> doctorDTOs = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            doctorDTO = generateRandomDoctorDTO();
+            doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+            doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+            doctorDTOs.add(doctorDTO);
+        }
 
-        assertThat(impl.getDoctortById(doctor.getId())).isEmpty();
+        assertThat(doctorService.getAll()).containsAll(doctorDTOs);
     }
+
+    @Test
+    void testGetAllBySpeciality() {
+        ArrayList<DoctorDTO> doctorDTOs = new ArrayList<>();
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+        for (int i = 0; i < 5; i++) {
+            doctorDTO = generateRandomDoctorDTO();
+            doctorDTO = doctorDTO.toBuilder().speciality(specialityDTO).build();
+            doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+            doctorDTOs.add(doctorDTO);
+        }
+
+        assertThat(doctorService.getAll()).containsAll(doctorDTOs);
+    }
+
+    @Test
+    void testUpdate() {
+        doctorDTO = generateRandomDoctorDTO();
+        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+
+        DoctorDTO updates = doctorDTO.toBuilder().name(genAlnum(10)).build();
+        assertThat(doctorService.update(doctorDTO.getId(), updates)).contains(updates);
+
+        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.update(doctorDTO.getId() + 20, updates));
+    }
+
+    @Test
+    void testUpdateSpeciality() {
+        doctorDTO = generateRandomDoctorDTO();
+        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
+
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+
+        DoctorDTO updatedDTO = doctorDTO.toBuilder().speciality(specialityDTO).build();
+        assertThat(doctorService.updateSpeciality(doctorDTO.getId(), specialityDTO.getId())).contains(updatedDTO);
+    }
+
 }

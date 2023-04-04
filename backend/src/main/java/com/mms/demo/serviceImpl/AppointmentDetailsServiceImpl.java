@@ -1,17 +1,16 @@
 package com.mms.demo.serviceImpl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import com.mms.demo.entity.AppointmentDetails;
-import com.mms.demo.entity.Doctor;
-import com.mms.demo.entity.Patient;
+
+import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.AppointmentDetailsRepository;
 import com.mms.demo.service.AppointmentDetailsService;
+import com.mms.demo.transferobject.AppointmentDetailsDTO;
 
 @Service
 public class AppointmentDetailsServiceImpl implements AppointmentDetailsService {
@@ -19,86 +18,44 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
     @Autowired
     AppointmentDetailsRepository repository;
 
+    @Autowired
+    DataTransferObjectMapper<AppointmentDetails, AppointmentDetailsDTO> mapper;
+
     @Override
-    public Optional<AppointmentDetails> create(AppointmentDetails appointmentDetails) {
-        if (appointmentDetails == null) {
+    public Optional<AppointmentDetailsDTO> get(Long id) {
+        Optional<AppointmentDetails> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(repository.save(appointmentDetails));
+        return Optional.of(mapper.entityToDto(fetchedContainer.get()));
     }
+
 
     @Override
-    public void deleteById(Long id) {
-        if (id == null) {
-            return;
-        }
-
-        repository.deleteById(id);
-    }
-
-    @Override
-    public List<AppointmentDetails> getAllByPatient(Patient patient) {
-        if (patient == null) {
-            return null;
-        }
-
-        return repository.findAllByPatient(patient);
-    }
-
-    public List<AppointmentDetails> getAllByDoctor(Doctor doctor) {
-        if(doctor == null) {
-            return null;
-        }
-        return repository.findAllByDoctor(doctor);
-    }
-
-    @Override
-    public List<AppointmentDetails> getAllByPatientAndDoctor(Patient patient, Doctor doctor) {
-        if (patient == null || doctor == null) {
-            return null;
-        }
-
-        return repository.findAllByPatientAndDoctor(patient, doctor);
-    }
-
-    @Override
-    public Optional<AppointmentDetails> getById(Long id) {
-        if (id == null) {
-            return Optional.empty();
-        }
-
-        return repository.findById(id);
-    }
-
-    @Override
-    public Optional<AppointmentDetails> getByPatientAndStamp(Patient patient, LocalDateTime stamp) {
-        if (patient == null || stamp == null) {
-            return null;
-        }
-
-        return repository.findByPatientAndStamp(patient, stamp);
-    }
-
-    @Override
-    public Optional<AppointmentDetails> update(Long id, AppointmentDetails updates) {
-        if (id == null || updates == null) {
-            return Optional.empty();
-        }
+    public Optional<AppointmentDetailsDTO> update(Long id, AppointmentDetailsDTO updatesDto)
+                    throws IllegalArgumentException {
 
         Optional<AppointmentDetails> fetchedContainer = repository.findById(id);
         if (fetchedContainer.isEmpty()) {
             return Optional.empty();
         }
 
-        AppointmentDetails appointmentDetails = fetchedContainer.get();
-        appointmentDetails.setDoctor(updates.getDoctor());
-        appointmentDetails.setFeedback(updates.getFeedback());
-        appointmentDetails.setPatient(updates.getPatient());
-        appointmentDetails.setPrescription(updates.getPrescription());
-        appointmentDetails.setStamp(updates.getStamp());
+        AppointmentDetails updates;
+        try {
+            updates = mapper.dtoToEntity(updatesDto);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to parse entity from data transfer object",
+                            e);
+        }
 
-        return Optional.of(repository.save(appointmentDetails));
+        AppointmentDetails appointmentDetails = fetchedContainer.get();
+
+        appointmentDetails.setFeedback(updates.getFeedback());
+        appointmentDetails.setPrescription(updates.getPrescription());
+        appointmentDetails = repository.save(appointmentDetails);
+
+        return Optional.of(mapper.entityToDto(appointmentDetails));
     }
 
 }

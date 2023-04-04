@@ -1,14 +1,13 @@
 const constructScheduleMenu = (key,value) => {
   var div = `
   <li class="table-row">
-  <div class="col col-1" data-label="DoctorId">${value.doctorResponse.id}</div>
-  <div class="col col-2" data-label="Name">${value.doctorResponse.name}</div>
-  <div class="col col-3" data-label="Speciality">${value.doctorResponse.speciality.name}</div>
-  <div class="col col-4" data-label="Date">${value.weekDate}</div>
-  <div class="col col-5" data-label="Day">${value.slotResponse.weekday}</div>
-  <div class="col col-6" data-label="StartTime">${value.slotResponse.start}</div>
-  <div class="col col-7" data-label="EndTime">${value.slotResponse.end}</div>
-  <div class="col col-7" data-label="Status">${value.approval?"Approved":"Not Approved"}</div>
+  <div class="col col-1" data-label="DoctorId">${value.doctor.id}</div>
+  <div class="col col-2" data-label="Name">${value.doctor.name}</div>
+  <div class="col col-3" data-label="Speciality">${value.doctor.speciality.name}</div>
+  <div class="col col-4" data-label="Date">${value.start.substring(0, value.start.indexOf('T'))}</div>
+  <div class="col col-6" data-label="StartTime">${value.start.substring(value.start.indexOf('T')+1).replace(/:00$/, '')}</div>
+  <div class="col col-7" data-label="EndTime">${ value.end.substring(value.end.indexOf('T')+1).replace(/:00$/, '')}</div>
+  <div class="col col-7" data-label="Status">${value.approvalStatus?"Approved":"Not Approved"}</div>
   <div class="col col-8">
     <button class="btn_accept" value=${value.id}>Accept</button>
   </div>
@@ -43,7 +42,7 @@ const constructScheduleMenu = (key,value) => {
       console.log(result);
       $.each(result, function (key, value) {
         console.log(value);
-        if(!value.approval){
+        if(!value.approvalStatus){
         $(".responsive-table").append(constructScheduleMenu(key,value));
         }
       });

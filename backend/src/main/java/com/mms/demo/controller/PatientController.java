@@ -1,9 +1,6 @@
 package com.mms.demo.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mms.demo.entity.Credential;
-import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Role;
-import com.mms.demo.exception.Custom403Exception;
 import com.mms.demo.exception.CustomException;
-import com.mms.demo.model.PatientRequest;
-import com.mms.demo.model.PatientResponse;
 import com.mms.demo.service.CredentialService;
 import com.mms.demo.service.PatientService;
+import com.mms.demo.transferobject.PatientDTO;
 
 import jakarta.validation.Valid;
 
@@ -41,66 +35,60 @@ public class PatientController {
     CredentialService credentialService;
 
     @GetMapping("/display")
-    public ResponseEntity<List<PatientResponse>> showAllPatients(
-                    @AuthenticationPrincipal Credential user) {
+    public ResponseEntity<List<PatientDTO>> showAllPatients(
+            @AuthenticationPrincipal Credential user) {
 
-        List<PatientResponse> response = new ArrayList<>();
-        List<Patient> patients = patientService.getAllPatients();
-        response = patients.stream().map((p) -> PatientResponse.createResponseFromPatient(p))
-                        .collect(Collectors.toList());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<PatientDTO> patientList = patientService.getAll();
+        return new ResponseEntity<>(patientList, HttpStatus.OK);
     }
 
     @GetMapping("/display/{id}")
-    public ResponseEntity<PatientResponse> showPatientById(@PathVariable Long id,
-                    @AuthenticationPrincipal Credential user) {
-        Patient patient = patientService.getPatientById(id)
-                        .orElseThrow(() -> new CustomException("Patient with given id not found",
-                                        "PATIENT_NOT_FOUND"));
+    public ResponseEntity<PatientDTO> showPatientById(@PathVariable Long id,
+            @AuthenticationPrincipal Credential user) {
+        PatientDTO patient = patientService.get(id)
+                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                        "PATIENT_NOT_FOUND", HttpStatus.NOT_FOUND));
 
         if (checkPermissions(user, patient.getEmail()) == false) {
-            throw new Custom403Exception(
-                            "Logged in user is not permitted to view another user's profile",
-                            "PROFILE_DISPLAY_NOT_ALLOWED");
-
+            throw new CustomException(
+                    "Logged in user is not permitted to view another user's profile",
+                    "PROFILE_DISPLAY_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
-
-        PatientResponse response = PatientResponse.createResponseFromPatient(patient);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientResponse> updatePatient(@PathVariable Long id,
-                    @Valid @RequestBody PatientRequest patientRequest,
-                    @AuthenticationPrincipal Credential user) {
+    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id,
+            @Valid @RequestBody PatientDTO patientRequest,
+            @AuthenticationPrincipal Credential user) {
 
         // Check if patient exists or not
-        Patient patient = patientService.getPatientById(id)
-                        .orElseThrow(() -> new CustomException("Patient with given id not found",
-                                        "PATIENT_NOT_FOUND"));
+        PatientDTO patient = patientService.get(id)
+                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                        "PATIENT_NOT_FOUND", HttpStatus.NOT_FOUND));
 
         if (checkPermissions(user, patient.getEmail()) == false) {
-            throw new Custom403Exception(
-                            "Logged in user is not permitted to edit another user's profile",
-                            "PROFILE_DISPLAY_NOT_ALLOWED");
-
+            throw new CustomException(
+                    "Logged in user is not permitted to edit another user's profile",
+                    "PROFILE_DISPLAY_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
-        Patient updatePatient = PatientRequest.createPatientFromRequest(patientRequest);
-        Patient updatedPatient = patientService.updatePatient(id, updatePatient);
-        PatientResponse patientResponse = PatientResponse.createResponseFromPatient(updatedPatient);
-        return new ResponseEntity<>(patientResponse, HttpStatus.OK);
+
+        PatientDTO updatedPatient = patientService.update(id, patientRequest)
+                .orElseThrow(() -> new CustomException("Error while updating patient details", "PATIENT_NOT_UPDATED",
+                        HttpStatus.INTERNAL_SERVER_ERROR));
+        System.out.println(updatedPatient);
+
+        return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
-        Patient patient = patientService.getPatientById(id)
-                        .orElseThrow(() -> new CustomException("Patient with given id not found",
-                                        "PATIENT_NOT_FOUND"));
-        Credential credential = credentialService.getCredentialsByEmail(patient.getEmail())
-                        .orElseThrow(() -> new CustomException("Patient credentials not found",
-                                        "CREDENTIAL_NOT_FOUND"));
-        credentialService.deleteCredentials(credential.getId());
-        patientService.deletePatient(id);
+        patientService.get(id)
+                .orElseThrow(() -> new CustomException("Patient with given id not found",
+                        "PATIENT_NOT_FOUND", HttpStatus.NOT_FOUND));
+        // throw new CustomException("Account cannot be deleted",
+        // "ACCOUNT_NOT_DELETED");
+        // patientService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

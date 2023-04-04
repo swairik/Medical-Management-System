@@ -1,17 +1,17 @@
-$(document).ready(function () {
-  const cookie = document.cookie;
-  if(cookie=='') window.location.href = "Auth";
+// $(document).ready(function () {
+//   const cookie = document.cookie;
+//   if(cookie=='') window.location.href = "Auth";
   
-  const token = cookie
-    .split("; ")
-    .find((row) => row.startsWith("authToken="))
-    .split("=")[1];
-  const patient_id = cookie
-    .split("; ")
-    .find((row) => row.startsWith("id="))
-    .split("=")[1];
-  console.log(token);
-  console.log(patient_id);
+//   const token = cookie
+//     .split("; ")
+//     .find((row) => row.startsWith("authToken="))
+//     .split("=")[1];
+//   const patient_id = cookie
+//     .split("; ")
+//     .find((row) => row.startsWith("id="))
+//     .split("=")[1];
+//   console.log(token);
+//   console.log(patient_id);
 
   $.ajax({
     url: `http://localhost:8050/appointment/display/patient/${patient_id}`,
@@ -56,19 +56,19 @@ $(document).ready(function () {
         var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
-      }
-    },
-  });
+//         if (errorObj) alert(errorObj.errorMessage);
+//         else alert("Some Error Occurred");
+//       }
+//     },
+//   });
 
-  $(".prescription-table").on("click", "#prescription_view_btn", function (e) {
-    console.log("clicked");
-    console.log(this.value);
-    console.log($(this).attr("doctor_id"))
+//   $(".prescription-table").on("click", "#prescription_view_btn", function (e) {
+//     console.log("clicked");
+//     console.log(this.value);
+//     console.log($(this).attr("doctor_id"))
 
-    window.location.href = "ViewPrescription?appointment_id=" + this.value + "&patient_id=" + $(this).attr("patient_id") + "&doctor_id=" + $(this).attr("doctor_id") ;
-  });
+//     window.location.href = "ViewPrescription?appointment_id=" + this.value + "&patient_id=" + $(this).attr("patient_id") + "&doctor_id=" + $(this).attr("doctor_id") ;
+//   });
 
 
-});
+// });

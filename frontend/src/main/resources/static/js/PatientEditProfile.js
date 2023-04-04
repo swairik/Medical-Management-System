@@ -71,7 +71,10 @@ $(document).ready(function () {
           window.location.href = "Auth";
         } else {
           var errorObj;
+        
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+
+          console.log(errorObj)
 
           if (errorObj) alert(errorObj.errorMessage);
           else alert("Some Error Occurred");
