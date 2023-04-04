@@ -89,7 +89,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
                 if (!(iTime.isBefore(weekStart) || iTime.isAfter(weekEnd))) {
                     uniqueDoctorsThisWeek.add(appointment.getDoctor().getId());
-                    appointmentsThisWeek += appointments.size();
+                    appointmentsThisWeek += 1;
                 }
             }
         }

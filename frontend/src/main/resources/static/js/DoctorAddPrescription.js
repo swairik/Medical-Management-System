@@ -49,7 +49,7 @@ $(document).ready(function () {
     e.preventDefault(); // Prevent default form submission
 
     var prescriptionData = {
-      prescription: "",
+      prescription: "check",
       feedback: "",
       rating: 0.0
     };

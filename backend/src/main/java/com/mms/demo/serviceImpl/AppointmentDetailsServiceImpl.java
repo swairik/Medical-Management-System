@@ -52,7 +52,7 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
 
         AppointmentDetails appointmentDetails = fetchedContainer.get();
 
-        if (updatesDto.getRating() != null) {
+        if (updatesDto.getRating() != 0) {
             Optional<Appointment> fetchedAppointmentContainer =
                             appointmentRepository.findByAppointmentDetails(appointmentDetails);
             if (fetchedAppointmentContainer.isEmpty()) {
@@ -69,14 +69,19 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
             Doctor doctor = fetchedDoctorContainer.get();
 
             Long currentRating = appointmentDetails.getRating();
+            System.out.println(currentRating);
             Double adjustedRating = doctor.getRatingAverage() * doctor.getRatingCount();
             adjustedRating += updatesDto.getRating() - currentRating;
+            System.out.println(adjustedRating);
             Long ratingCount = doctor.getRatingCount();
             if (currentRating == 0) {
                 ratingCount += 1;
             }
             doctor.setRatingCount(ratingCount);
-            doctor.setRatingAverage(adjustedRating / doctor.getRatingCount());
+            if (ratingCount > 0) {
+                doctor.setRatingAverage(adjustedRating / ratingCount);
+            }
+            
 
             doctorRepository.save(doctor);
         }
@@ -92,7 +97,10 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
 
         appointmentDetails.setFeedback(updates.getFeedback());
         appointmentDetails.setPrescription(updates.getPrescription());
-        appointmentDetails.setRating(updatesDto.getRating());
+        if (updatesDto.getRating() > 0) {
+            appointmentDetails.setRating(updatesDto.getRating());
+        }
+        
         appointmentDetails = repository.save(appointmentDetails);
 
         return Optional.of(mapper.entityToDto(appointmentDetails));
