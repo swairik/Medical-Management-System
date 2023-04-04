@@ -13,48 +13,48 @@
 //   console.log(token);
 //   console.log(patient_id);
 
-  $.ajax({
-    url: `http://localhost:8050/appointment/display/patient/${patient_id}`,
-    type: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    success: function (result) {
-      console.log(result);
-      if(result.length===0){
+//   $.ajax({
+//     url: `http://localhost:8050/appointment/display/patient/${patient_id}`,
+//     type: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//     success: function (result) {
+//       console.log(result);
+//       if(result.length===0){
 
-      }else{
-      $('#NA').replaceWith($('.prescription-table').show());
-      $(".prescription-table").append(
-        `<th>Doctor Name</th>
-        <th>Speciality</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th></th>`
-      );
-      $.each(result, function (key, value) {
-        console.log(value);
-        $(".prescription-table").append(
-          `<tr>
-          <td id="prescription_doctor">${value.scheduleResponse.doctorResponse.name}</td>
-          <td id="prescription_speciality">${value.scheduleResponse.doctorResponse.speciality.name}</td>
-          <td id="prescription_date">${value.scheduleResponse.weekDate}</td>
-          <td id="prescription_status">Added/Not Added</td>
-          <td id="prescription_view">
-            <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.scheduleResponse.doctorResponse.id} patient_id=${value.patientResponse.id}>
-            View</button>
-          </td>
-        </tr>`
-        );
-      });
-    }
-    },
-    error: function (xhr, status, errorThrown) {
-      if (xhr.status == 403) {
-        window.location.href = "Auth";
-      } else {
-        var errorObj;
-        if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+//       }else{
+//       $('#NA').replaceWith($('.prescription-table').show());
+//       $(".prescription-table").append(
+//         `<th>Doctor Name</th>
+//         <th>Speciality</th>
+//         <th>Date</th>
+//         <th>Status</th>
+//         <th></th>`
+//       );
+//       $.each(result, function (key, value) {
+//         console.log(value);
+//         $(".prescription-table").append(
+//           `<tr>
+//           <td id="prescription_doctor">${value.scheduleResponse.doctorResponse.name}</td>
+//           <td id="prescription_speciality">${value.scheduleResponse.doctorResponse.speciality.name}</td>
+//           <td id="prescription_date">${value.scheduleResponse.weekDate}</td>
+//           <td id="prescription_status">Added/Not Added</td>
+//           <td id="prescription_view">
+//             <button style="background-color: #4caf50" id="prescription_view_btn" value=${value.id} doctor_id=${value.scheduleResponse.doctorResponse.id} patient_id=${value.patientResponse.id}>
+//             View</button>
+//           </td>
+//         </tr>`
+//         );
+//       });
+//     }
+//     },
+//     error: function (xhr, status, errorThrown) {
+//       if (xhr.status == 403) {
+//         window.location.href = "Auth";
+//       } else {
+//         var errorObj;
+//         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
 //         if (errorObj) alert(errorObj.errorMessage);
 //         else alert("Some Error Occurred");
