@@ -5,7 +5,6 @@ import com.mms.demo.entity.Speciality;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.DoctorDTO;
 import com.mms.demo.transferobject.SpecialityDTO;
-import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +28,8 @@ public class DoctorMapperImpl implements DataTransferObjectMapper<Doctor, Doctor
         doctorDTO.email(doctor.getEmail());
         doctorDTO.phone(doctor.getPhone());
         doctorDTO.speciality(specialityMapper.entityToDto(doctor.getSpeciality()));
+        doctorDTO.ratingCount(doctor.getRatingCount());
+        doctorDTO.ratingAverage(doctor.getRatingAverage());
 
         return doctorDTO.build();
     }

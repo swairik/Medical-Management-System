@@ -28,6 +28,25 @@ import java.util.Random;
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SpecialityMapperImplTest {
+    private String genAlnum(int targetStringLength) {
+        int leftLimit = 48;
+        int rightLimit = 122;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength).collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
+
+    private SpecialityDTO generateRandomSpecialityDTO() {
+        Random rng = new Random();
+        return SpecialityDTO.builder().name(genAlnum(6)).build();
+    }
+
     @Autowired
     private DataTransferObjectMapper<Speciality, SpecialityDTO> mapper;
 
@@ -36,7 +55,7 @@ public class SpecialityMapperImplTest {
         final SpecialityDTO specialityDTOtest = SpecialityDTO.builder().id(1L).name(null).build();
 
         assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(specialityDTOtest));
+                .isThrownBy(() -> mapper.dtoToEntity(specialityDTOtest));
 
         SpecialityDTO specialityDTO = SpecialityDTO.builder().name("Spec").build();
         Speciality speciality = mapper.dtoToEntity(specialityDTO);
