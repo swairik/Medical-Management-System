@@ -6,7 +6,7 @@ const constructAppointmentInfo = (index,result) => {
   <div class="col col-3" data-label="Name">${result.patient.name}</div>
   <div class="col col-4" data-label="Age">${result.patient.age}</div>
   <div class="col col-5" data-label="Prescription">
-  <button id="add_prescription" value=${result.appointmentDetails.id}>Add
+  <button id="add_prescription" value=${result.appointmentDetails.id} appointment_id=${result.id}>Add
   </button></div>
 </li>
         `;
@@ -118,6 +118,6 @@ $(document).ready(function () {
     console.log("clicked");
     console.log(this.value);
 
-    window.location.href = "AddPrescription?appointmentDetailsId=" + this.value ;
+    window.location.href = "AddPrescription?appointmentDetailsId=" + this.value + "&appointmentId=" + $(this).attr("appointment_id");
   });
 });

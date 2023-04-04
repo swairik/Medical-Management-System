@@ -1,7 +1,7 @@
 body {
   margin: 0;
 }
-/* 
+ 
 * {
   font-family: 'Times New Roman';
 }
@@ -172,7 +172,7 @@ nav img {
   button:hover {
     font-weight: 1000;
   }
-} */
+} 
 
 .prescription{
   margin: 5% 25%;
