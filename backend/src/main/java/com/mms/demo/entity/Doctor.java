@@ -112,5 +112,5 @@ public class Doctor {
 
     @Column(name = "doctor_rating_sum", nullable = false)
     @Builder.Default
-    private Long ratingSum = 0;
+    private Long ratingSum = 0L;
 }
