@@ -50,7 +50,7 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
             return Optional.empty();
         }
 
-        if (fetchedContainer.get().getRating() >= 1) {
+        if (fetchedContainer.get().getRating() != null) {
             Optional<Appointment> fetchedAppointmentContainer =
                             appointmentRepository.findByAppointmentDetails(fetchedContainer.get());
             if (fetchedAppointmentContainer.isEmpty()) {
