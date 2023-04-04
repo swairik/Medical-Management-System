@@ -4,11 +4,10 @@ $(document).ready(function () {
 
   console.log(urlParams);
 
-  const doctor_id = urlParams.get("doctor_id");
-  const appointment_id = urlParams.get("appointment_id");
-  const patient_id = urlParams.get("patient_id");
-
-  console.log(appointment_id);
+  
+  const appointmentDetailsId = urlParams.get("appointmentDetailsId");
+  
+  console.log(appointmentDetailsId);
   const cookie = document.cookie;
   if(cookie=='') window.location.href = "Auth";
   
@@ -23,9 +22,7 @@ $(document).ready(function () {
     e.preventDefault(); // Prevent default form submission
 
     var prescriptionData = {
-      doctorId: doctor_id,
-      patientId: patient_id,
-      appointmentId: appointment_id,
+      appointmentId: appointmentDetailsId,
       contents: {
         medication: $('#medication').val(),
         test: $('#tests').val(),
