@@ -6,8 +6,9 @@ const constructAppointmentInfo = (index,result) => {
   <div class="col col-3" data-label="Name">${result.patient.name}</div>
   <div class="col col-4" data-label="Age">${result.patient.age}</div>
   <div class="col col-5" data-label="Prescription">
-  <button id="add_prescription" value=${result.appointmentDetails.id} appointment_id=${result.id}>Add
-  </button></div>
+  <button id="add_prescription" value=${result.appointmentDetails.id} appointment_id=${result.id}>${result.appointmentDetails.prescription.length==0?"Add":"Update"}
+  </button>
+  </div>
 </li>
         `;
 };
