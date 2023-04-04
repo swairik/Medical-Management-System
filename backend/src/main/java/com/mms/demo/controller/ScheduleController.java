@@ -76,12 +76,11 @@ public class ScheduleController {
             dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
         } catch (Exception e) {
             throw new CustomException("Wrong format of stamp", "WRONG_FORMAT",
-                            HttpStatus.BAD_REQUEST);
+                    HttpStatus.BAD_REQUEST);
         }
         List<ScheduleDTO> schedulesList = scheduleService.getAllAfter(dateTime);
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
-
 
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<List<ScheduleDTO>> displaySchedulesByDoctor(@PathVariable Long did) {
@@ -140,9 +139,17 @@ public class ScheduleController {
     // schedules
     @GetMapping("/display/patient/approved/{did}")
     public ResponseEntity<List<ScheduleDTO>> displayNonZeroApprovedSchedulesByDoctor(
-            @PathVariable Long did) {
+            @PathVariable Long did, @RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter).truncatedTo(ChronoUnit.MINUTES);
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of stamp", "WRONG_FORMAT",
+                    HttpStatus.BAD_REQUEST);
+        }
         List<ScheduleDTO> schedulesList = scheduleService.getBookedAndApprovedByDoctor(did, true,
-                false, Optional.empty());
+                false, Optional.of(dateTime));
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
