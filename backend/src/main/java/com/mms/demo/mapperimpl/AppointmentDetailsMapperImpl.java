@@ -21,6 +21,7 @@ public class AppointmentDetailsMapperImpl
         appointmentDetailsDTO.id(appointmentDetails.getId());
         appointmentDetailsDTO.prescription(new String(appointmentDetails.getPrescription()));
         appointmentDetailsDTO.feedback(new String(appointmentDetails.getFeedback()));
+        appointmentDetailsDTO.rating(appointmentDetails.getRating());
 
         return appointmentDetailsDTO.build();
     }
@@ -38,7 +39,8 @@ public class AppointmentDetailsMapperImpl
 
         try {
             appointmentDetails.feedback(appointmentDetailsDTO.getFeedback().getBytes())
-                            .prescription(appointmentDetailsDTO.getPrescription().getBytes());
+                            .prescription(appointmentDetailsDTO.getPrescription().getBytes())
+                            .rating(appointmentDetailsDTO.getRating());
         } catch (NullPointerException e) {
             throw new IllegalArgumentException(
                             "Expected required field in the DataTransferObject, found null", e);

@@ -55,7 +55,7 @@ $(document).ready(function () {
       console.log(formattedEndDate);
   
       $.ajax({
-        url: `http://localhost:8050/report/display/generateDoctorReport/${doctor_id}?from=${formattedStartDate}&to=${formattedEndDate}`,
+        url: `http://localhost:8050/report/display/doctor/${doctor_id}/download?from=${formattedStartDate}&to=${formattedEndDate}`,
         type: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ $(document).ready(function () {
           const url = window.URL.createObjectURL(data);
           const a = document.createElement("a");
           a.href = url;
-          a.download = "ReportDoctor.zip";
+          a.download = "ReportDoctor.xlsx";
           document.body.appendChild(a);
           a.click();
           a.remove();

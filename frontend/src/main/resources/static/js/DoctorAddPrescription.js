@@ -4,11 +4,11 @@ $(document).ready(function () {
 
   console.log(urlParams);
 
-  const doctor_id = urlParams.get("doctor_id");
-  const appointment_id = urlParams.get("appointment_id");
-  const patient_id = urlParams.get("patient_id");
-
-  console.log(appointment_id);
+  
+  const appointmentDetailsId = urlParams.get("appointmentDetailsId");
+  const appointmentId = urlParams.get("appointmentId");
+  
+  console.log(appointmentDetailsId);
   const cookie = document.cookie;
   if(cookie=='') window.location.href = "Auth";
   
@@ -18,27 +18,48 @@ $(document).ready(function () {
     .split("=")[1];
 
     console.log(token)
+  
+    $.ajax({
+      url: `http://localhost:8050/appointment/display/${appointmentId}`,
+      type: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      success: function (result) {
+        console.log(result);
+        $("#pID").text(result.id);
+        $("#pname").text(result.patient.name);
+        $("#page").text(result.patient.age);
+        $("#pgender").text(result.patient.gender);
+        $("#pdocname").text(result.doctor.name);
+        $("#pdate").text(result.start.substring(0, result.start.indexOf('T')));
+        // $(".DoctorInfo").append(constructDoctorInfo(result));
+      },
+      error: function (xhr, status, errorThrown) {
+        if (xhr.status == 403) {
+          window.location.href = "Auth";
+        } else {
+          alert("Some Error Occurred");
+        }
+      },
+    });
+  
 
   $("#prescription_form").on("submit", function (e) {
     e.preventDefault(); // Prevent default form submission
 
     var prescriptionData = {
-      doctorId: doctor_id,
-      patientId: patient_id,
-      appointmentId: appointment_id,
-      contents: {
-        medication: $('#medication').val(),
-        test: $('#tests').val(),
-        diagnosis: $('#diagnosis').val()
-      },
+      prescription: "check",
+      feedback: "",
+      rating: 0.0
     };
 
     console.log(prescriptionData);
 
     // Send Ajax request
     $.ajax({
-      url: `http://localhost:8050/prescription/`,
-      method: 'POST',
+      url: `http://localhost:8050/appointmentDetails/${appointmentDetailsId}`,
+      method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -49,7 +70,7 @@ $(document).ready(function () {
         // Handle successful response
         console.log(response);
         alert("Prescription Updated Successfully!");
-        window.location.href = "YourPatients";
+        // window.location.href = "YourPatients";
       },
       error: function (xhr, status, error) {
         // Handle error response

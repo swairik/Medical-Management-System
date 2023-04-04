@@ -163,7 +163,8 @@ $(document).ready(function () {
       scheduleId: this.value,
       appointmentDetails: {
         prescription: "",
-        feedback: ""
+        feedback: "",
+        rating: 0
       }
     }
 

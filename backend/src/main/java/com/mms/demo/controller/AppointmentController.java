@@ -107,6 +107,20 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentsList, HttpStatus.OK);
     }
 
+    @GetMapping("/display/patient/{pid}/unFilledFeedback/{days}")
+    public ResponseEntity<List<AppointmentDTO>> showAllPatientUnfilledFeedback(@PathVariable Long pid, @PathVariable Long days,
+            @RequestParam String stamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.parse(stamp, formatter);
+        } catch (Exception e) {
+            throw new CustomException("Wrong format of timestamp", "WRONG_FORMAT", HttpStatus.BAD_REQUEST);
+        }
+        List<AppointmentDTO> appointmentsList = appointmentService.getAllByPatientWithUnfilledFeedbackTill(pid, days, dateTime);
+        return new ResponseEntity<>(appointmentsList, HttpStatus.OK);
+    }
+
     /*
      * deprecated endpoint
      */
@@ -231,7 +245,8 @@ public class AppointmentController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        AppointmentDTO createdAppointment = appointmentService.create(appointmentRequest.getPatientId(), appointmentRequest.getScheduleId(), appointmentRequest.getAppointmentDetails());
+        AppointmentDTO createdAppointment = appointmentService.create(appointmentRequest.getPatientId(),
+                appointmentRequest.getScheduleId(), appointmentRequest.getAppointmentDetails());
 
         return new ResponseEntity<>(createdAppointment, HttpStatus.CREATED);
     }

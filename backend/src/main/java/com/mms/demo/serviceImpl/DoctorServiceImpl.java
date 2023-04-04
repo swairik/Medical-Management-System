@@ -14,7 +14,6 @@ import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.SpecialityRepository;
 import com.mms.demo.service.DoctorService;
 import com.mms.demo.transferobject.DoctorDTO;
-import java.util.Collections;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {

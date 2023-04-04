@@ -22,6 +22,12 @@ import com.mms.demo.transferobject.ScheduleDTO;
 public class ScheduleServiceImpl implements ScheduleService {
 
 
+    @Override
+    public List<ScheduleDTO> getAllAfter(LocalDateTime stamp) {
+        return repository.findAllByStartGreaterThanEqual(stamp.truncatedTo(ChronoUnit.MINUTES))
+                        .stream().map(s -> mapper.entityToDto(s)).collect(Collectors.toList());
+    }
+
     @Autowired
     private ScheduleRepository repository;
 
@@ -36,8 +42,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     Optional<LocalDateTime> endContainer) throws IllegalArgumentException {
         Optional<Doctor> fetchedContainer = doctorRepository.findById(doctorID);
 
-        if (start.isAfter(LocalDateTime.now().minusSeconds(30)) == false) {
-            throw new IllegalArgumentException("Creation of slots at a past time is not allowed");
+        if (start.isAfter(LocalDateTime.now().plusHours(2)) == false) {
+            throw new IllegalArgumentException("Slots should be created minimum 2 hours from now");
         }
 
         if (fetchedContainer.isEmpty()) {
@@ -58,7 +64,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         List<Schedule> schedules = new ArrayList<>();
-        for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(30)) {
+        for (LocalDateTime time = start; time.plusMinutes(30).isBefore(end); time = time.plusMinutes(30)) {
             Schedule schedule = Schedule.builder().doctor(doctor).start(time)
                             .end(time.plusMinutes(30)).build();
             schedules.add(schedule);

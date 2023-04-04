@@ -56,6 +56,10 @@ public class AppointmentDetails {
     @Builder.Default
     private byte[] feedback = null;
 
+    @Column(name = "appointment_details_rating", nullable = false)
+    @Builder.Default
+    Long rating = 0L;
+
     @Column(name = "appointment_details_stamp")
     private LocalDateTime stamp;
 }

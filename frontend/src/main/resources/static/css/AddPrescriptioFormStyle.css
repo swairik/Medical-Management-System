@@ -158,6 +158,21 @@ nav img {
 }
 
 
+@media only screen and (max-width: 768px){
+  .menu .homeactive{
+    display: none;
+  }
+
+  .navbar{
+    padding: 10px 10px;
+  }
+
+  button:hover {
+    font-weight: 1000;
+  }
+} 
+
+
 .prescription{
   margin: 5% 25%;
   border: 2.5px solid #004798;

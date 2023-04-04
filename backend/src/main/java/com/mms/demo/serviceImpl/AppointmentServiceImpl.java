@@ -2,7 +2,6 @@ package com.mms.demo.serviceImpl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -333,6 +332,28 @@ public class AppointmentServiceImpl implements AppointmentService {
                         to.truncatedTo(ChronoUnit.SECONDS));
 
         return appointments.stream().map(a -> mapper.entityToDto(a)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentDTO> getAllByPatientWithUnfilledFeedbackTill(Long patientID,
+                    Long daysBack, LocalDateTime stamp) throws IllegalArgumentException {
+        if (daysBack < 0) {
+            throw new IllegalArgumentException(
+                            "Number of days to look backwards should not be negative");
+        }
+
+        Optional<Patient> fetchedPatientContainer = patientRepository.findById(patientID);
+        if (fetchedPatientContainer.isEmpty()) {
+            throw new IllegalArgumentException("Referenced patient does not exist");
+        }
+        Patient patient = fetchedPatientContainer.get();
+
+        LocalDateTime from = stamp.truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime to = from.toLocalDate().minusDays(daysBack).atStartOfDay();
+        List<Appointment> appointments =
+                        repository.findAllByPatientAndStartBetween(patient, from, to);
+        return appointments.stream().filter(a -> a.getAppointmentDetails().getFeedback() == null)
+                        .map(a -> mapper.entityToDto(a)).collect(Collectors.toList());
     }
 
 

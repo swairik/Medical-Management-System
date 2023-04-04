@@ -86,7 +86,7 @@ $(document).ready(function () {
     console.log(formattedEndDate);
 
     $.ajax({
-      url: `http://localhost:8050/report/display/generateReport?from=${formattedStartDate}&to=${formattedEndDate}`,
+      url: `http://localhost:8050/report/display/between/download?from=${formattedStartDate}&to=${formattedEndDate}`,
       type: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

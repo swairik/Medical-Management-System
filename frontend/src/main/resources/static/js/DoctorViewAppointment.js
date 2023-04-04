@@ -3,19 +3,16 @@ const constructAppointmentInfo = (result, index) => {
     <li class="table-row">
           <div class="col col-1" data-label="S. No.">${index + 1}</div>
           <div class="col col-2" data-label="Date">${
-            result.scheduleResponse.weekDate
-          }</div>
-          <div class="col col-3" data-label="Day">${
-            result.scheduleResponse.slotResponse.weekday
+            result.start.substring(0, result.start.indexOf('T'))
           }</div>
           <div class="col col-4" data-label="Time">${
-            result.scheduleResponse.slotResponse.start
-          }-${result.scheduleResponse.slotResponse.end}</div>
+            result.start.substring(result.start.indexOf('T')+1).replace(/:00$/, '')
+          }</div>
           <div class="col col-5" data-label="Patient's Name">${
-            result.patientResponse.name
+            result.patient.name
           }</div>
           <div class="col col-6" data-label="Patient's Age">${
-            result.patientResponse.age
+            result.patient.age
           }</div>
     </li>
       `;

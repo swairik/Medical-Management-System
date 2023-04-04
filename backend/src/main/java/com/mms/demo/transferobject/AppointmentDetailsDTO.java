@@ -15,4 +15,5 @@ public class AppointmentDetailsDTO {
     Long id;
     String prescription;
     String feedback;
+    Long rating;
 }
