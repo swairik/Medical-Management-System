@@ -38,9 +38,13 @@ public class AppointmentDetailsMapperImpl
 
 
         try {
-            appointmentDetails.feedback(appointmentDetailsDTO.getFeedback().getBytes())
-                            .prescription(appointmentDetailsDTO.getPrescription().getBytes())
-                            .rating(appointmentDetailsDTO.getRating());
+            if (appointmentDetailsDTO.getFeedback() != null) {
+                appointmentDetails.feedback(appointmentDetailsDTO.getFeedback().getBytes());
+            }
+            if (appointmentDetailsDTO.getPrescription() != null) {
+                appointmentDetails.prescription(appointmentDetailsDTO.getPrescription().getBytes());
+            }
+            appointmentDetails.rating(appointmentDetailsDTO.getRating());
         } catch (NullPointerException e) {
             throw new IllegalArgumentException(
                             "Expected required field in the DataTransferObject, found null", e);
