@@ -72,7 +72,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (LocalDateTime time = start; !time.plusMinutes(30).isAfter(end); time =
                         time.plusMinutes(30)) {
             List<Schedule> candidates = repository.findAllByDoctorAndStartBetween(doctor,
-                            time.plusMinutes(1), time.plusMinutes(29));
+                            time.minusMinutes(29), time.plusMinutes(29));
 
 
             if (!candidates.isEmpty()) {
