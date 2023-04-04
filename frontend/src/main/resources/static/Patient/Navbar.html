@@ -8,6 +8,7 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
+    
       $("#out").on("click", function (e) {
         // Do something when the button is clicked
 
@@ -63,7 +64,7 @@
       .menu .link {
         color: #ffffff;
         text-decoration: none;
-        padding: 10px 15px;
+        padding: 8px 15px;
       }
 
       .menu a:hover,
@@ -82,7 +83,7 @@
         border: none;
         outline: none;
         color: white;
-        padding: 10px 15px;
+        padding: 8px 15px;
         background-color: inherit;
         margin: 0;
       }
@@ -100,7 +101,7 @@
       .dropdown-content .link {
         float: none;
         color: white;
-        padding: 10px 15px;
+        padding: 8px 15px;
         text-decoration: none;
         display: block;
         text-align: left;
@@ -178,6 +179,23 @@
         border-radius: 8px;
         margin: 5px;
       }
+      .fa-stack[data-count]:after{
+      position:absolute;
+      left:50%;
+      top:1%;
+      content: attr(data-count);
+      font-size:50%;
+      padding:.3em;
+      border-radius:999px;
+      line-height:.75em;
+      color: white;
+      background:#E15E55;
+      text-align:center;
+      min-width:2em;
+      font-weight:bold;
+    }
+   
+
       @media only screen and (max-width: 768px) {
         .navbar {
           padding: 10px 10px;
@@ -192,6 +210,15 @@
         <p>Care4U</p>
       </div>
       <div class="menu">
+        <div class="link dropdown">
+          <span class="fa-stack fa-lg" data-count="1">
+            <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+          </span>
+          <div class="dropdown-content">
+            <a class="link" href="PatientFeedback">Please Provide<br>your valuable feedback<br></a>
+          </div>
+        </div>
+          
         <a class="link homeactive" href="Patient">Home</a>
         <div class="dropdown">
           <button class="dropbtn">
@@ -212,5 +239,6 @@
         <button id="out" style="background-color: #0ca912">Yes</button>
       </div>
     </div>
+
   </body>
 </html>
