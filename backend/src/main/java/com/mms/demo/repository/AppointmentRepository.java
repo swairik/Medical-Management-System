@@ -3,10 +3,12 @@ package com.mms.demo.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import com.mms.demo.entity.Appointment;
+import com.mms.demo.entity.AppointmentDetails;
 import com.mms.demo.entity.Doctor;
 import com.mms.demo.entity.Patient;
 import com.mms.demo.entity.Speciality;
@@ -49,6 +51,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                     Doctor doctor, LocalDateTime start);
 
     List<Appointment> findAllByStartBetween(LocalDateTime start, LocalDateTime end);
+
+    Optional<Appointment> findByAppointmentDetails(AppointmentDetails appointmentDetails);
 
     Long countByDoctor_Speciality(Speciality speciality);
 
