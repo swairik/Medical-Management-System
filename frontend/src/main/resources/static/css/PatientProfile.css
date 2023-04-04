@@ -47,7 +47,7 @@
       border-radius: 50%;
     }
     footer {
-      position: absolute;
+      position: fixed;
       bottom: 0%;
       top: max-content;
       height: fit-content;
