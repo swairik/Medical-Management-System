@@ -110,7 +110,7 @@ $(document).ready(function () {
 
 
   $.ajax({
-    url: `http://localhost:8050/schedule/display/doctor/${doctor_id}/upcoming`,
+    url: `http://localhost:8050/schedule/display/patient/approved/${doctor_id}`,
     type: "GET",
     data: {
       stamp: (new Date())
@@ -162,8 +162,8 @@ $(document).ready(function () {
       patientId: patient_id,
       scheduleId: this.value,
       appointmentDetails: {
-        prescription: "",
-        feedback: "",
+        prescription: null,
+        feedback: null,
         rating: 0
       }
     }
