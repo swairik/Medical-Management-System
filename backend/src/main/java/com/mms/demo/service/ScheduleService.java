@@ -32,6 +32,8 @@ public interface ScheduleService {
      */
     List<ScheduleDTO> getAll();
 
+    List<ScheduleDTO> getAllAfter(LocalDateTime stamp);
+
     List<ScheduleDTO> getAllUnapproved();
 
     /**
