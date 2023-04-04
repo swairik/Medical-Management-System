@@ -85,7 +85,7 @@ public interface AppointmentService {
     List<AppointmentDTO> getAllByPatientAndDoctorAfter(Long patientID, Long doctorID,
                     LocalDateTime after) throws IllegalArgumentException;
 
-    List<AppointmentDTO> getAllByPatientWithUnfilledFeedbackTill(Long patientID, Long daysBack)
+    List<AppointmentDTO> getAllByPatientWithUnfilledFeedbackTill(Long patientID, Long daysBack, LocalDateTime stamp)
                     throws IllegalArgumentException;
 
 

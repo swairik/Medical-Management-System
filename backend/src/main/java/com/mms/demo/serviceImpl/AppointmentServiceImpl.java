@@ -336,7 +336,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<AppointmentDTO> getAllByPatientWithUnfilledFeedbackTill(Long patientID,
-                    Long daysBack) throws IllegalArgumentException {
+                    Long daysBack, LocalDateTime stamp) throws IllegalArgumentException {
         if (daysBack < 0) {
             throw new IllegalArgumentException(
                             "Number of days to look backwards should not be negative");
@@ -348,7 +348,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         Patient patient = fetchedPatientContainer.get();
 
-        LocalDateTime from = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDateTime from = stamp.truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime to = from.toLocalDate().minusDays(daysBack).atStartOfDay();
         List<Appointment> appointments =
                         repository.findAllByPatientAndStartBetween(patient, from, to);
