@@ -4,7 +4,142 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/PatientProfile.css" />
+    <style>
+      body{
+        text-align: center;
+      }
+      form{
+        margin: 2.5% 25%;
+        border: 1px solid rgb(207, 206, 206);
+        box-shadow: #cbcccc;
+        background-image: linear-gradient(to right, #fdfdfd,  #d7dada, #cbcccc, #a5a7a7) ;
+        padding: 1.5em;
+      }
+      .input{
+        background: transparent;
+        border: 1px dashed #b6b2b2;
+        margin: 2%;
+        height: 5em;
+        width: 80%;
+        resize: none;
+        padding: 2%;
+      }
+      .submit{
+        padding: 10px 15px;
+        background-image: linear-gradient(to right, #5dacec, #1160bb);
+        border: #1160bb;
+        color: white;
+        border-radius: 8px;
+        margin: 2%;
+      }
+      h1{
+        color:#004798;
+      }
+ 
+.rating {
+  width: 265px;
+  margin: 200px auto 0;
+  margin-top: 100px;
+  position: relative;
+  direction: rtl;
+}
+
+.rating .emo {
+  position: absolute;
+  font-family: FontAwesome;
+  color: #070000;
+  font-size: 50px;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+}
+
+.rating .emo:after {
+  content: '\f119';
+}
+
+.rating input {
+  position: absolute;
+  width: 35px;
+  height: 50px;
+  cursor: pointer;
+  transform: translateX(52px);
+  opacity: 0;
+  z-index: 5;
+}
+
+.rating input:nth-of-type(4):checked ~ .emo:after,
+.rating input:nth-of-type(4):hover ~ .emo:after,
+.rating input:nth-of-type(3):checked ~ .emo:after,
+.rating input:nth-of-type(3):hover ~ .emo:after {
+  content: '\f11a';
+}
+
+.rating input:nth-of-type(1):checked ~ .emo:after,
+.rating input:nth-of-type(1):hover ~ .emo:after,
+.rating input:nth-of-type(2):checked ~ .emo:after,
+.rating input:nth-of-type(2):hover ~ .emo:after {
+  content: '\f118';
+}
+
+.rating input:nth-of-type(1) {
+  right: 50px;
+}
+
+.rating input:nth-of-type(2) {
+  right: 100px;
+}
+
+.rating input:nth-of-type(3) {
+  right: 150px;
+}
+
+.rating input:nth-of-type(4) {
+  right: 200px;
+}
+
+.rating input:nth-of-type(5) {
+  right: 250px;
+}
+
+.rating input:nth-of-type(6) {
+  right: 300px;
+}
+
+.rating input:checked ~ .star:after,
+.rating input:hover ~ .star:after {
+  content: '\f005';
+}
+
+.rating .star {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-size: 42px;
+  color: #004798;
+  cursor: pointer;
+  margin: 3px;
+}
+
+.rating .star:after {
+  content: '\f006';
+}
+
+.rating .star:hover ~ .star:after,
+.rating .star:hover:after {
+  content: '\f005';
+}
+
+
+@media only screen and (max-width: 768px){
+  form{
+        margin: 10%;
+  }
+}
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
+
     <script>
         $(function () {
           $("#load_content").load("PatientNavbar");
@@ -13,8 +148,8 @@
   </head>
   <body>
     <div id="load_content"></div>
-    <h2>Patient Feedback Form</h2>
     <form action="" id="feedback">
+      <br><h1>Patient Feedback Form</h1><br><br>
         <label for="Question1">How was your experience making an appointment?</label><br>
         <textarea class="input" id="Question1"></textarea><br>
         <label for="Question2">How was your experience with the doctor?</label><br>
@@ -22,7 +157,13 @@
         <label for="Question3">Some suggestions to improve?</label><br>
         <textarea class="input" id="Question3"></textarea><br>
         <label for="Question4">Rate your overall experience</label><br>
-        
+        <div class="rating">
+          <input type="radio" name="star"><span class="star"> </span>
+          <input type="radio" name="star"><span class="star"> </span>
+          <input type="radio" name="star"><span class="star"> </span>
+          <input type="radio" name="star"><span class="star"> </span>
+          <input type="radio" name="star"><span class="star"> </span><span class="emo"> </span>
+        </div>
         <input class="submit" type="submit" value="Submit">
       </form>
     <footer>

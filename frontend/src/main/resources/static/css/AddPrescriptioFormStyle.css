@@ -1,9 +1,6 @@
 body {
   margin: 0;
-}
- 
-* {
-  font-family: 'Times New Roman';
+  font-family: Arial, sans-serif;
 }
 
 .navbar {
@@ -160,6 +157,7 @@ nav img {
   margin: 5px;
 }
 
+
 @media only screen and (max-width: 768px){
   .menu .homeactive{
     display: none;
@@ -173,6 +171,7 @@ nav img {
     font-weight: 1000;
   }
 } 
+
 
 .prescription{
   margin: 5% 25%;
@@ -249,4 +248,24 @@ nav img {
 
   footer a {
   color: #fff;
+  }
+
+  @media only screen and (max-width: 768px){
+    .menu .homeactive{
+      display: none;
+    }
+  
+    .navbar{
+      padding: 10px 10px;
+    }
+  
+    button:hover {
+      font-weight: 1000;
+    }
+
+    .prescription{
+      margin: 5% 15%;
+      border: 2.5px solid #004798;
+      padding: 2%;
+    }
   }
