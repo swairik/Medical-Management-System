@@ -58,7 +58,7 @@ public class AppointmentDetails {
 
     @Column(name = "appointment_details_rating", nullable = false)
     @Builder.Default
-    Double rating = 0.0;
+    Long rating = 0L;
 
     @Column(name = "appointment_details_stamp")
     private LocalDateTime stamp;

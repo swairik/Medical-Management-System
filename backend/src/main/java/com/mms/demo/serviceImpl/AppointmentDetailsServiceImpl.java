@@ -50,9 +50,11 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
             return Optional.empty();
         }
 
-        if (fetchedContainer.get().getRating() != null) {
+        AppointmentDetails appointmentDetails = fetchedContainer.get();
+
+        if (updatesDto.getRating() != null) {
             Optional<Appointment> fetchedAppointmentContainer =
-                            appointmentRepository.findByAppointmentDetails(fetchedContainer.get());
+                            appointmentRepository.findByAppointmentDetails(appointmentDetails);
             if (fetchedAppointmentContainer.isEmpty()) {
                 throw new IllegalArgumentException(
                                 "No parent appointment with the given details found");
@@ -66,9 +68,14 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
             }
             Doctor doctor = fetchedDoctorContainer.get();
 
+            Long currentRating = appointmentDetails.getRating();
             Double adjustedRating = doctor.getRatingAverage() * doctor.getRatingCount();
-            adjustedRating += fetchedContainer.get().getRating();
-            doctor.setRatingCount(doctor.getRatingCount() + 1);
+            adjustedRating += updatesDto.getRating() - currentRating;
+            Long ratingCount = doctor.getRatingCount();
+            if (currentRating == 0) {
+                ratingCount += 1;
+            }
+            doctor.setRatingCount(ratingCount);
             doctor.setRatingAverage(adjustedRating / doctor.getRatingCount());
 
             doctorRepository.save(doctor);
@@ -83,10 +90,9 @@ public class AppointmentDetailsServiceImpl implements AppointmentDetailsService 
                             e);
         }
 
-        AppointmentDetails appointmentDetails = fetchedContainer.get();
-
         appointmentDetails.setFeedback(updates.getFeedback());
         appointmentDetails.setPrescription(updates.getPrescription());
+        appointmentDetails.setRating(updatesDto.getRating());
         appointmentDetails = repository.save(appointmentDetails);
 
         return Optional.of(mapper.entityToDto(appointmentDetails));
