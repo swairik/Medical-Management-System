@@ -53,12 +53,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         Doctor doctor = fetchedContainer.get();
 
-        List<Schedule> candidates = repository.findAllByDoctorAndStartBetween(doctor,
-                        start.minusMinutes(29), start.plusMinutes(29));
-        if (!candidates.isEmpty()) {
-            throw new IllegalArgumentException("Slots cannot be within 30 minutes of each other");
-        }
-
 
 
         LocalDateTime end = null;
@@ -72,15 +66,20 @@ public class ScheduleServiceImpl implements ScheduleService {
             end = start.plusMinutes(30);
         }
 
-        candidates = repository.findAllByDoctorAndStartBetween(doctor, end.minusMinutes(29),
-                        end.plusMinutes(29));
-        if (!candidates.isEmpty()) {
-            throw new IllegalArgumentException("Slots cannot be within 30 minutes of each other");
-        }
+
 
         List<Schedule> schedules = new ArrayList<>();
-        for (LocalDateTime time = start; time.plusMinutes(30).isAfter(end) == false; time =
+        for (LocalDateTime time = start; !time.plusMinutes(30).isAfter(end); time =
                         time.plusMinutes(30)) {
+            List<Schedule> candidates = repository.findAllByDoctorAndStartBetween(doctor,
+                            time.plusMinutes(1), time.plusMinutes(29));
+
+
+            if (!candidates.isEmpty()) {
+                throw new IllegalArgumentException(
+                                "Slots cannot be within 30 minutes of each other");
+            }
+
             Schedule schedule = Schedule.builder().doctor(doctor).start(time)
                             .end(time.plusMinutes(30)).build();
             schedules.add(schedule);
