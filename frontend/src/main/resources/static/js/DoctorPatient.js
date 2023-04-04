@@ -2,11 +2,11 @@ const constructAppointmentInfo = (index,result) => {
   return `
   <li class="table-row">
   <div class="col col-1" data-label="No">${index+1}</div>
-  <div class="col col-2" data-label="Date">${result.scheduleResponse.weekDate}</div>
-  <div class="col col-3" data-label="Name">${result.patientResponse.name}</div>
-  <div class="col col-4" data-label="Age">${result.patientResponse.age}</div>
+  <div class="col col-2" data-label="Date">${result.start.substring(0, result.start.indexOf('T'))}</div>
+  <div class="col col-3" data-label="Name">${result.patient.name}</div>
+  <div class="col col-4" data-label="Age">${result.patient.age}</div>
   <div class="col col-5" data-label="Prescription">
-  <button id="add_prescription" value=${result.id} doctor_id=${result.scheduleResponse.doctorResponse.id} patient_id=${result.patientResponse.id}>Add
+  <button id="add_prescription" value=${result.appointmentDetails.id}>Add
   </button></div>
 </li>
         `;
@@ -117,8 +117,7 @@ $(document).ready(function () {
   $(".responsive-table").on("click", "#add_prescription", function (e) {
     console.log("clicked");
     console.log(this.value);
-    console.log($(this).attr("doctor_id"))
 
-    window.location.href = "AddPrescription?appointment_id=" + this.value + "&patient_id=" + $(this).attr("patient_id") + "&doctor_id=" + $(this).attr("doctor_id") ;
+    window.location.href = "AddPrescription?appointmentDetailsId=" + this.value ;
   });
 });
