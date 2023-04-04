@@ -56,7 +56,7 @@ public class AppointmentDetails {
     @Builder.Default
     private byte[] feedback = null;
 
-    @Column(name = "appointment_details_rating")
+    @Column(name = "appointment_details_rating", nullable = false)
     @Builder.Default
     Double rating = 0.0;
 

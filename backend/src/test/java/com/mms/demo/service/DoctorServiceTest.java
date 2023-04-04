@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.TestPropertySource;
 
 import com.mms.demo.entity.Doctor;
@@ -33,10 +34,10 @@ public class DoctorServiceTest {
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength).collect(StringBuilder::new,
-                        StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(targetStringLength).collect(StringBuilder::new,
+                                        StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
 
         return generatedString;
     }
@@ -49,7 +50,8 @@ public class DoctorServiceTest {
     private DoctorDTO generateRandomDoctorDTO() {
         Random rng = new Random();
         return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                .name(genAlnum(14)).phone(genAlnum(10)).speciality(generateRandomSpecialityDTO()).build();
+                        .name(genAlnum(14)).phone(genAlnum(10))
+                        .speciality(generateRandomSpecialityDTO()).build();
     }
 
     @Autowired
@@ -65,20 +67,25 @@ public class DoctorServiceTest {
 
     @Test
     void testCreate() {
-        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(null, null));
+        assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
+                        .isThrownBy(() -> doctorService.create(null, null));
 
         doctorDTO = generateRandomDoctorDTO();
-        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(doctorDTO, null));
+        assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
+                        .isThrownBy(() -> doctorService.create(doctorDTO, null));
         assertThatIllegalArgumentException().isThrownBy(() -> doctorService.create(doctorDTO, 1L));
 
-        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
-        assertThat(doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId())).extracting("id").isNotNull();
+        doctorDTO = doctorDTO.toBuilder()
+                        .speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        assertThat(doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId()))
+                        .extracting("id").isNotNull();
     }
 
     @Test
     void testDelete() {
         doctorDTO = generateRandomDoctorDTO();
-        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorDTO.toBuilder()
+                        .speciality(specialityService.create(doctorDTO.getSpeciality())).build();
         doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
         doctorService.delete(doctorDTO.getId());
         assertThat(doctorService.get(doctorDTO.getId())).isEmpty();
@@ -87,7 +94,8 @@ public class DoctorServiceTest {
     @Test
     void testGet() {
         doctorDTO = generateRandomDoctorDTO();
-        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorDTO.toBuilder()
+                        .speciality(specialityService.create(doctorDTO.getSpeciality())).build();
         doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
         assertThat(doctorService.get(doctorDTO.getId())).contains(doctorDTO);
         assertThat(doctorService.get(doctorDTO.getId() - 1)).isNotSameAs(Optional.of(doctorDTO));
@@ -99,7 +107,9 @@ public class DoctorServiceTest {
         ArrayList<DoctorDTO> doctorDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             doctorDTO = generateRandomDoctorDTO();
-            doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+            doctorDTO = doctorDTO.toBuilder()
+                            .speciality(specialityService.create(doctorDTO.getSpeciality()))
+                            .build();
             doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
             doctorDTOs.add(doctorDTO);
         }
@@ -124,25 +134,29 @@ public class DoctorServiceTest {
     @Test
     void testUpdate() {
         doctorDTO = generateRandomDoctorDTO();
-        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorDTO.toBuilder()
+                        .speciality(specialityService.create(doctorDTO.getSpeciality())).build();
         doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
 
         DoctorDTO updates = doctorDTO.toBuilder().name(genAlnum(10)).build();
         assertThat(doctorService.update(doctorDTO.getId(), updates)).contains(updates);
 
-        assertThatIllegalArgumentException().isThrownBy(() -> doctorService.update(doctorDTO.getId() + 20, updates));
+        assertThatIllegalArgumentException()
+                        .isThrownBy(() -> doctorService.update(doctorDTO.getId() + 20, updates));
     }
 
     @Test
     void testUpdateSpeciality() {
         doctorDTO = generateRandomDoctorDTO();
-        doctorDTO = doctorDTO.toBuilder().speciality(specialityService.create(doctorDTO.getSpeciality())).build();
+        doctorDTO = doctorDTO.toBuilder()
+                        .speciality(specialityService.create(doctorDTO.getSpeciality())).build();
         doctorDTO = doctorService.create(doctorDTO, doctorDTO.getSpeciality().getId());
 
         SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
 
         DoctorDTO updatedDTO = doctorDTO.toBuilder().speciality(specialityDTO).build();
-        assertThat(doctorService.updateSpeciality(doctorDTO.getId(), specialityDTO.getId())).contains(updatedDTO);
+        assertThat(doctorService.updateSpeciality(doctorDTO.getId(), specialityDTO.getId()))
+                        .contains(updatedDTO);
     }
 
 }

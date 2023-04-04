@@ -13,31 +13,11 @@ import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.transferobject.SpecialityDTO;
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Random;
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public class SpecialityMapperImplTest {
-    private String genAlnum(int targetStringLength) {
-        int leftLimit = 48;
-        int rightLimit = 122;
-        Random random = new Random();
-
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                        .limit(targetStringLength).collect(StringBuilder::new,
-                                        StringBuilder::appendCodePoint, StringBuilder::append)
-                        .toString();
-
-        return generatedString;
-    }
-
-    private SpecialityDTO generateRandomSpecialityDTO() {
-        Random rng = new Random();
-        return SpecialityDTO.builder().name(genAlnum(6)).build();
-    }
-
     @Autowired
     private DataTransferObjectMapper<Speciality, SpecialityDTO> mapper;
 
