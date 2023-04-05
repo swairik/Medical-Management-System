@@ -354,7 +354,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<Appointment> appointments =
                         repository.findAllByPatientAndStartBetween(patient, to, from);
       
-
+        System.out.println(to);
+        System.out.println(from);
         return appointments.stream().filter(a -> a.getAppointmentDetails().getFeedback() == null)
                         .map(a -> mapper.entityToDto(a)).collect(Collectors.toList());
     }

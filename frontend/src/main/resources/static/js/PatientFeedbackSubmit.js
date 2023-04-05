@@ -57,7 +57,7 @@ $(document).ready(function () {
     console.log("check");
 
     var feedback = {
-      prescription: prescriptionData.lenght == 0 ? null : prescriptionData,
+      prescription: (prescriptionData.lenght == 0) ? null : prescriptionData,
       feedback: feedbackData,
       rating: $(".rating input[name='star']:checked").val()
     };
