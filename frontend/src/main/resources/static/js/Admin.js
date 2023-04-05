@@ -37,10 +37,10 @@ $(document).ready( function () {
                   render: function(data, type, row) {
                   return '<button type="button" class="add_doctor_menu_btn_edit" value='+data+'>Edit</button>';
                 }},
-                { data: 'id',
-                  render: function(data, type, row) {
-                  return '<button type="button" class="add_doctor_menu_btn_remove" value='+data+'>Remove</button>';
-                }}
+                // { data: 'id',
+                //   render: function(data, type, row) {
+                //   return '<button type="button" class="add_doctor_menu_btn_remove" value='+data+'>Remove</button>';
+                // }}
             ],
             ordering: false,
         });
