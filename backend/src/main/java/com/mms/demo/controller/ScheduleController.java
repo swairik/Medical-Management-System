@@ -3,12 +3,8 @@ package com.mms.demo.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -88,11 +84,6 @@ public class ScheduleController {
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
-    // deprecated endpoint
-    // @GetMapping("/display/schedule/{sid}")
-    // public ResponseEntity<List<ScheduleResponse>>
-    // displaySchedulesBySlot(@PathVariable Long sid) {}
-
     @GetMapping("/display/approved/{did}")
     public ResponseEntity<List<ScheduleDTO>> displayApprovedSchedulesByDoctor(
             @PathVariable Long did) {
@@ -135,8 +126,6 @@ public class ScheduleController {
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
-    // TODO: Add a stamp field since this endpoint is only supposed to show upcoming
-    // schedules
     @GetMapping("/display/patient/approved/{did}")
     public ResponseEntity<List<ScheduleDTO>> displayNonZeroApprovedSchedulesByDoctor(
             @PathVariable Long did, @RequestParam String stamp) {
@@ -153,68 +142,11 @@ public class ScheduleController {
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
 
-    // @GetMapping("/display/patient/approved/{did}")
-    // public ResponseEntity<List<ScheduleDTO>>
-    // displayNonZeroApprovedSchedulesByDoctor(
-    // @PathVariable Long did) {
-    // List<ScheduleDTO> schedulesList =
-    // scheduleService.getBookedAndApprovedByDoctor(did);
-    // return new ResponseEntity<>(schedulesList, HttpStatus.OK);
-    // }
-
-    // @GetMapping("/display/{pid}/{did}")
-    // public ResponseEntity<List<ScheduleResponse>>
-    // displayDoctorSchedulesByPatient(
-    // @PathVariable Long did, @PathVariable Long pid) {
-    // Doctor doctor = doctorService.getDoctortById(did)
-    // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-    // "DOCTOR_NOT_FOUND"));
-    // Patient patient = patientService.getPatientById(pid)
-    // .orElseThrow(() -> new CustomException("Patient with given id not found",
-    // "PATIENT_NOT_FOUND"));
-    // List<Appointment> bookedAppointments =
-    // appointmentService.getAppointmentsByPatient(patient);
-    // List<Long> bookedSlotsByPatient = bookedAppointments.stream().map((s) ->
-    // (s.getId()))
-    // .collect(Collectors.toList());
-    // List<Schedule> schedules = scheduleService.getSchedulesByDoctor(doctor);
-    // List<ScheduleResponse> response = schedules.stream().filter((s) ->
-    // s.getApproval())
-    // .filter((s) -> (!bookedSlotsByPatient.contains(s.getId())))
-    // .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
-    // .collect(Collectors.toList());
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-    // }
-
     @GetMapping("/display/unapproved")
     public ResponseEntity<List<ScheduleDTO>> displayUnapprovedSchedules() {
         List<ScheduleDTO> schedulesList = scheduleService.getAllUnapproved();
         return new ResponseEntity<>(schedulesList, HttpStatus.OK);
     }
-
-    // @GetMapping("/display/doctor/{id}/weekday")
-    // public ResponseEntity<List<ScheduleResponse>>
-    // displayDoctorSchedulesByPatientWeekday(
-    // @PathVariable Long id, @RequestParam String from, @RequestParam String to) {
-    // Doctor doctor = doctorService.getDoctortById(id)
-    // .orElseThrow(() -> new CustomException("Doctor with given id not found",
-    // "DOCTOR_NOT_FOUND"));
-    // LocalDate start, end;
-    // try {
-    // start = LocalDate.parse(from);
-    // end = LocalDate.parse(to);
-    // } catch (Exception e) {
-    // throw new CustomException("Error while parsing from and to date",
-    // "WRONG_FORMAT");
-    // }
-    // List<Schedule> schedules =
-    // scheduleService.getSchedulesByDoctorAndWeekDay(doctor, start, end);
-    // List<ScheduleResponse> response = schedules.stream()
-    // .map((s) -> ScheduleResponse.createResponseFromSchedule(s))
-    // .collect(Collectors.toList());
-    // return new ResponseEntity<>(response, HttpStatus.OK);
-
-    // }
 
     @PostMapping("/")
     public ResponseEntity<List<ScheduleDTO>> createSchedule(
@@ -244,18 +176,6 @@ public class ScheduleController {
                     "SCHEDULE_CREATION_NOT_ALLOWED", HttpStatus.FORBIDDEN);
         }
 
-        // List<ScheduleDTO> allSchedules =
-        // scheduleService.getByDoctor(scheduleRequest.getDoctorId());
-        // ScheduleDTO alreadyCreatedSchedule = allSchedules.stream().filter((s) ->
-        // s.getStart().equals(startTime))
-        // .findFirst()
-        // .orElse(null);
-
-        // if (alreadyCreatedSchedule != null) {
-        // throw new CustomException("Schedule with given combination of doctor & time
-        // already exists",
-        // "SCHEDULE_ALREADY_EXISTS", HttpStatus.CONFLICT);
-        // }
         List<ScheduleDTO> createdSchedule = scheduleService.create(scheduleRequest.getDoctorId(), startTime, endTime);
 
         return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);
