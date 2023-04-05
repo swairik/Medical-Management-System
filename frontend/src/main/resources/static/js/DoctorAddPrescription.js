@@ -18,6 +18,8 @@ $(document).ready(function () {
 
   console.log(token);
 
+  var feedbackData;
+
   $.ajax({
     url: `http://localhost:8050/appointment/display/${appointmentId}`,
     type: "GET",
@@ -47,6 +49,8 @@ $(document).ready(function () {
       $("#diagnosis").text(diagnosis);
       $("#medication").text(medication);
       $("#tests").text(tests);
+
+      feedbackData=result.appointmentDetails.feedback
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
@@ -72,7 +76,7 @@ $(document).ready(function () {
 
     var prescriptionData = {
       prescription: prescriptionData,
-      feedback: "",
+      feedback: feedbackData.length==0?null:feedbackData,
       rating: 0.0,
     };
 
@@ -92,7 +96,7 @@ $(document).ready(function () {
         // Handle successful response
         console.log(response);
         alert("Prescription Updated Successfully!");
-        // window.location.href = "YourPatients";
+        window.location.href = "YourPatients";
       },
       error: function (xhr, status, error) {
         // Handle error response

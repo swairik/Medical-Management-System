@@ -138,6 +138,7 @@
 }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../js/PatientFeedbackSubmit.js"></script>
     <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
 
     <script>
@@ -151,18 +152,19 @@
     <form action="" id="feedback">
       <br><h1>Patient Feedback Form</h1><br><br>
         <label for="Question1">How was your experience making an appointment?</label><br>
-        <textarea class="input" id="Question1"></textarea><br>
+        <textarea class="input" id="Question1" required></textarea><br>
         <label for="Question2">How was your experience with the doctor?</label><br>
-        <textarea class="input" id="Question2"></textarea><br>
+        <textarea class="input" id="Question2" required></textarea><br>
         <label for="Question3">Some suggestions to improve?</label><br>
-        <textarea class="input" id="Question3"></textarea><br>
+        <textarea class="input" id="Question3" required></textarea><br>
         <label for="Question4">Rate your overall experience</label><br>
-        <div class="rating">
-          <input type="radio" name="star"><span class="star"> </span>
-          <input type="radio" name="star"><span class="star"> </span>
-          <input type="radio" name="star"><span class="star"> </span>
-          <input type="radio" name="star"><span class="star"> </span>
-          <input type="radio" name="star"><span class="star"> </span><span class="emo"> </span>
+        <div class="rating" required>
+          <input type="radio" name="star" value="5"><span class="star"> </span>
+          <input type="radio" name="star" value="4"><span class="star"> </span>
+          <input type="radio" name="star" value="3"><span class="star"> </span>
+          <input type="radio" name="star" value="2"><span class="star"> </span>
+          <input type="radio" name="star" value="1" checked><span class="star"> </span>
+          <span class="emo"> </span>
         </div>
         <input class="submit" type="submit" value="Submit">
       </form>
