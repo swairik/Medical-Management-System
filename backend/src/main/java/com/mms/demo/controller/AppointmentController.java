@@ -121,17 +121,6 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentsList, HttpStatus.OK);
     }
 
-    /*
-     * deprecated endpoint
-     */
-    // @GetMapping("/display/slot/{id}")
-    // public ResponseEntity<List<AppointmentDTO>> displayAppointmentsBySlot(
-    // @PathVariable Long id) {
-    // List<AppointmentDTO> appointmentsList =
-    // appointmentService.getAppointmentsBySlot(slot);
-    // return new ResponseEntity<>(appointmentsList, HttpStatus.OK);
-    // }
-
     @GetMapping("/display/doctor/{did}")
     public ResponseEntity<List<AppointmentDTO>> displayAppointmentsByDoctor(@PathVariable Long did) {
         doctorService.get(did).orElseThrow(
