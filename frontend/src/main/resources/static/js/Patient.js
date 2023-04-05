@@ -13,9 +13,9 @@ const constructSpecialityMenu = (value) => {
 
 $(document).ready(function () {
   const cookie = document.cookie;
-  console.log(cookie)
+  console.log(cookie);
 
-  if(cookie=='') window.location.href = "Auth";
+  if (cookie == "") window.location.href = "Auth";
 
   const token = cookie
     .split("; ")
@@ -23,14 +23,12 @@ $(document).ready(function () {
     .split("=")[1];
   console.log(token);
 
-  var doctor_array=[];
+  var doctor_array = [];
 
- 
-
-  $(document).click(function() {
+  $(document).click(function () {
     // code to handle the click event
     $("#doctor_search_result").empty();
-    $("#doctor_search").val("")
+    $("#doctor_search").val("");
   });
 
   $.ajax({
@@ -45,7 +43,7 @@ $(document).ready(function () {
       console.log(docList);
       $.each(result, function (key, value) {
         console.log(value);
-        doctor_array.push(value)
+        doctor_array.push(value);
         // console.log(doctor_array)
       });
     },
@@ -58,7 +56,7 @@ $(document).ready(function () {
     },
   });
 
-  console.log(doctor_array)
+  console.log(doctor_array);
 
   $.ajax({
     url: "http://localhost:8050/speciality/display",
@@ -99,10 +97,31 @@ $(document).ready(function () {
       success: function (result) {
         $.each(result, function (key, value) {
           console.log(value);
+          console.log(value.ratingAverage)
           $("#doctor_list").append(
             `<ul>
-            <li><button id="show_slot" value=${value.id}>${value.name}</button></li>
-            </ul>`
+            <li><button id="show_slot" value=${value.id}>${
+              value.name
+            }</button></li>
+           
+            <div class="rating">
+            <input type="radio" name="star" value="5" ${
+              value.ratingAverage === 5 ? 'checked' : ''
+            }><span class="star"> </span>
+            <input type="radio" name="star" value="4" checked=${
+              value.ratingAverage === 4 ? 'checked' : ''
+            } disabled><span class="star"> </span>
+            <input type="radio" name="star" value="3" ${
+              value.ratingAverage === 3
+            } disabled><span class="star"> </span>
+            <input type="radio" name="star" value="2" checked=${
+              value.ratingAverage === 2
+            } disabled><span class="star"> </span>
+            <input type="radio" name="star" value="1"  disabled><span class="star"> </span>
+          </div>
+          
+            </ul>
+            `
           );
         });
       },
@@ -123,28 +142,28 @@ $(document).ready(function () {
     window.location.href = "BookAppointment?id=" + this.value;
   });
 
-  $("#doctor_search").on("keyup", function() {
+  $("#doctor_search").on("keyup", function () {
     // Get the current value of the input field
     var filterValue = $(this).val().toLowerCase();
 
-    console.log(filterValue)
+    console.log(filterValue);
 
-    var filteredData = doctor_array.filter(function(item) {
+    var filteredData = doctor_array.filter(function (item) {
       return item.name.toLowerCase().indexOf(filterValue) > -1;
     });
 
-    console.log(filteredData)
+    console.log(filteredData);
 
     $("#doctor_search_result").empty();
-    
-    $.each(filteredData, function(index, item) {
-      $("#doctor_search_result").append(`<li value=${item.id}>` + item.name + "</li>");
+
+    $.each(filteredData, function (index, item) {
+      $("#doctor_search_result").append(
+        `<li value=${item.id}>` + item.name + "</li>"
+      );
     });
-
-
   });
 
-  $("#doctor_search_result").on("click", "li", function() {
+  $("#doctor_search_result").on("click", "li", function () {
     window.location.href = "BookAppointment?id=" + this.value;
   });
 });
