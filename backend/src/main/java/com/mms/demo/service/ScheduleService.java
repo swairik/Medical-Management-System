@@ -1,13 +1,9 @@
 package com.mms.demo.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.mms.demo.entity.Doctor;
-import com.mms.demo.entity.Schedule;
-import com.mms.demo.transferobject.DoctorDTO;
 import com.mms.demo.transferobject.ScheduleDTO;
 
 /**
@@ -93,7 +89,7 @@ public interface ScheduleService {
      *
      * @param id the id
      */
-    void deleteSchedule(Long id);
+    void deleteSchedule(Long id) throws IllegalArgumentException;
 
     void scheduleCleanerScheduler();
 }

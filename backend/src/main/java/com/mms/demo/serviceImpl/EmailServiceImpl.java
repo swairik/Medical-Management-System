@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
         List<Appointment> appointments = appointmentRepository.findAllByStartBetween(
                         LocalDateTime.now().plusHours(2),
                         LocalDateTime.now().plusHours(2).plusMinutes(30));
-        final String subject = "Your Appointment is comping up!";
+        final String subject = "Your Appointment is coming up!";
         for (Appointment appointment : appointments) {
             Patient patient = appointment.getPatient();
 

@@ -103,7 +103,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(Long id) throws IllegalArgumentException {
+        Optional<Schedule> fetchedContainer = repository.findById(id);
+        if (fetchedContainer.isEmpty()) {
+            return;
+        }
+        if(fetchedContainer.get().getBooked() == true) {
+            throw new IllegalArgumentException("Booked schedules cannot be deleted");
+        }
         repository.deleteById(id);
     }
 
