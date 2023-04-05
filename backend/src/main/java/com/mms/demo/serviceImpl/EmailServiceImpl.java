@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Value("${email.reminder.delay}")
+    @Value("#{new Long('${email.reminder.delay}')}")
     private Long minimumReminderDelay;
 
 
