@@ -361,15 +361,15 @@ public class ReportServiceImpl implements ReportService {
             titlesRow = currentDoctorMetaSheet
                             .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
             titles = new ArrayList<>(Arrays.asList("Appointment Time", "Appointment ID",
-                            "Patient ID", "Patient Name", "Scheduled On", "Attended"));
+                            "Patient ID", "Patient Name", "Scheduled On"));
             for (int i = 0; i < titles.size(); i++) {
                 titlesRow.createCell(i).setCellValue(titles.get(i));
             }
-
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             for (Appointment appointment : appointments) {
                 currentRow = currentDoctorMetaSheet
                                 .createRow(currentDoctorMetaSheet.getLastRowNum() + 1);
-                currentRow.createCell(0).setCellValue(appointment.getStart());
+                currentRow.createCell(0).setCellValue(appointment.getStart().format(formatter));
                 currentRow.createCell(currentRow.getLastCellNum())
                                 .setCellValue(appointment.getId());
                 currentRow.createCell(currentRow.getLastCellNum())
@@ -378,8 +378,8 @@ public class ReportServiceImpl implements ReportService {
                                 .setCellValue(appointment.getPatient().getName());
                 currentRow.createCell(currentRow.getLastCellNum())
                                 .setCellValue(appointment.getStamp().toString());
-                currentRow.createCell(currentRow.getLastCellNum())
-                                .setCellValue(appointment.getAttended());
+                // currentRow.createCell(currentRow.getLastCellNum())
+                //                 .setCellValue(appointment.getAttended());
             }
         }
 
