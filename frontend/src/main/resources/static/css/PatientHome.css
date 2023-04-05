@@ -64,6 +64,22 @@ html {
   background-color: #ffffff;
 }
 
+#doctor_search_result{
+  background-color: #ffffff65;
+  margin: 1em auto;
+  margin-top: 0;
+  width: 40%;
+}
+
+#doctor_search_result li{
+  list-style: none;
+  padding: 0.5em;
+}
+
+#doctor_search_result li:hover{
+  background-image: linear-gradient(to right, #5dacec, #1160bb);
+  color: #ffffff;
+}
 
 #steps{
   width: 600px;

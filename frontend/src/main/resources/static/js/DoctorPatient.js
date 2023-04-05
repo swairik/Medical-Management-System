@@ -96,9 +96,21 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
+        if(result.length===0)
+        {
+          $("#instruction").hide();
+          $("#NA").show();
+          $(".responsive-table").hide();
+        }
+        else{
+          $("#instruction").hide();
+          $("#NA").hide();
+          $(".responsive-table").show();
+        $(".table-header").show();
         $.each(result, function (key, value) {
           $(".responsive-table").append(constructAppointmentInfo(key, value));
         });
+      }
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -107,8 +119,19 @@ $(document).ready(function () {
           var errorObj;
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

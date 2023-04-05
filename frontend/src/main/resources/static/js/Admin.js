@@ -54,8 +54,19 @@ $(document).ready( function () {
         var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
+        // if (errorObj) alert(errorObj.errorMessage);
+        // else alert("Some Error Occurred");
+        if (errorObj) {
+          swal(errorObj.errorMessage, "", "error", {
+            button: "OK",
+          });
+        }
+        else 
+        {
+          swal("Some Error Occurred", "", "error", {
+            button: "OK",
+          });
+        }
       }
     },
   });

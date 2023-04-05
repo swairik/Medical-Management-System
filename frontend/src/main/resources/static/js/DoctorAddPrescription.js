@@ -33,13 +33,17 @@ $(document).ready(function () {
         $("#pgender").text(result.patient.gender);
         $("#pdocname").text(result.doctor.name);
         $("#pdate").text(result.start.substring(0, result.start.indexOf('T')));
+        $("#contact").text(result.doctor.phone);
         // $(".DoctorInfo").append(constructDoctorInfo(result));
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
           window.location.href = "Auth";
         } else {
-          alert("Some Error Occurred");
+          // alert("Some Error Occurred");
+          swal("", "Some Error Occurred", "error", {
+            button: "OK",
+          });
         }
       },
     });
@@ -69,7 +73,10 @@ $(document).ready(function () {
       success: function (response) {
         // Handle successful response
         console.log(response);
-        alert("Prescription Updated Successfully!");
+        // alert("Prescription Updated Successfully!");
+        swal("", "Prescription Updated Successfully!", "success", {
+          button: "OK",
+        });
         // window.location.href = "YourPatients";
       },
       error: function (xhr, status, error) {
@@ -80,8 +87,19 @@ $(document).ready(function () {
           var errorObj;
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../js/DoctorAddPrescription.js"></script>
     <script src="../js/SignOut.js"></script>
   </head>
@@ -74,7 +75,7 @@
       </table>
     
     <div class="form">
-      <h2>PRESCRIPTION</h2>
+      
       <form action="" id="prescription_form">
         <label for="diagnosis">Diagnosis</label><br>
         <textarea class="input" id="diagnosis"></textarea><br>
@@ -85,8 +86,8 @@
         <input class="submit" type="submit" value="Submit">
       </form>
     </div>
-    <div class="contact">
-      For Query Contact:
+    <div>
+      For Query Contact:<span id="contact"></span>
     </div>
   </div>
   <footer>

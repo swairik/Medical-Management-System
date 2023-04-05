@@ -90,7 +90,7 @@
     color: #004798;
     z-index: 2;
   }
-
+  
   @media only screen and (max-width: 768px){
     .container{
       width: 80%;

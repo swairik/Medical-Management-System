@@ -29,7 +29,10 @@ $(document).ready(function () {
     success: function (response) {
       // Handle successful response
       console.log(response);
-      alert("Prescription Fetched Successfully!");
+      // alert("Prescription Fetched Successfully!");
+      swal("", "Prescription Fetched Successfully!", "success", {
+        button: "OK",
+      });
       $('#diagnosis').val(response.contents.diagnosis)
       $('#tests').val(response.contents.test)
       $('#medication').val(response.contents.medication)
@@ -42,8 +45,19 @@ $(document).ready(function () {
         var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
+        // if (errorObj) alert(errorObj.errorMessage);
+        // else alert("Some Error Occurred");
+        if (errorObj) {
+          swal("", errorObj.errorMessage, "error", {
+            button: "OK",
+          });
+        }
+        else 
+        {
+          swal("", "Some Error Occurred", "error", {
+            button: "OK",
+          });
+        }
       }
     },
   });

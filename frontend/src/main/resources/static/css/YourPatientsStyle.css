@@ -175,15 +175,10 @@ nav img {
 }
 
 .heading {
-  text-align: center;
-  font-family: 'Font Awesome 5 Free';
-  font-style: italic;
-  font-size: 24px;
-  text-align: center;
-  text-decoration-line: underline;
-  color: #000093;
-  opacity: 0.7;
-  padding-bottom: 2%;
+  padding-bottom: 1%;
+  color: #004798;
+  margin: 1em;
+  border-bottom: 2px solid #004798;
 }
 
 .container {

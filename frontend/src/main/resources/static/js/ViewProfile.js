@@ -59,8 +59,19 @@ $(document).ready(function () {
             var errorObj;
             if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
     
-            if (errorObj) alert(errorObj.errorMessage);
-            else alert("Some Error Occurred");
+            // if (errorObj) alert(errorObj.errorMessage);
+            // else alert("Some Error Occurred");
+            if (errorObj) {
+              swal(errorObj.errorMessage, "", "error", {
+                button: "OK",
+              });
+            }
+            else 
+            {
+              swal("Some Error Occurred", "", "error", {
+                button: "OK",
+              });
+            }
           }
         },
       });
@@ -93,16 +104,32 @@ $(document).ready(function () {
           success: function(response) {
             // Handle successful response
             console.log(response);
-            alert('Updated Successfully!')
-            window.location.href = 'ViewProfile';
+            // alert('Updated Successfully!')
+            // window.location.href = 'ViewProfile';
+            swal("Updated Successfully!", "", "success", {
+              button: "OK",
+            }).then((value) => {
+                window.location.href = 'ViewProfile';
+              });
           },
           error: function(xhr, status, error) {
             // Handle error response
             var errorObj;
             if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
     
-            if (errorObj) alert(errorObj.errorMessage);
-            else alert("Some Error Occurred");
+            // if (errorObj) alert(errorObj.errorMessage);
+            // else alert("Some Error Occurred");
+            if (errorObj) {
+              swal(errorObj.errorMessage, "", "error", {
+                button: "OK",
+              });
+            }
+            else 
+            {
+              swal("Some Error Occurred", "", "error", {
+                button: "OK",
+              });
+            }
           }
         });
     });

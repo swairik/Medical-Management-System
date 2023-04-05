@@ -53,9 +53,19 @@ const constructScheduleMenu = (key,value) => {
       } else {
         var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
-
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
+        // alert(errorObj.errorMessage);
+        if (errorObj) {
+          swal(errorObj.errorMessage, "", "error", {
+            button: "OK",
+          });
+        }
+        else 
+        // alert("Some Error Occurred");
+        {
+          swal("Some Error Occurred", "", "error", {
+            button: "OK",
+          });
+        }
       }
     },
   });
@@ -71,8 +81,11 @@ const constructScheduleMenu = (key,value) => {
           Authorization: `Bearer ${token}`,
         },
         success: function(result) {
-          alert('Schedule Approved...')
-          window.location.href = 'ApproveSchedule';
+        swal("Schedule Approved...", "", "success", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = 'ApproveSchedule';
+          });
         },
         error: function(xhr, status, errorThrown) {
           if (xhr.status == 403) {
@@ -81,8 +94,18 @@ const constructScheduleMenu = (key,value) => {
             var errorObj;
             if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
     
-            if (errorObj) alert(errorObj.errorMessage);
-            else alert("Some Error Occurred");
+            if (errorObj) {
+              swal(errorObj.errorMessage, "", "error", {
+                button: "OK",
+              });
+            }
+            else 
+            // alert("Some Error Occurred");
+            {
+              swal("Some Error Occurred", "", "error", {
+                button: "OK",
+              });
+            }
           }
         }
       });
@@ -99,8 +122,12 @@ const constructScheduleMenu = (key,value) => {
           Authorization: `Bearer ${token}`,
         },
         success: function(result) {
-          alert('Schedule Rejected...')
-          window.location.href = 'ApproveSchedule';
+          
+          swal("Schedule Rejected!", "", "warning", {
+            button: "OK",
+          }).then((value) => {
+              window.location.href = 'ApproveSchedule'
+            });
         },
         error: function(xhr, status, errorThrown) {
           if (xhr.status == 403) {
@@ -109,8 +136,18 @@ const constructScheduleMenu = (key,value) => {
             var errorObj;
             if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
     
-            if (errorObj) alert(errorObj.errorMessage);
-            else alert("Some Error Occurred");
+            if (errorObj) {
+              swal(errorObj.errorMessage, "", "error", {
+                button: "OK",
+              });
+            }
+            else 
+            // alert("Some Error Occurred");
+            {
+              swal("Some Error Occurred", "", "error", {
+                button: "OK",
+              });
+            }
           }
         }
       });

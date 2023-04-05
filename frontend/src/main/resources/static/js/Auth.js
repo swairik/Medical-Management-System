@@ -34,7 +34,10 @@ $(document).ready(function () {
       },
       error: function (error) {
         console.log(error);
-        alert("Wrong credential");
+        // alert("Wrong credential");
+        swal("", "Wrong credential!", "error", {
+            button: "OK",
+          });
       },
     });
   });
@@ -61,16 +64,32 @@ $(document).ready(function () {
       success: function (result) {
         // window.location.href = 'EditDoctor';
         console.log(result);
-        alert('Account Created')
-        window.location.href = 'Auth';
+        // alert('Account Created')
+        // window.location.href = 'Auth';
+        swal("", "Account Created", "success", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = 'Auth';
+          });
         // if(result.role==="PATIENT") window.location.href = 'Patient';
       },
       error: function (xhr,status,errorThrown) {
         var errorObj;
         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-        if (errorObj) alert(errorObj.errorMessage);
-        else alert("Some Error Occurred");
+        // if (errorObj) alert(errorObj.errorMessage);
+        // else alert("Some Error Occurred");
+        if (errorObj) {
+          swal("", errorObj.errorMessage, "error", {
+            button: "OK",
+          });
+        }
+        else 
+        {
+          swal("", "Some Error Occurred", "error", {
+            button: "OK",
+          });
+        }
       },
     });
   });
