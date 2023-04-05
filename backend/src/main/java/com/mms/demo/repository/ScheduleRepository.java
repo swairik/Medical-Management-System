@@ -42,4 +42,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findAllByDoctorAndStartGreaterThanEqual(Doctor doctor, LocalDateTime after);
 
     List<Schedule> findAllByApprovalStatus(Boolean approvalStatus);
+
+    List<Schedule> findAllByStartLessThan(LocalDateTime stamp);
 }

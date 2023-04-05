@@ -1,66 +1,90 @@
-// package com.mms.demo.service;
+package com.mms.demo.service;
 
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.TestMethodOrder;
-// import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-// import org.junit.jupiter.api.DisplayName;
-// import org.junit.jupiter.api.Order;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.test.context.TestPropertySource;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
-// import com.mms.demo.entity.Speciality;
-// import static org.assertj.core.api.Assertions.assertThat;
+import com.mms.demo.entity.Speciality;
+import com.mms.demo.transferobject.SpecialityDTO;
 
-// @SpringBootTest
-// @TestMethodOrder(OrderAnnotation.class)
-// @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-// public class SpecialityServiceTest {
-// @Autowired
-// SpecialityService impl;
+import static org.assertj.core.api.Assertions.assertThat;
 
-// static final Speciality spec = Speciality.builder().name("Spec").build();
+import java.util.Optional;
+import java.util.Random;
 
-// @Order(1)
-// @Test
-// @DisplayName("Testing create on a single speciality")
-// void testCreateSpeciality() {
-// assertThat(impl.createSpeciality(spec)).isEqualTo(spec);
-// }
+@SpringBootTest
+@TestMethodOrder(OrderAnnotation.class)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+public class SpecialityServiceTest {
+    @Autowired
+    SpecialityService specialityService;
 
-// @Order(2)
-// @Test
-// @DisplayName("Testing fetch on all specialities")
-// void testGetAllSpecialities() {
-// assertThat(impl.getAllSpecialities()).isNotEmpty();
-// }
+    private String genAlnum(int targetStringLength) {
+        int leftLimit = 48;
+        int rightLimit = 122;
+        Random random = new Random();
 
-// @Order(3)
-// @Test
-// @DisplayName("Testing fetch on a single speciality by id")
-// void testGetSpecialityById() {
-// assertThat(impl.getSpecialityById(spec.getId())).isNotEmpty().contains(spec);
-// }
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(targetStringLength).collect(StringBuilder::new,
+                                        StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString();
 
-// @Order(4)
-// @Test
-// @DisplayName("Testing update on a single speciality by id")
-// void testUpdateSpeciality() {
-// Speciality temp = Speciality.builder().name("Spec 2").build();
-// impl.createSpeciality(temp);
-// Speciality tempUpdate = temp.toBuilder().name("Spec 2.1").build();
-// assertThat(impl.updateSpeciality(temp.getId(),
-// tempUpdate)).isEqualTo(tempUpdate).isNotEqualTo(temp);
-// }
+        return generatedString;
+    }
 
-// @Order(5)
-// @Test
-// @DisplayName("Testing delete on a single speciality by id")
-// void testDeleteSpeciality() {
-// Speciality temp = Speciality.builder().name("Spec 3").build();
-// assertThat(impl.createSpeciality(temp)).isEqualTo(temp);
+    private SpecialityDTO generateRandomSpecialityDTO() {
+        return SpecialityDTO.builder().name(genAlnum(6)).build();
+    }
 
-// impl.deleteSpeciality(temp.getId());
-// assertThat(impl.getSpecialityById(temp.getId())).isEmpty();
-// }
-// }
+    @Order(1)
+    @Test
+    @DisplayName("Testing create on a single speciality")
+    void testCreateSpeciality() {
+        SpecialityDTO specialityDTO = generateRandomSpecialityDTO();
+        assertThat(specialityService.create(specialityDTO).getName())
+                        .isEqualTo(specialityDTO.getName());
+    }
+
+    @Order(2)
+    @Test
+    @DisplayName("Testing fetch on all specialities")
+    void testGetAllSpecialities() {
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+        assertThat(specialityService.getAll()).contains(specialityDTO);
+    }
+
+    @Order(3)
+    @Test
+    @DisplayName("Testing fetch on a single speciality by id")
+    void testGetSpecialityById() {
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+        assertThat(specialityService.get(specialityDTO.getId())).contains(specialityDTO);
+    }
+
+    @Order(4)
+    @Test
+    @DisplayName("Testing update on a single speciality by id")
+    void testUpdateSpeciality() {
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+        Optional<SpecialityDTO> temp = specialityService.update(specialityDTO.getId(),
+                        generateRandomSpecialityDTO());
+        assertThat(temp.get().getId()).isEqualTo(specialityDTO.getId());
+        assertThat(temp.get().getName()).isNotEqualTo(specialityDTO.getName());
+    }
+
+    @Order(5)
+    @Test
+    @DisplayName("Testing delete on a single speciality by id")
+    void testDeleteSpeciality() {
+        SpecialityDTO specialityDTO = specialityService.create(generateRandomSpecialityDTO());
+
+        specialityService.delete(specialityDTO.getId());
+        assertThat(specialityService.get(specialityDTO.getId())).isEmpty();
+    }
+}

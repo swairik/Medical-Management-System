@@ -8,6 +8,8 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../js/PatientFeedback.js"></script>
+
     <script>
     
       $("#out").on("click", function (e) {
@@ -212,11 +214,16 @@
       </div>
       <div class="menu">
         <div class="link dropdown">
-          <span class="fa-stack fa-lg" data-count="1">
+          <!-- <span class="fa-stack fa-lg" id="span_count" data-count="1"> -->
+            <span class="fa-stack fa-lg" id="span_count">
             <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
           </span>
           <div class="dropdown-content">
-            <a class="link" href="PatientFeedback">Please Provide<br>your valuable feedback<br></a>
+            <ul id="patient_feedback">
+              <!-- <li><a class="link" href="PatientFeedback?appointmentDetailsId=4&appointmentId=4">Please Provide<br>your valuable feedback<br></a></li> -->
+              <!-- <li>Item 2</li>
+              <li>Item 3</li> -->
+            </ul>
           </div>
         </div>
           

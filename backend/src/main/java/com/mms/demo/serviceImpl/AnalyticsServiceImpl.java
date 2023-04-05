@@ -17,10 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mms.demo.entity.Appointment;
 import com.mms.demo.entity.Doctor;
+import com.mms.demo.entity.Schedule;
 import com.mms.demo.entity.Speciality;
 import com.mms.demo.mapper.DataTransferObjectMapper;
 import com.mms.demo.repository.AppointmentRepository;
 import com.mms.demo.repository.DoctorRepository;
+import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.repository.SpecialityRepository;
 import com.mms.demo.service.AnalyticsService;
 import com.mms.demo.transferobject.AdminAnalyticsDTO;
@@ -40,6 +42,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Autowired
     AppointmentRepository appointmentRepository;
+
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
     @Override
     public AdminAnalyticsDTO getForAdmin() {
@@ -134,6 +139,22 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                         .findAllByDoctorAndStartBetween(doctor, weekStart.atStartOfDay(),
                                         weekEnd.atTime(LocalTime.MAX))
                         .stream().filter(a -> a.getAttended()).count()));
+
+        List<Schedule> schedules = scheduleRepository.findAllByDoctorAndStartBetween(doctor,
+                        LocalDate.now().atStartOfDay(), LocalDate.now().atTime(LocalTime.MAX));
+        dtoBuilder.totalSlotsToday(Long.valueOf(schedules.size()));
+
+        dtoBuilder.totalSlotsBookedToday(
+                        Long.valueOf(schedules.stream().filter(s -> s.getBooked()).count()));
+
+        dtoBuilder.totalSlotsFreeToday(
+                        Long.valueOf(schedules.stream().filter(s -> !s.getBooked()).count()));
+
+        double rating = 0.0;
+        if (doctor.getRatingCount() >= 1) {
+            rating = (double) doctor.getRatingSum() / doctor.getRatingCount();
+        }
+        dtoBuilder.rating(rating);
 
         return Optional.of(dtoBuilder.build());
     }

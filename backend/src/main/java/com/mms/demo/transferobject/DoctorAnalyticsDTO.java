@@ -12,4 +12,9 @@ public class DoctorAnalyticsDTO {
     Long patientCount;
     Long unfilledPrescriptions;
     Long fulfilledAppointmentsThisWeek;
+
+    Long totalSlotsToday;
+    Long totalSlotsBookedToday;
+    Long totalSlotsFreeToday;
+    Double rating;
 }

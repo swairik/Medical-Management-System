@@ -115,10 +115,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         @ExceptionHandler({ NullPointerException.class })
         public ResponseEntity<ErrorResponse> handleNullPointerException(Exception e) {
+                System.out.println(e);
                 return new ResponseEntity<>(
-                                ErrorResponse.builder().errorMessage(e.getMessage()).errorCode("NULL_POINTER_EXCEPTION")
+                                ErrorResponse.builder().errorMessage("Error has occured!").errorCode("NULL_POINTER_EXCEPTION")
                                                 .build(),
-                                HttpStatus.BAD_REQUEST);
+                                HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         @ExceptionHandler({ IOException.class })
@@ -139,7 +140,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         @ExceptionHandler({ Exception.class })
         public ResponseEntity<ErrorResponse> handleException(Exception e) {
                 return new ResponseEntity<>(
-                                ErrorResponse.builder().errorMessage(e.getMessage()).errorCode("EXCEPTION_ENCOUNTERED")
+                                ErrorResponse.builder().errorMessage("Some error has occured").errorCode("EXCEPTION_ENCOUNTERED")
                                                 .build(),
                                 HttpStatus.INTERNAL_SERVER_ERROR);
         }

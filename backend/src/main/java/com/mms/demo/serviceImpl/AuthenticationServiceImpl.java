@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -101,8 +100,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User email not found"));
         var jwtToken = jwtService.generateToken(user);
 
-        // TODO : Fix issue for multiple login for same user - revoke their old token
-        // access
+        // TODO : Fix issue for multiple login for same user - revoke their old token access
         Date expirationDateStamp = jwtService.extractExpiration(jwtToken);
         LocalDateTime expirationStamp = expirationDateStamp.toInstant()
                 .atZone(ZoneId.systemDefault()).toLocalDateTime();

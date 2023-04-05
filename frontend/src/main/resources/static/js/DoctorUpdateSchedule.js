@@ -180,30 +180,30 @@ $(document).ready(function () {
     });
   });
 
-  // $(".responsive-table").on("click", "button#remove_button", function (e) {
-  //   console.log("clicked");
-  //   console.log(this);
-  //   e.preventDefault();
-  //   $.ajax({
-  //     type: "DELETE",
-  //     url: `http://localhost:8050/schedule/${this.value}`,
-  //     headers: {
-  //       "Authorization": `Bearer ${token}`
-  //     },
-  //     success: function (result) {
-  //       alert("Schedule Removed Successfully");
-  //       window.location.href = "UpdateSchedule";
-  //     },
-  //     error: function (xhr, status, errorThrown) {
-  //       if (xhr.status == 403) {
-  //         window.location.href = "Auth";
-  //       } else {
-  //         if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+  $(".responsive-table").on("click", "button#remove_button", function (e) {
+    console.log("clicked");
+    console.log(this);
+    e.preventDefault();
+    $.ajax({
+      type: "DELETE",
+      url: `http://localhost:8050/schedule/${this.value}`,
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      success: function (result) {
+        alert("Schedule Removed Successfully");
+        window.location.href = "UpdateSchedule";
+      },
+      error: function (xhr, status, errorThrown) {
+        if (xhr.status == 403) {
+          window.location.href = "Auth";
+        } else {
+          if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-  //         if (errorObj) alert(errorObj.errorMessage);
-  //         else alert("Some Error Occurred");
-  //       }
-  //     },
-  //   });
-  // });
+          if (errorObj) alert(errorObj.errorMessage);
+          else alert("Some Error Occurred");
+        }
+      },
+    });
+  });
 });

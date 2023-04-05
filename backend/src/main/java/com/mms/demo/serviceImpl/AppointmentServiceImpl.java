@@ -80,7 +80,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Failed to parse entity from data transfer object",
                             e);
         }
-        appointmentDetails = appointmentDetailsRepository.save(appointmentDetails);
+        // appointmentDetails = appointmentDetailsRepository.save(appointmentDetails);
 
         Appointment appointment = Appointment.builder().appointmentDetails(appointmentDetails)
                         .doctor(schedule.getDoctor()).patient(patient).start(schedule.getStart())
@@ -348,10 +348,14 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         Patient patient = fetchedPatientContainer.get();
 
+
         LocalDateTime from = stamp.truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime to = from.toLocalDate().minusDays(daysBack).atStartOfDay();
         List<Appointment> appointments =
-                        repository.findAllByPatientAndStartBetween(patient, from, to);
+                        repository.findAllByPatientAndStartBetween(patient, to, from);
+      
+        System.out.println(to);
+        System.out.println(from);
         return appointments.stream().filter(a -> a.getAppointmentDetails().getFeedback() == null)
                         .map(a -> mapper.entityToDto(a)).collect(Collectors.toList());
     }

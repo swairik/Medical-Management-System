@@ -94,4 +94,6 @@ public interface ScheduleService {
      * @param id the id
      */
     void deleteSchedule(Long id);
+
+    void scheduleCleanerScheduler();
 }

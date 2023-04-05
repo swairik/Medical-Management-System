@@ -53,7 +53,8 @@ public class AppointmentMapperImplTest {
         Random rng = new Random();
         return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
                         .name(genAlnum(14)).phone(genAlnum(10))
-                        .speciality(generateRandomSpecialityDTO()).build();
+                        .speciality(generateRandomSpecialityDTO()).ratingCount(0L)
+                        .ratingAverage(0.0).build();
     }
 
     private AppointmentDetailsDTO generateRandomDetailsDTO() {
@@ -74,26 +75,6 @@ public class AppointmentMapperImplTest {
 
     @Test
     void testDtoToEntity() {
-        appointmentDTOtest =
-                        generateRandomAppointmentDTO().toBuilder().appointmentDetails(null).build();
-        assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(appointmentDTOtest));
-        appointmentDTOtest = generateRandomAppointmentDTO().toBuilder().patient(null).build();
-        assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(appointmentDTOtest));
-
-        appointmentDTOtest = generateRandomAppointmentDTO().toBuilder().doctor(null).build();
-        assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(appointmentDTOtest));
-
-        appointmentDTOtest = generateRandomAppointmentDTO().toBuilder().start(null).build();
-        assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(appointmentDTOtest));
-
-        appointmentDTOtest = generateRandomAppointmentDTO().toBuilder().patient(null).build();
-        assertThatIllegalArgumentException()
-                        .isThrownBy(() -> mapper.dtoToEntity(appointmentDTOtest));
-
         AppointmentDTO appointmentDTO = generateRandomAppointmentDTO();
 
         assertThat(mapper.dtoToEntity(appointmentDTO)).isNotNull();

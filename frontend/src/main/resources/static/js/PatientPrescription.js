@@ -4,60 +4,59 @@ $(document).ready(function () {
 
   console.log(urlParams);
 
-  const doctor_id = urlParams.get("doctor_id");
-  const appointment_id = urlParams.get("appointment_id");
-  const patient_id = urlParams.get("patient_id");
+  const appointmentDetailsId = urlParams.get("appointmentDetailsId");
+  const appointmentId = urlParams.get("appointmentId");
 
-  console.log(appointment_id);
   const cookie = document.cookie;
-  if(cookie=='') window.location.href = "Auth";
-  
+  if (cookie == '') window.location.href = "Auth";
+
   const token = cookie
     .split("; ")
     .find((row) => row.startsWith("authToken="))
     .split("=")[1];
+  const patient_id = cookie
+    .split("; ")
+    .find((row) => row.startsWith("id="))
+    .split("=")[1];
+  console.log(token);
+  console.log(patient_id);
 
- console.log(token)
 
-  // Send Ajax request
   $.ajax({
-    url: `http://localhost:8050/prescription/display/${doctor_id}/${patient_id}/${appointment_id}`,
-    method: "GET",
+    url: `http://localhost:8050/appointment/display/${appointmentId}`,
+    type: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    success: function (response) {
-      // Handle successful response
-      console.log(response);
-      // alert("Prescription Fetched Successfully!");
-      swal("", "Prescription Fetched Successfully!", "success", {
-        button: "OK",
-      });
-      $('#diagnosis').val(response.contents.diagnosis)
-      $('#tests').val(response.contents.test)
-      $('#medication').val(response.contents.medication)
-    },
-    error: function (xhr, status, error) {
-      // Handle error response
-      if (xhr.status == 403) {
-        // window.location.href = "Auth";
-      } else {
-        var errorObj;
-        if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
+    success: function (result) {
+      console.log(result);
+      console.log(result.appointmentDetails.prescription);
 
-        // if (errorObj) alert(errorObj.errorMessage);
-        // else alert("Some Error Occurred");
-        if (errorObj) {
-          swal("", errorObj.errorMessage, "error", {
-            button: "OK",
-          });
-        }
-        else 
-        {
-          swal("", "Some Error Occurred", "error", {
-            button: "OK",
-          });
-        }
+      var diagnosis= "", medication="", tests=""
+
+      var prescriptionString = result.appointmentDetails.prescription
+
+      if(result.appointmentDetails.prescription.length!=0) {
+        diagnosis = prescriptionString.substring(prescriptionString.indexOf("Diagnosis=") + ("Diagnosis=").length, prescriptionString.indexOf("Medication"));
+        medication = prescriptionString.substring(prescriptionString.indexOf("Medication=") + ("Medication=").length, prescriptionString.indexOf("Tests"));
+        tests = prescriptionString.substring(prescriptionString.indexOf("Tests=") + ("Tests=").length);
+      } 
+      
+      $("#pID").text(result.id);
+      $("#pname").text(result.patient.name);
+      $("#page").text(result.patient.age);
+      $("#pgender").text(result.patient.gender);
+      $("#pdocname").text(result.doctor.name);
+      $("#pdate").text(result.start.substring(0, result.start.indexOf("T")));
+      $("#diagnosis").text(diagnosis);
+      $("#medication").text(medication);
+      $("#tests").text(tests);
+    },
+    error: function (xhr, status, errorThrown) {
+      if (xhr.status == 403) {
+        window.location.href = "Auth";
+      } else {
+        alert("Some Error Occurred");
       }
     },
   });

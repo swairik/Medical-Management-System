@@ -1,6 +1,8 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Doctor;
@@ -17,6 +21,7 @@ import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.service.ScheduleService;
 import com.mms.demo.transferobject.ScheduleDTO;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -46,12 +51,15 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new IllegalArgumentException("Slots should be created minimum 2 hours from now");
         }
 
+        start = start.truncatedTo(ChronoUnit.MINUTES);
+
         if (fetchedContainer.isEmpty()) {
             throw new IllegalArgumentException("Referenced doctor does not exist");
         }
         Doctor doctor = fetchedContainer.get();
 
-        start = start.truncatedTo(ChronoUnit.MINUTES);
+
+
         LocalDateTime end = null;
         if (endContainer.isPresent()) {
             end = endContainer.get().truncatedTo(ChronoUnit.MINUTES);
@@ -63,8 +71,20 @@ public class ScheduleServiceImpl implements ScheduleService {
             end = start.plusMinutes(30);
         }
 
+
+
         List<Schedule> schedules = new ArrayList<>();
-        for (LocalDateTime time = start; time.plusMinutes(30).isBefore(end); time = time.plusMinutes(30)) {
+        for (LocalDateTime time = start; !time.plusMinutes(30).isAfter(end); time =
+                        time.plusMinutes(30)) {
+            List<Schedule> candidates = repository.findAllByDoctorAndStartBetween(doctor,
+                            time.minusMinutes(29), time.plusMinutes(29));
+
+
+            if (!candidates.isEmpty()) {
+                throw new IllegalArgumentException(
+                                "Slots cannot be within 30 minutes of each other");
+            }
+
             Schedule schedule = Schedule.builder().doctor(doctor).start(time)
                             .end(time.plusMinutes(30)).build();
             schedules.add(schedule);
@@ -213,5 +233,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         repository.save(schedule);
 
     }
+
+    @Override
+    @Scheduled(cron = "${schedule.clean.interval}")
+    @Transactional
+    @Async
+    public void scheduleCleanerScheduler() {
+        System.out.println("Performing schedule cleanup");
+        LocalDateTime temporalTarget = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
+        List<Schedule> schedules = repository.findAllByStartLessThan(temporalTarget);
+
+        repository.deleteAll(schedules);
+
+    }
+
 
 }

@@ -44,10 +44,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/appointment/**").hasAnyAuthority("ADMIN", "PATIENT")
                 .requestMatchers(HttpMethod.DELETE, "/appointment/**").hasAnyAuthority("ADMIN", "PATIENT")
 
-                // .requestMatchers("/report/display/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/report/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                .requestMatchers(HttpMethod.PUT, "/report/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                .requestMatchers(HttpMethod.DELETE, "/report/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                // .requestMatchers("/appointmentDetails/display/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/appointmentDetails/**").hasAnyAuthority("ADMIN", "PATIENT", "DOCTOR")
 
                 // .requestMatchers("/schedule/display/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/schedule/**").hasAnyAuthority("ADMIN", "DOCTOR")
@@ -59,11 +57,17 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/speciality/**").hasAnyAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/speciality/**").hasAnyAuthority("ADMIN")
 
-                .anyRequest().authenticated().and().sessionManagement()
+                // .requestMatchers("/analytics/display/**").permitAll()
+                // .requestMatchers("/report/display/**").permitAll()
+
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout().logoutUrl("/auth/logout").addLogoutHandler(logoutHandler)
+                .logout()
+                .logoutUrl("/auth/logout").addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler((request, response,
                         authentication) -> SecurityContextHolder.clearContext());
 

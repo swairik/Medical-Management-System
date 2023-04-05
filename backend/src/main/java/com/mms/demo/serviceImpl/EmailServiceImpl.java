@@ -15,9 +15,7 @@ import com.mms.demo.entity.Patient;
 import com.mms.demo.exception.CustomException;
 import com.mms.demo.model.EmailDetails;
 import com.mms.demo.repository.AppointmentRepository;
-import com.mms.demo.service.AppointmentService;
 import com.mms.demo.service.EmailService;
-import com.mms.demo.service.ScheduleService;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -28,10 +26,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String sender;
-
-    @Value("${email.reminder.delay}")
-    private Long minimumReminderDelay;
-
 
     @Autowired
     AppointmentRepository appointmentRepository;
@@ -60,6 +54,7 @@ public class EmailServiceImpl implements EmailService {
     @Scheduled(cron = "${email.reminder.interval}")
     @Async
     public void emailReminderScheduler() {
+        System.out.println("Sending emails");
         List<Appointment> appointments = appointmentRepository.findAllByStartBetween(
                         LocalDateTime.now().plusHours(2),
                         LocalDateTime.now().plusHours(2).plusMinutes(30));

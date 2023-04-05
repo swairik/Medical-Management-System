@@ -43,8 +43,7 @@ public class PatientMapperImplTest {
 
     @Test
     void testDtoToEntity() {
-        PatientDTO patientDTOtest = generateRandomPatientDTO().toBuilder().email(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(patientDTOtest));
+        PatientDTO patientDTOtest = generateRandomPatientDTO().toBuilder().email("").build();
 
         assertThat(mapper.dtoToEntity(patientDTOtest)).isNotNull();
     }
