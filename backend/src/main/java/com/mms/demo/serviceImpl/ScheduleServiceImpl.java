@@ -1,6 +1,8 @@
 package com.mms.demo.serviceImpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mms.demo.entity.Doctor;
@@ -17,6 +21,7 @@ import com.mms.demo.repository.DoctorRepository;
 import com.mms.demo.repository.ScheduleRepository;
 import com.mms.demo.service.ScheduleService;
 import com.mms.demo.transferobject.ScheduleDTO;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -228,5 +233,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         repository.save(schedule);
 
     }
+
+    @Override
+    @Scheduled(cron = "${schedule.clean.interval}")
+    @Transactional
+    @Async
+    public void scheduleCleanerScheduler() {
+        System.out.println("Performing schedule cleanup");
+        LocalDateTime temporalTarget = LocalDate.now().minusDays(1).atTime(LocalTime.MAX);
+        List<Schedule> schedules = repository.findAllByStartLessThan(temporalTarget);
+
+        repository.deleteAll(schedules);
+
+    }
+
 
 }

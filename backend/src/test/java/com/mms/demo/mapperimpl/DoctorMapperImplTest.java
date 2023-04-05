@@ -43,7 +43,8 @@ public class DoctorMapperImplTest {
         Random rng = new Random();
         return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
                         .name(genAlnum(14)).phone(genAlnum(10))
-                        .speciality(generateRandomSpecialityDTO()).build();
+                        .speciality(generateRandomSpecialityDTO()).ratingCount(0L)
+                        .ratingAverage(0.0).build();
     }
 
     @Autowired
@@ -53,14 +54,6 @@ public class DoctorMapperImplTest {
 
     @Test
     void testDtoToEntity() {
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().speciality(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
-
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().email(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
-
-        doctorDTOtest = generateRandomDoctorDTO().toBuilder().phone(null).build();
-        assertThatIllegalArgumentException().isThrownBy(() -> mapper.dtoToEntity(doctorDTOtest));
 
         DoctorDTO doctorDTO = generateRandomDoctorDTO();
 

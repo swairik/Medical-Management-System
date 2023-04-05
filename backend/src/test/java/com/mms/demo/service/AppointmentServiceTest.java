@@ -39,10 +39,10 @@ public class AppointmentServiceTest {
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
-                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                        .limit(targetStringLength).collect(StringBuilder::new,
-                                        StringBuilder::appendCodePoint, StringBuilder::append)
-                        .toString();
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength).collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
 
         return generatedString;
     }
@@ -50,7 +50,7 @@ public class AppointmentServiceTest {
     private PatientDTO generateRandomPatientDTO() {
         Random rng = new Random();
         return PatientDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                        .name(genAlnum(14)).phone(genAlnum(10)).build();
+                .name(genAlnum(14)).phone(genAlnum(10)).build();
     }
 
     private SpecialityDTO generateRandomSpecialityDTO() {
@@ -60,30 +60,30 @@ public class AppointmentServiceTest {
     private DoctorDTO generateRandomDoctorDTO() {
         Random rng = new Random();
         return DoctorDTO.builder().age(rng.nextInt(90)).email(genAlnum(14) + "@xyz.com")
-                        .name(genAlnum(14)).phone(genAlnum(10))
-                        .speciality(generateRandomSpecialityDTO()).build();
+                .name(genAlnum(14)).phone(genAlnum(10))
+                .speciality(generateRandomSpecialityDTO()).build();
     }
 
     private AppointmentDetailsDTO generateRandomDetailsDTO() {
         return AppointmentDetailsDTO.builder().feedback(genAlnum(100)).prescription(genAlnum(100))
-                        .rating(5L).build();
+                .rating(5L).build();
     }
 
     private AppointmentDTO generateRandomAppointmentDTO() {
         return AppointmentDTO.builder().appointmentDetails(generateRandomDetailsDTO())
-                        .doctor(generateRandomDoctorDTO()).patient(generateRandomPatientDTO())
-                        .start(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
+                .doctor(generateRandomDoctorDTO()).patient(generateRandomPatientDTO())
+                .start(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)).build();
     }
 
     private AppointmentDTO generateRandomPersistentAppointmentDTO() {
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
         ScheduleDTO scheduleDTO = scheduleService
-                        .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
         PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
         AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
         AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                        scheduleDTO.getId(), appointmentDetailsDTO);
+                scheduleDTO.getId(), appointmentDetailsDTO);
 
         return appointmentDTO;
     }
@@ -93,7 +93,7 @@ public class AppointmentServiceTest {
     private LocalDateTime getNextTick() {
         LocalDateTime temp = clock;
         clock = clock.plusMinutes(30);
-        return temp;
+        return temp.truncatedTo(ChronoUnit.MINUTES);
     }
 
     @Autowired
@@ -119,12 +119,11 @@ public class AppointmentServiceTest {
     @Test
     void testCreate() {
         assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
-                        .isThrownBy(() -> appointmentService.create(null, null, null));
+                .isThrownBy(() -> appointmentService.create(null, null, null));
         appointmentDTO = generateRandomAppointmentDTO();
         assertThatExceptionOfType(InvalidDataAccessApiUsageException.class).isThrownBy(
-                        () -> appointmentService.create(appointmentDTO.getPatient().getId(), null,
-                                        appointmentDTO.getAppointmentDetails()));
-
+                () -> appointmentService.create(appointmentDTO.getPatient().getId(), null,
+                        appointmentDTO.getAppointmentDetails()));
 
         appointmentDTO = generateRandomPersistentAppointmentDTO();
         assertThat(appointmentDTO.getId()).isNotNull();
@@ -160,61 +159,61 @@ public class AppointmentServiceTest {
     @Test
     void testGetAllByDoctor() {
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
 
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
             PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByDoctor(doctorDTO.getId()))
-                        .containsAll(appointmentDTOs);
+                .containsAll(appointmentDTOs);
     }
 
     @Test
     void testGetAllByDoctorAfter() {
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
         LocalDateTime after = getNextTick();
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
             PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByDoctorAfter(doctorDTO.getId(), after))
-                        .containsExactlyElementsOf(appointmentDTOs);
+                .containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
     void testGetAllByDoctorBetween() {
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
         LocalDateTime after = getNextTick();
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
             PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
         LocalDateTime before = getNextTick();
         assertThat(appointmentService.getAllByDoctorBetween(doctorDTO.getId(), after, before))
-                        .containsExactlyElementsOf(appointmentDTOs);
+                .containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
@@ -224,17 +223,17 @@ public class AppointmentServiceTest {
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                            specialityService.create(generateRandomSpecialityDTO()).getId());
+                    specialityService.create(generateRandomSpecialityDTO()).getId());
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByPatient(patientDTO.getId()))
-                        .containsAll(appointmentDTOs);
+                .containsAll(appointmentDTOs);
     }
 
     @Test
@@ -244,83 +243,83 @@ public class AppointmentServiceTest {
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                            specialityService.create(generateRandomSpecialityDTO()).getId());
+                    specialityService.create(generateRandomSpecialityDTO()).getId());
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByPatientAfter(patientDTO.getId(), after))
-                        .containsExactlyElementsOf(appointmentDTOs);
+                .containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
     void testGetAllByPatientAndDoctor() {
         PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByPatientAndDoctor(patientDTO.getId(),
-                        doctorDTO.getId())).containsAll(appointmentDTOs);
+                doctorDTO.getId())).containsAll(appointmentDTOs);
     }
 
     @Test
     void testGetAllByPatientAndDoctorAfter() {
         PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
 
         LocalDateTime after = getNextTick();
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
 
         assertThat(appointmentService.getAllByPatientAndDoctorAfter(patientDTO.getId(),
-                        doctorDTO.getId(), after)).containsExactlyElementsOf(appointmentDTOs);
+                doctorDTO.getId(), after)).containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
     void testGetAllByPatientAndDoctorBetween() {
         PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
 
         LocalDateTime after = getNextTick();
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
         LocalDateTime before = getNextTick();
         assertThat(appointmentService.getAllByPatientAndDoctorBetween(patientDTO.getId(),
-                        doctorDTO.getId(), after, before))
-                                        .containsExactlyElementsOf(appointmentDTOs);
+                doctorDTO.getId(), after, before))
+                .containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
@@ -330,18 +329,18 @@ public class AppointmentServiceTest {
         ArrayList<AppointmentDTO> appointmentDTOs = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                            specialityService.create(generateRandomSpecialityDTO()).getId());
+                    specialityService.create(generateRandomSpecialityDTO()).getId());
             ScheduleDTO scheduleDTO = scheduleService
-                            .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                    .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
             AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
             AppointmentDTO appointmentDTO = appointmentService.create(patientDTO.getId(),
-                            scheduleDTO.getId(), appointmentDetailsDTO);
+                    scheduleDTO.getId(), appointmentDetailsDTO);
             appointmentDTOs.add(appointmentDTO);
         }
         LocalDateTime before = getNextTick();
         assertThat(appointmentService.getAllByPatientBetween(patientDTO.getId(), after, before))
-                        .containsExactlyElementsOf(appointmentDTOs);
+                .containsExactlyElementsOf(appointmentDTOs);
     }
 
     @Test
@@ -356,16 +355,16 @@ public class AppointmentServiceTest {
     @Test
     void testUpdateSchedule() {
         DoctorDTO doctorDTO = doctorService.create(generateRandomDoctorDTO(),
-                        specialityService.create(generateRandomSpecialityDTO()).getId());
+                specialityService.create(generateRandomSpecialityDTO()).getId());
         ScheduleDTO scheduleDTO = scheduleService
-                        .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
         PatientDTO patientDTO = patientService.create(generateRandomPatientDTO());
         AppointmentDetailsDTO appointmentDetailsDTO = generateRandomDetailsDTO();
         appointmentDTO = appointmentService.create(patientDTO.getId(), scheduleDTO.getId(),
-                        appointmentDetailsDTO);
+                appointmentDetailsDTO);
 
         ScheduleDTO scheduleDTOtest = scheduleService
-                        .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
+                .create(doctorDTO.getId(), getNextTick(), Optional.empty()).get(0);
 
         appointmentService.updateSchedule(appointmentDTO.getId(), scheduleDTOtest.getId());
         scheduleDTO = scheduleService.get(scheduleDTO.getId()).get();
