@@ -86,6 +86,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     @Async
     public void tokenCleanerScheduler() {
+        System.out.println("Cleaning tokens");
         repository.deleteAllByExpirationStampBefore(LocalDateTime.now());
     }
 
