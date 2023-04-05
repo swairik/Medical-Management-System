@@ -58,15 +58,24 @@ $(document).ready(function () {
     },
     success: function (result) {
       console.log(result);
+      if(result.length===0){
+
+      }
+      else{
+        $('#NA').replaceWith($('.table-header').show());
       $.each(result, function (key, value) {
         $(".responsive-table").append(constructAppointmentInfo(value, key));
       });
+    }
     },
     error: function (xhr, status, errorThrown) {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });

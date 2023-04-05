@@ -31,7 +31,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -63,8 +66,13 @@ $(document).ready(function () {
       success: function (response) {
         // Handle successful response
         console.log(response);
-        alert("Updated Successfully!");
-        window.location.href = "PatientProfile";
+        // alert("Updated Successfully!");
+        // window.location.href = "PatientProfile";
+        swal("Updated Successfully!", "", "success", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = 'PatientProfile';
+          });
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -76,8 +84,19 @@ $(document).ready(function () {
 
           console.log(errorObj)
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

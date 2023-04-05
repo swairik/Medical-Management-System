@@ -12,7 +12,10 @@ $(document).ready(function() {
           success: function(response) {
             // Handle successful response
             console.log(response);
-            alert('Email Sent Successfully')
+            // alert('Email Sent Successfully')
+            swal("Email Sent Successfully!", "", "success", {
+              button: "OK",
+            });
           },
           error: function(xhr, status, error) {
             // Handle error response
