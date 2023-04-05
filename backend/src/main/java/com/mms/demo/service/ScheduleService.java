@@ -82,7 +82,7 @@ public interface ScheduleService {
     Optional<ScheduleDTO> update(Long id, ScheduleDTO scheduleUpdates)
                     throws IllegalArgumentException;
 
-    void markAsApproved(Long id) throws IllegalArgumentException;
+    void markAsApproved(Long id) throws IllegalArgumentException; 
 
     /**
      * Delete schedule.

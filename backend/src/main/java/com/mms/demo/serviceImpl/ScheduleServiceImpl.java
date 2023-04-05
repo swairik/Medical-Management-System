@@ -114,6 +114,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         repository.deleteById(id);
     }
 
+    
     @Override
     public List<ScheduleDTO> getAll() {
         return repository.findAll().stream().map(s -> mapper.entityToDto(s))
