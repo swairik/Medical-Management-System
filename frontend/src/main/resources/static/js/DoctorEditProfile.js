@@ -36,7 +36,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", errorObj.errorMessage, "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -68,8 +71,13 @@ $(document).ready(function () {
       success: function (response) {
         // Handle successful response
         console.log(response);
-        alert("Updated Successfully!");
-        window.location.href = "EditDoctor";
+        // alert("Updated Successfully!");
+        // window.location.href = "EditDoctor";
+        swal("Updated Successfully!", "", "success", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = 'EditDoctor';
+          });
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -81,8 +89,19 @@ $(document).ready(function () {
 
           console.log(errorObj);
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

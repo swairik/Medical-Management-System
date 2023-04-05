@@ -28,14 +28,20 @@ $(document).ready(function() {
           success: function(response) {
             // Handle successful response
             console.log(response);
-            alert('Password Updated Successfully')
+            // alert('Password Updated Successfully')
+            swal("Password Updated Successfully!", "", "success", {
+              button: "OK",
+            });
           },
           error: function(xhr, status, error) {
             // Handle error response
             console.log(xhr.responseText);
         
             if((JSON.parse(xhr.responseText)).errorCode) alert((JSON.parse(xhr.responseText)).errorCode)
-            else alert('Some Error Occurred!')
+            // else alert('Some Error Occurred!')
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
           }
         });
     });

@@ -103,7 +103,11 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+            button: "OK",
+          });
+        
       }
     },
   });
@@ -145,7 +149,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -183,8 +190,13 @@ $(document).ready(function () {
       success: function (result) {
         console.log(result);
         console.log("Booked");
-        alert("Slot Booked");
-        window.location.href = 'EditAppointment';
+        // alert("Slot Booked");
+        // window.location.href = 'EditAppointment';
+        swal("Slot Booked...", "", "success", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = 'EditAppointment';
+          });
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -192,8 +204,19 @@ $(document).ready(function () {
         } else {
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
 
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

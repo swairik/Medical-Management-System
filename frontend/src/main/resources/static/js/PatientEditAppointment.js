@@ -75,7 +75,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -106,8 +109,13 @@ $(document).ready(function () {
       },
       success: function (result) {
         console.log(result);
-        alert("Appointment Cancelled");
-        window.location.href = "BookAppointment?id=" + doctor_id;
+        // alert("Appointment Cancelled");
+        // window.location.href = "BookAppointment?id=" + doctor_id;
+        swal("Appointment Cancelled!", "", "warning", {
+          button: "OK",
+        }).then((value) => {
+            window.location.href = "BookAppointment?id=" + doctor_id;
+          });
       },
       error: function (xhr, status, errorThrown) {
         if (xhr.status == 403) {
@@ -116,8 +124,19 @@ $(document).ready(function () {
           var errorObj;
           if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
   
-          if (errorObj) alert(errorObj.errorMessage);
-          else alert("Some Error Occurred");
+          // if (errorObj) alert(errorObj.errorMessage);
+          // else alert("Some Error Occurred");
+          if (errorObj) {
+            swal("", errorObj.errorMessage, "error", {
+              button: "OK",
+            });
+          }
+          else 
+          {
+            swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+          }
         }
       },
     });

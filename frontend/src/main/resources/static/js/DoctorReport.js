@@ -64,7 +64,10 @@ $(document).ready(function () {
           responseType: "blob",
         },
         success: function (data,status,xhr) {
-          alert("Downloading..");
+          // alert("Downloading..");
+          swal("Downloading...", "", "info", {
+            button: "OK",
+          });
           console.log(data);
   
           // const filename = xhr.getResponseHeader('Content-Disposition')
@@ -86,8 +89,19 @@ $(document).ready(function () {
             var errorObj;
             if (xhr.responseText) errorObj = JSON.parse(xhr.responseText);
   
-            if (errorObj) alert(errorObj.errorCode);
-            else alert("Some Error Occurred");
+            // if (errorObj) alert(errorObj.errorCode);
+            // else alert("Some Error Occurred");
+            if (errorObj) {
+              swal("", errorObj.errorMessage, "error", {
+                button: "OK",
+              });
+            }
+            else 
+            {
+              swal("", "Some Error Occurred", "error", {
+                button: "OK",
+              });
+            }
           }
         },
       });

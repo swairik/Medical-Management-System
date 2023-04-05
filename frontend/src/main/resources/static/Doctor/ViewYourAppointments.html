@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../js/SignOut.js"></script>
     <script src="../js/DoctorViewAppointment.js"></script>
   </head>
@@ -61,7 +62,8 @@
 
     <div class="container">
       <ul class="responsive-table">
-        <li class="table-header">
+        <h2 id="NA">No Upcoming Appointments</h2>
+        <li class="table-header" style="display: none;">
           <div class="col col-1">S. No.</div>
           <div class="col col-2">Date</div>
           <!-- <div class="col col-3">Day</div> -->

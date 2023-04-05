@@ -173,6 +173,21 @@ nav img {
   padding: 2%;
   height: fit-content;
 }
+
+.right h4 {
+  color: #004798;
+}
+.slots{
+  display: block;
+  float: left;
+  margin-top: 5%;
+  width: 100%;
+}
+.slot_head{
+  padding: 0% 10% 0% 10%;
+}
+  
+
 @media only screen and (max-width: 770px) {
     .navbar{
     padding: 10px 10px;

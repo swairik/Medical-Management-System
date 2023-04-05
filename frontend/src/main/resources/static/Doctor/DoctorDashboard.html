@@ -17,6 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="../js/DoctorReport.js"></script>
     <script src="../js/DoctorAnalytics.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
   </head>
 
@@ -72,17 +73,40 @@
           </div>
         </div>
         <div class="column right" >
-          <h2>OVERVIEW</h2>
+          <h2>OVERVIEW</h2><br>
           <div class="graph graph1">
-            <h4>Upcoming Appointment</h4>
+            <h4>Upcoming Appointment</h4><br><br>
+            <h2 id="u_app"></h2>
           </div>
           <div class="graph graph2">
-            <h4>Patient Count</h4>
+            <h4>Patients Visited</h4>
+            <br><br>
+            <h2 id="ptotal"></h2>
+          </div>
+          <div class="slots">
+            <h4>Slot Summary</h4><br><br>
+            <table>
+            <tr>
+              <th class="slot_head">Total</th>
+              <th class="slot_head">Booked</th>
+              <th class="slot_head">Free</th>
+            </tr>
+            <tr>
+              <td id="total_slots"></td>
+              <td id="booked_slots"></td>
+              <td id="free_slots"></td>
+            </tr>
+          </table>
           </div>
         </div>
       </div>
       <div id="reminder">
-        Reminder
+        <h2 style="color: #E15E55;">Updates</h2><br>
+        <h4>There are currently <span id="no_pres" style="color: #E15E55; font-size:28px;"> </span> unfilled prescriptions that require your attention and prompt filling.</h4><br>
+        <h4 id="incomplete" style="display: none; color: #004798;">Kindly attend to them at your earliest convenience.</h5>
+        <h4 id="complete" style="display: none; color: #004798;">You are up-to-date.</h4>
+        </div>
+        
       </div>
       <div id="GenerateReportForDoctor" class="modal">
         <h2>Report</h2>

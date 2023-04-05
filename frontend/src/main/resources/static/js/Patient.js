@@ -51,7 +51,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -77,7 +80,10 @@ $(document).ready(function () {
       if (xhr.status == 403) {
         window.location.href = "Auth";
       } else {
-        alert("Some Error Occurred");
+        // alert("Some Error Occurred");
+        swal("", "Some Error Occurred", "error", {
+          button: "OK",
+        });
       }
     },
   });
@@ -129,7 +135,11 @@ $(document).ready(function () {
         if (xhr.status == 403) {
           window.location.href = "Auth";
         } else {
-          alert("Some Error Occurred");
+          // alert("Some Error Occurred");
+          swal("", "Some Error Occurred", "error", {
+              button: "OK",
+            });
+
         }
       },
     });
