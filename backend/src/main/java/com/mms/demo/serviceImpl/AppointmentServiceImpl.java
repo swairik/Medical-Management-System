@@ -348,10 +348,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         Patient patient = fetchedPatientContainer.get();
 
+
         LocalDateTime from = stamp.truncatedTo(ChronoUnit.MINUTES);
         LocalDateTime to = from.toLocalDate().minusDays(daysBack).atStartOfDay();
         List<Appointment> appointments =
-                        repository.findAllByPatientAndStartBetween(patient, from, to);
+                        repository.findAllByPatientAndStartBetween(patient, to, from);
+      
+
         return appointments.stream().filter(a -> a.getAppointmentDetails().getFeedback() == null)
                         .map(a -> mapper.entityToDto(a)).collect(Collectors.toList());
     }
